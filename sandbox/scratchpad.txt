@@ -43,53 +43,8 @@ role : Assassin
 type : Ranged
 franchise : Starcraft
 
-ReleaseDate
 ratings
 baseStats
 statsPerLevel
 skills
 talents
-
-
-                Kael'thas
-                
-               
-                
-Zagara                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

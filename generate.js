@@ -1,17 +1,16 @@
 "use strict";
-/*global setImmediate: true*/
 
 var base = require("xbase"),
 	fs = require("fs"),
 	path = require("path"),
 	runUtil = require("xutil").run,
 	fileUtil = require("xutil").file,
+	moment = require("moment"),
+	skeemas = require("skeemas"),
 	libxmljs = require("libxmljs"),
 	C = require("C"),
 	rimraf = require("rimraf"),
 	tiptoe = require("tiptoe");
-
-var EXTRA_HEROES = ["anubarak", "chen", "crusader", "jaina", "kaelthas", "lostvikings", "murky", "sonyarework", "sylvanas", "thrall", "herointeractions"];
 
 if(process.argv.length<3 || !fs.existsSync(process.argv[2]))
 {
@@ -29,6 +28,11 @@ if(!fs.existsSync(HOTS_DATA_PATH))
 }
 
 var CASCEXTRATOR_PATH = path.join(__dirname, "CASCExtractor", "build", "bin", "CASCExtractor");
+
+var OUT_PATH = path.join(__dirname, "out");
+var HEROES_OUT_PATH = path.join(OUT_PATH, "heroes.json");
+
+var EXTRA_HEROES = ["anubarak", "chen", "crusader", "jaina", "kaelthas", "lostvikings", "murky", "sonyarework", "sylvanas", "thrall"];
 var NEEDED_SUBFIXES =
 [
 	"enus.stormdata\\LocalizedData\\GameStrings.txt",
@@ -53,13 +57,7 @@ NEEDED_PREFIXES.forEach(function(NEEDED_PREFIX)
 	});
 });
 
-NEEDED_FILE_PATHS.removeAll([
-	"mods\\heromods\\herointeractions.stormmod\\base.stormdata\\GameData\\BehaviorData.xml",
-	"mods\\heromods\\herointeractions.stormmod\\base.stormdata\\GameData\\TalentData.xml"
-]);
-
-var OUT_PATH = path.join(__dirname, "out");
-var HEROES_OUT_PATH = path.join(OUT_PATH, "heroes.json");
+NEEDED_FILE_PATHS.push("mods\\heroesdata.stormmod\\base.stormdata\\GameData\\Heroes\\ZagaraData.xml");
 
 var S = {};
 
@@ -106,7 +104,7 @@ tiptoe(
 					S[line.substring(0, line.indexOf("="))] = line.substring(line.indexOf("=")+1).trim();
 				});
 			}
-			else if(diskPath.endsWith("HeroData.xml"))
+			else if(diskPath.endsWith("HeroData.xml") || diskPath.endsWith("ZagaraData.xml"))
 			{
 				heroDocs.push(libxmljs.parseXml(fileData));
 			}
@@ -146,7 +144,7 @@ function getHeroNodes(heroDocs)
 			if(!heroNode.attr("id") || heroNode.childNodes().length===0)
 				return;
 
-			var heroid = heroNode.attr("id").value();
+			var heroid = attributeValue(heroNode, "id");
 			if(heroid==="Random")
 				return;
 
@@ -184,70 +182,89 @@ function processHeroNode(heroNode)
 		hero.role = "Assassin";
 	if(!hero.role && !!getValue(heroNode, "Melee"))
 		hero.role = "Warrior";
-//<Role value="Specialist"/>
-		/*
-title : Dominion Ghost
-role : Assassin
-type : Ranged
-franchise : Starcraft*/
-		// For hero name, see how lost vikings uses '<Unit value="HeroLostVikingsController"/>' in HEroData.xml to reference the full hero name "The Lost Vikings" in GAmeStrings
 
+	hero.type = !!getValue(heroNode, "Melee") ? "Melee" : "Ranged";
+	hero.gender = getValue(heroNode, "Gender", "Male");
+	hero.franchise = getValue(heroNode, "Universe", "Starcraft");
+	hero.difficulty = getValue(heroNode, "Difficulty", "Easy");
+	if(hero.difficulty==="VeryHard")
+		hero.difficulty = "Very Hard";
+
+	var ratingsNode = heroNode.get("Ratings");
+	if(ratingsNode)
+	{
+		hero.ratings =
+		{
+			damage        : +getValue(ratingsNode, "Damage", attributeValue(ratingsNode, "Damage", 1)),
+			utility       : +getValue(ratingsNode, "Utility", attributeValue(ratingsNode, "Utility", 1)),
+			survivability : +getValue(ratingsNode, "Survivability", attributeValue(ratingsNode, "Survivability", 1)),
+			complexity    : +getValue(ratingsNode, "Complexity", attributeValue(ratingsNode, "Complexity", 1)),
+		};
+	}
+
+	var releaseDateNode = heroNode.get("ReleaseDate");
+	if(releaseDateNode)
+		hero.releaseDate = moment(attributeValue(releaseDateNode, "Month", 1) + "-" + attributeValue(releaseDateNode, "Day", 1) + "-" + attributeValue(releaseDateNode, "Year", "2014"), "M-D-YYYY").format("YYYY-MM-DD");
+
+    performHeroModifications(hero);
 
 	return hero;
 }
 
-function validateHero(hero)
+function performHeroModifications(hero)
 {
-	Object.forEach(hero, function(key, val)
+	if(!C.HERO_MODIFICATIONS.hasOwnProperty(hero.id))
+		return;
+
+	C.HERO_MODIFICATIONS[hero.id].forEach(function(HERO_MODIFICATION)
 	{
-		if(!C.FIELD_TYPES.hasOwnProperty(key))
+		if(HERO_MODIFICATION.set)
 		{
-			base.warn("%s NO KNOWN TYPE REFERENCE: [%s] : [%s]", hero.id, key, val);
-			return;
+			Object.forEach(HERO_MODIFICATION.set, function(key, value)
+			{ 
+				if(Object.isObject(value))
+				{
+					if(!hero.hasOwnProperty(key))
+						hero[key] = {};
+
+					Object.forEach(value, function(newField, newFieldValue)
+					{
+						hero[key][newField] = newFieldValue;
+					});
+				}
+				else
+				{
+					hero[key] = value; 
+				}
+			});
 		}
-
-		// Handle arrays
-		if(Array.isArray(C.FIELD_TYPES[key]))
-		{
-			if(val.some(function(v) { return typeof v!==C.FIELD_TYPES[key][0]; }))
-				base.warn("%s HAS A NON-%s IN ARRAY: [%s] : [%s]", hero.id, C.FIELD_TYPES[key][0], key, val);
-
-			return;
-		}
-		
-		// Handle objects
-		if(Object.isObject(C.FIELD_TYPES[key]))
-		{
-			if(!Object.isObject(val))
-				base.warn("%s INVALID TYPE: [%s] : [%s] (Not an object)", hero.id, key, val);
-
-			return;
-		}
-		
-		// Handle regular values
-		if(typeof val!==C.FIELD_TYPES[key])
-		{
-			base.warn("%s INVALID TYPE: [%s] : [%s] (%s !== %s)", hero.id, key, val, typeof val, C.FIELD_TYPES[key]);
-			return;
-		}
-
-		if(C.FIELD_VALID_VALUES.hasOwnProperty(key) && !C.FIELD_VALID_VALUES[key].contains(val))
-			base.warn("%s HAS INVALID VALUE [%s] from possible: %s", hero.id, val, C.FIELD_VALID_VALUES[key]);
-
-	});
-
-	Object.keys(C.FIELD_TYPES).forEach(function(FIELD_NAME)
-	{
-		if(!hero.hasOwnProperty(FIELD_NAME))
-			base.warn("%s is MISSING FIELD %s", hero.id, FIELD_NAME);
 	});
 }
 
-function getValue(node, subnodeName, fallback)
+function validateHero(hero)
+{
+	var result = skeemas.validate(hero, C.HERO_JSON_SCHEMA);
+	if(!result.valid)
+	{
+		base.warn("Hero %s (%s) has FAILED VALIDATION", hero.id, hero.name);
+		base.warn(result.errors);
+	}
+}
+
+function getValue(node, subnodeName, defaultValue)
 {
 	var subnode = node.get(subnodeName);
 	if(!subnode)
-		return fallback || undefined;
+		return defaultValue || undefined;
 
-	return subnode.attr("value").value();
+	return attributeValue(subnode, "value", defaultValue);
+}
+
+function attributeValue(node, attrName, defaultValue)
+{
+	var attr = node.attr(attrName);
+	if(!attr)
+		return defaultValue || undefined;
+
+	return attr.value();
 }
