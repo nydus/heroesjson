@@ -35,4 +35,61 @@ However I want to ensure -rpath is being used too so when execute the mybin exec
 <CHero id="SgtHammer">
         <AttributeId value="Sgth"/>
 
-        
+
+Hero Information:
+name: Nova
+title : Dominion Ghost
+role : Assassin
+type : Ranged
+franchise : Starcraft
+
+ReleaseDate
+ratings
+baseStats
+statsPerLevel
+skills
+talents
+
+
+                Kael'thas
+                
+               
+                
+Zagara                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

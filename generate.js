@@ -6,10 +6,12 @@ var base = require("xbase"),
 	path = require("path"),
 	runUtil = require("xutil").run,
 	fileUtil = require("xutil").file,
+	libxmljs = require("libxmljs"),
+	C = require("C"),
 	rimraf = require("rimraf"),
 	tiptoe = require("tiptoe");
 
-var EXTRA_HEROS = ["anubarak", "chen", "crusader", "jaina", "kaelthas", "lostvikings", "murky", "sonyarework", "sylvanas", "thrall"];
+var EXTRA_HEROES = ["anubarak", "chen", "crusader", "jaina", "kaelthas", "lostvikings", "murky", "sonyarework", "sylvanas", "thrall", "herointeractions"];
 
 if(process.argv.length<3 || !fs.existsSync(process.argv[2]))
 {
@@ -26,7 +28,6 @@ if(!fs.existsSync(HOTS_DATA_PATH))
 	process.exit(1);
 }
 
-var OUT_PATH = path.join(__dirname, "out");
 var CASCEXTRATOR_PATH = path.join(__dirname, "CASCExtractor", "build", "bin", "CASCExtractor");
 var NEEDED_SUBFIXES =
 [
@@ -37,7 +38,7 @@ var NEEDED_SUBFIXES =
 ];
 
 var NEEDED_PREFIXES = ["heroesdata.stormmod"];
-EXTRA_HEROS.forEach(function(EXTRA_HERO)
+EXTRA_HEROES.forEach(function(EXTRA_HERO)
 {
 	NEEDED_PREFIXES.push("heromods\\" + EXTRA_HERO + ".stormmod");
 });
@@ -52,10 +53,18 @@ NEEDED_PREFIXES.forEach(function(NEEDED_PREFIX)
 	});
 });
 
-var STRINGS = {};
+NEEDED_FILE_PATHS.removeAll([
+	"mods\\heromods\\herointeractions.stormmod\\base.stormdata\\GameData\\BehaviorData.xml",
+	"mods\\heromods\\herointeractions.stormmod\\base.stormdata\\GameData\\TalentData.xml"
+]);
+
+var OUT_PATH = path.join(__dirname, "out");
+var HEROES_OUT_PATH = path.join(OUT_PATH, "heroes.json");
+
+var S = {};
 
 tiptoe(
-	function clearOut()
+	/*function clearOut()
 	{
 		base.info("Clearing 'out' directory...");
 		rimraf(OUT_PATH, this);
@@ -76,23 +85,41 @@ tiptoe(
 		{
 			runUtil.run(CASCEXTRATOR_PATH, [HOTS_DATA_PATH, "-o", OUT_PATH, "-f", NEEDED_FILE_PATH], {silent:true}, subcb);
 		}, this, 10);
-	},
-	function loadData()
+	},*/
+	function loadDataAndSaveJSON()
 	{
-		base.info("Loading strings...");
+		var heroDocs = [];
+
+		base.info("Loading data...");
 		NEEDED_FILE_PATHS.forEach(function(NEEDED_FILE_PATH)
 		{
 			var diskPath = path.join(OUT_PATH, NEEDED_FILE_PATH.replaceAll("\\\\", "/"));
-			base.info(diskPath);
+			if(!fs.existsSync(diskPath))
+			{
+				base.info("Missing file: %s", NEEDED_FILE_PATH);
+				return;
+			}
+			var fileData = fs.readFileSync(diskPath, {encoding:"utf8"});
 			if(diskPath.endsWith("GameStrings.txt"))
 			{
-				fs.readFileSync(diskPath, {encoding:"utf8"}).split("\n").forEach(function(line) {
-					STRINGS[line.substring(0, line.indexOf("="))] = line.substring(line.indexOf("=")+1);
+				fileData.split("\n").forEach(function(line) {
+					S[line.substring(0, line.indexOf("="))] = line.substring(line.indexOf("=")+1).trim();
 				});
+			}
+			else if(diskPath.endsWith("HeroData.xml"))
+			{
+				heroDocs.push(libxmljs.parseXml(fileData));
 			}
 		});
 
-		this();
+		var heroes = getHeroNodes(heroDocs).map(processHeroNode);
+
+		base.info("Validating %d heroes...", heroes.length);
+		heroes.forEach(validateHero);
+		
+		base.info("Saving JSON...");
+
+		fs.writeFile(HEROES_OUT_PATH, JSON.stringify(heroes), {encoding:"utf8"}, this);
 	},
 	function finish(err)
 	{
@@ -102,6 +129,125 @@ tiptoe(
 			process.exit(1);
 		}
 
+		base.info("Done.");
+
 		process.exit(0);
 	}
 );
+
+function getHeroNodes(heroDocs)
+{
+	var heroNodes = {};
+
+	heroDocs.forEach(function(heroDoc)
+	{
+		heroDoc.find("/Catalog/CHero").forEach(function(heroNode)
+		{
+			if(!heroNode.attr("id") || heroNode.childNodes().length===0)
+				return;
+
+			var heroid = heroNode.attr("id").value();
+			if(heroid==="Random")
+				return;
+
+			if(!heroNodes.hasOwnProperty(heroid))
+			{
+				heroNodes[heroid] = heroNode;
+				return;
+			}
+
+			mergeXML(heroNode, heroNodes[heroid]);
+		});
+	});
+
+	return Object.values(heroNodes);
+}
+
+function mergeXML(fromNode, toNode)
+{
+	fromNode.childNodes().forEach(function(childNode)
+	{
+		toNode.addChild(childNode);
+	});
+}
+
+function processHeroNode(heroNode)
+{
+	var hero = {};
+
+	hero.id = heroNode.attr("id").value();
+	hero.name = S["Unit/Name/" + getValue(heroNode, "Unit", "Hero" + hero.id)];
+	hero.title =  S["Hero/Title/" + hero.id];
+
+	hero.role = getValue(heroNode, "Role");
+	if(hero.role==="Damage")
+		hero.role = "Assassin";
+	if(!hero.role && !!getValue(heroNode, "Melee"))
+		hero.role = "Warrior";
+//<Role value="Specialist"/>
+		/*
+title : Dominion Ghost
+role : Assassin
+type : Ranged
+franchise : Starcraft*/
+		// For hero name, see how lost vikings uses '<Unit value="HeroLostVikingsController"/>' in HEroData.xml to reference the full hero name "The Lost Vikings" in GAmeStrings
+
+
+	return hero;
+}
+
+function validateHero(hero)
+{
+	Object.forEach(hero, function(key, val)
+	{
+		if(!C.FIELD_TYPES.hasOwnProperty(key))
+		{
+			base.warn("%s NO KNOWN TYPE REFERENCE: [%s] : [%s]", hero.id, key, val);
+			return;
+		}
+
+		// Handle arrays
+		if(Array.isArray(C.FIELD_TYPES[key]))
+		{
+			if(val.some(function(v) { return typeof v!==C.FIELD_TYPES[key][0]; }))
+				base.warn("%s HAS A NON-%s IN ARRAY: [%s] : [%s]", hero.id, C.FIELD_TYPES[key][0], key, val);
+
+			return;
+		}
+		
+		// Handle objects
+		if(Object.isObject(C.FIELD_TYPES[key]))
+		{
+			if(!Object.isObject(val))
+				base.warn("%s INVALID TYPE: [%s] : [%s] (Not an object)", hero.id, key, val);
+
+			return;
+		}
+		
+		// Handle regular values
+		if(typeof val!==C.FIELD_TYPES[key])
+		{
+			base.warn("%s INVALID TYPE: [%s] : [%s] (%s !== %s)", hero.id, key, val, typeof val, C.FIELD_TYPES[key]);
+			return;
+		}
+
+		if(C.FIELD_VALID_VALUES.hasOwnProperty(key) && !C.FIELD_VALID_VALUES[key].contains(val))
+			base.warn("%s HAS INVALID VALUE [%s] from possible: %s", hero.id, val, C.FIELD_VALID_VALUES[key]);
+
+	});
+
+	Object.keys(C.FIELD_TYPES).forEach(function(FIELD_NAME)
+	{
+		if(!hero.hasOwnProperty(FIELD_NAME))
+			base.warn("%s is MISSING FIELD %s", hero.id, FIELD_NAME);
+	});
+}
+
+function getValue(node, subnodeName, fallback)
+{
+	var subnode = node.get(subnodeName);
+	if(!subnode)
+		return fallback || undefined;
+
+	return subnode.attr("value").value();
+}
