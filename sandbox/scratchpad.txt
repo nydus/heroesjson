@@ -36,15 +36,30 @@ However I want to ensure -rpath is being used too so when execute the mybin exec
         <AttributeId value="Sgth"/>
 
 
-Hero Information:
-name: Nova
-title : Dominion Ghost
-role : Assassin
-type : Ranged
-franchise : Starcraft
 
-ratings
-baseStats
-statsPerLevel
-skills
-talents
+From HeroData:
+    <TalentTreeArray Talent="NovaMasteryAmbushSnipe" Tier="1" Column="3"/>
+
+From TalentData:
+    <CTalent id="NovaMasteryAmbushSnipe">
+        <Face value="NovaSnipeAmbushSnipeTalent"/>
+        <RankArray Face="NovaSnipeAmbushSnipeTalentSimple"/>
+        <AbilityModificationArray ModifyAbil="NovaSnipeStorm" TooltipAddendum="Talent/Nova/Snipe/AmbushSnipe">
+            <Modifications>
+                <Type value="FlatModification"/>
+                <Catalog value="Effect"/>
+                <Entry value="SnipeApplyAmbushSnipeBehavior"/>
+                <Field value="Chance"/>
+                <Value value="1.000000"/>
+            </Modifications>
+        </AbilityModificationArray>
+        <Abil value="NovaSnipeStorm"/>
+    </CTalent>
+
+From GameStrings.txt
+Button/Name/NovaSnipeAmbushSnipeTalent=Ambush Snipe
+Button/Name/NovaSnipeAmbushSnipeTalentSimple=Ambush Snipe
+Button/Tooltip/NovaSnipeAmbushSnipeTalent=<s val="StandardTooltipHeader">Ambush Snipe </s><n/><s val="StandardTooltip"><n/>Increases Snipe's damage by <s val="StandardTooltipDetails">20%</s> when used from Cloak or within one second of being Cloaked.
+Button/Tooltip/NovaSnipeAmbushSnipeTalentSimple=<s val="TalentChoiceNameLabel">Ambush Snipe </s><n/><s val="TalentChoiceDescriptionLabel">Increased Snipe damage while Cloaked</s>
+Button/TooltipAppender/NovaSnipeAmbushSnipe=<n/><n/><s val="StandardTooltipUpgrade">[Ambush Snipe]</s> <s val="StandardTooltip">Increase damage by <s val="StandardTooltipDetails">20%</s> when used from Cloak or within one second of being Cloaked.</s>
+Talent/Nova/Snipe/AmbushSnipe=Increases damage by 20% when used while cloaked
