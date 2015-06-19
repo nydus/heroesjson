@@ -1,15 +1,13 @@
 #!/bin/bash
 
-echo "Geting CascLib..."
-git submodule init
-git update
+echo "Geting CASCExtractor..."
+git submodule update --init --recursive
 
-echo "Building CascLib..."
-mkdir CascLib-build
-cd CascLib-build
-cmake ../CascLib/
+echo "Building CASCExtractor..."
+cd CASCExtractor
+mkdir build
+cd build
+cmake ..
 make
-
-echo "Building cascextract..."
 
 echo "Done."
