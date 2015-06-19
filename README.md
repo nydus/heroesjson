@@ -15,7 +15,6 @@ Build
 
     git clone https://github.com/Sembiance/heroesjson.git
     cd heroesjson
-    ??? git submodule init?? ???
     ./build.sh
 
 Run

@@ -1,7 +1,6 @@
 /---------------\
 | High Priority |
 \---------------/
-* Make an 'Everything.zip that has all JSON files. Then e-mail davidsaraiv@gmail.com'
 
 
 /-----------------\

@@ -1,0 +1,29 @@
+NovaCombatStyleOneintheChamber
+NovaOneintheChamberTalent
+
+GameStrings.txt:Button/Name/NovaOneintheChamberTalent=One in the Chamber
+GameStrings.txt:Button/Name/NovaOneintheChamberTalentSimple=One in the Chamber
+GameStrings.txt:Button/Tooltip/NovaOneintheChamberTalent=<s val="StandardTooltipHeader">One in the Chamber</s><n/><s val="StandardTooltip"><n/>After using an ability, your next Basic Attack deals <s val="StandardTooltipDetails"><d ref="100*Behavior,NovaOneintheChamber,Modification.DamageDealtFraction[Ranged]"/>%</s> additional damage.
+GameStrings.txt:Button/Tooltip/NovaOneintheChamberTalentSimple=<s val="TalentChoiceNameLabel">One in the Chamber</s><n/><s val="TalentChoiceDescriptionLabel">Using an ability empowers next Basic Attack
+
+TalentData.xml:
+
+
+BehaviorData.xml:
+<CBehaviorBuff id="NovaOneintheChamber">
+        <Alignment value="Positive"/>
+        <Modification>
+            <DamageDealtFraction index="Ranged" value="0.8"/>
+        </Modification>
+        <DamageResponse Chance="1" Handled="NovaOneintheChamberRemoveBehavior" Location="Attacker">
+            <Kind index="Spell" value="0"/>
+            <Kind index="Melee" value="0"/>
+            <Kind index="NoProc" value="0"/>
+        </DamageResponse>
+        <InfoIcon value="Assets\Textures\storm_btn-extra_int_0.dds"/>
+        <Duration value="3"/>
+    </CBehaviorBuff>
+
+
+I am successfully doing find_library(CUSTOM_LIBRARY custom ../../cusom-build/)    target_link_libraries(mybin "-lm ${CUSTOM_LIBRARY}")
+However I want to ensure -rpath is being used too so when execute the mybin executable I don't get a error loading the shared library.
