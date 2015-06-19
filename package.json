@@ -8,6 +8,7 @@
 	{
 		"xutil"				: "git://github.com/Sembiance/xutil.git",
 		"tiptoe"			: ">= 1.0.0",
-		"xbase"				: "git://github.com/Sembiance/xbase.git"
+		"xbase"				: "git://github.com/Sembiance/xbase.git",
+		"rimraf"			: ">= 2.2.6"
 	}
 }

@@ -27,3 +27,12 @@ BehaviorData.xml:
 
 I am successfully doing find_library(CUSTOM_LIBRARY custom ../../cusom-build/)    target_link_libraries(mybin "-lm ${CUSTOM_LIBRARY}")
 However I want to ensure -rpath is being used too so when execute the mybin executable I don't get a error loading the shared library.
+
+
+
+./enus.stormdata/LocalizedData/GameStrings.txt:20263:Unit/Name/HeroSgtHammer=Sgt. Hammer
+
+<CHero id="SgtHammer">
+        <AttributeId value="Sgth"/>
+
+        
