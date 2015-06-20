@@ -1,5 +1,5 @@
 {
-	var test=2;
+	var lookupXMLRef = options.lookupXMLRef;
 }
 
 START
@@ -19,7 +19,7 @@ primary
 	/ "(" additive:additive ")" { return additive; }
 
 xmlprimary
-	= chars:[A-Za-z0-9,._\[\]-]+ { return 0; }
+	= chars:[A-Za-z0-9,._\[\]-]+ { return lookupXMLRef(chars.join("")); }
 
 integer "integer"
 	= digits:[0-9]+ { return parseInt(digits.join(""), 10); }

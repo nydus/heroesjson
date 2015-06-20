@@ -12,7 +12,6 @@ var base = require("xbase"),
 	C = require("C"),
 	PEG = require("pegjs"),
 	rimraf = require("rimraf"),
-	jp = require("jsonpath"),
 	tiptoe = require("tiptoe");
 
 if(process.argv.length<3 || !fs.existsSync(process.argv[2]))
@@ -272,8 +271,8 @@ function processHeroNode(heroNode)
 					var formula = dynamic.match(/ref\s*=\s*"([^"]+)"/, "$1")[1];
 					var precision = dynamic.match(/precision\s*=\s*"([^"]+)"/, "$1") ? +dynamic.match(/precision\s*=\s*"([^"]+)"/, "$1")[1] : 0;
 
-					base.info("(%s) PARSING: %s (precision=%s)", talent.name, formula, precision);
-					var result = FORMULA_PARSER.parse(formula);
+					//base.info("(%s) PARSING: %s (precision=%s)", talent.name, formula, precision);
+					var result = FORMULA_PARSER.parse(formula, {lookupXMLRef : lookupXMLRef});
 
 					talent.description = talent.description.replace(dynamic, result);
 					//talent.description = talent.description.replace(/<s val="StandardTooltipDetails">([^<]+)<\/s>/, "$1");
@@ -283,36 +282,44 @@ function processHeroNode(heroNode)
 				talent.description = talent.description.replace(/<s\s*val\s*=\s*"StandardTooltipDetails">/gm, "").replace(/<s\s*val\s*=\s*"StandardTooltip">/gm, "").replace(/<\/?s\/?>/g, "").trim();
 				base.info("%s\n", talent.description);
 			}
-			/*
-100*Behavior,TalentGatheringPowerCarry,Modification.DamageDealtFraction[Spell]
-100*Behavior,TalentGatheringPowerStack,Modification.DamageDealtFraction[Spell]
-((Behavior,TalentGatheringPowerStack,MaxStackCount*Behavior,TalentGatheringPowerStack,Modification.DamageDealtFraction[Spell])+Behavior,TalentGatheringPowerCarry,Modification.DamageDealtFraction[Spell])*100
-100*Behavior,TalentGatheringPowerCarry,Modification.DamageDealtFraction[Spell]
-Abil,TalentHealingWard,Cost[0].Cooldown.TimeUse
-Effect,EnvenomDamage,Amount * (Behavior,Envenom,Duration + 1)
-Behavior,Envenom,Duration
-100*Behavior,NovaOneintheChamber,Modification.DamageDealtFraction[Ranged]
-Effect,TripleTapLaunchPersistent,PeriodCount
-Effect,TripleTapMissileDamage,Amount
-Effect,PrecisionStrikeDamage,Amount*(Behavior,Artifact_AP_Base,Modification.DamageDealtFraction[Spell]+1)
-Behavior,CloakMoveSpeedBuff,Modification.UnifiedMoveSpeedFactor*100
-Effect,NovaAdvancedCloakingCreateHealer,RechargeVitalFraction*100
-Behavior,DamageReductionSpell50Controller,DamageResponse.ModifyFraction *100
-Behavior,SpellShieldActive,Duration
-Behavior,SpellShieldCooldown,Duration
-Abil,TalentOverdrive,Cost[0].Cooldown.TimeUse
-Behavior,BucketOverdrive,Modification.DamageDealtFraction[Spell]*100
-Behavior,BucketOverdrive,Duration
-Abil,TalentRewind,Cost[0].Cooldown.TimeUse
-Abil,FlashoftheStorms,Cost[0].Cooldown.TimeUse*/
-
-			//base.info(talent.description);
-			//100*Behavior,NovaOneintheChamber,Modification.DamageDealtFraction[Ranged]
-			
-			//<d ref="100*Behavior,NovaOneintheChamber,Modification.DamageDealtFraction[Ranged]"/>
 		}
 
-		/*<CBehaviorBuff id="NovaOneintheChamber">
+		hero.talents[C.HERO_TALENT_LEVELS[((+attributeValue(talentTreeNode, "Tier"))-1)]].push(talent);
+	});
+	
+	// Final modifications
+    performHeroModifications(hero);
+	
+	return hero;
+}
+
+function lookupXMLRef(query)
+{
+	var result = 0;
+
+	//base.info("QUERY: %s", query);
+
+	var parts = query.split(",");
+	if(!NODE_MAP_TYPES.contains(parts[0]))
+	{
+		base.warn("No valid node map type for XML query: %s", query);
+		return result;
+	}
+
+	var nodeMap = NODE_MAPS[parts[0]];
+	if(!nodeMap.hasOwnProperty(parts[1]))
+	{
+		base.warn("No valid id for nodeMapType XML parts: %s", parts);
+		return result;
+	}
+
+	base.info("%s => %d", query, result);
+
+	return result;
+	//Behavior,NovaOneintheChamber,Modification.DamageDealtFraction[Ranged]
+
+	//100*Behavior,NovaOneintheChamber,Modification.DamageDealtFraction[Ranged]
+	/*<CBehaviorBuff id="NovaOneintheChamber">
         <Alignment value="Positive"/>
         <Modification>
             <DamageDealtFraction index="Ranged" value="0.8"/>
@@ -327,14 +334,6 @@ Abil,FlashoftheStorms,Cost[0].Cooldown.TimeUse*/
     </CBehaviorBuff>
 
  */
-
-		hero.talents[C.HERO_TALENT_LEVELS[((+attributeValue(talentTreeNode, "Tier"))-1)]].push(talent);
-	});
-	
-	// Final modifications
-    performHeroModifications(hero);
-	
-	return hero;
 }
 
 function performHeroModifications(hero)
