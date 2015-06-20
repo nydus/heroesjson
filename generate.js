@@ -10,6 +10,7 @@ var base = require("xbase"),
 	jsonselect = require("JSONSelect"),
 	libxmljs = require("libxmljs"),
 	C = require("C"),
+	PEG = require("pegjs"),
 	rimraf = require("rimraf"),
 	jp = require("jsonpath"),
 	tiptoe = require("tiptoe");
@@ -40,6 +41,8 @@ var NEEDED_SUBFIXES =
 	"enus.stormdata\\LocalizedData\\GameStrings.txt",
 	"base.stormdata\\GameData\\BehaviorData.xml",
 	"base.stormdata\\GameData\\TalentData.xml",
+	"base.stormdata\\GameData\\AbilData.xml",
+	"base.stormdata\\GameData\\EffectData.xml",
 	"base.stormdata\\GameData\\HeroData.xml",
 ];
 
@@ -61,7 +64,13 @@ NEEDED_PREFIXES.forEach(function(NEEDED_PREFIX)
 
 NEEDED_FILE_PATHS.push("mods\\heroesdata.stormmod\\base.stormdata\\GameData\\Heroes\\ZagaraData.xml");
 
+var FORMULA_PARSER = PEG.buildParser(fs.readFileSync(path.join(__dirname, "heroes.pegjs"), {encoding:"utf8"}));
+
 var S = {};
+var NODE_MAP_TYPES = ["Hero", "Talent", "Behavior", "Effect", "Abil" ];
+var NODE_MAPS = {};
+NODE_MAP_TYPES.forEach(function(NODE_MAP_TYPE) { NODE_MAPS[NODE_MAP_TYPE] = {}; });
+var IGNORED_NODE_TYPE_IDS = {"Hero" : ["Random"]};
 
 tiptoe(
 	/*function clearOut()
@@ -112,10 +121,9 @@ tiptoe(
 			}
 		});
 
-		var heroNodeMap = getMergedNodeMap(xmlDocs, "CHero", "Random");
-		var talentNodeMap = getMergedNodeMap(xmlDocs, "CTalent");
-		var behaviorNodeMap = getMergedNodeMap(xmlDocs, "CBehaviorBuff");
-		var heroes = Object.values(heroNodeMap).map(function(heroNode) { return processHeroNode(heroNode, talentNodeMap, behaviorNodeMap); });
+		loadMergedNodeMap(xmlDocs);
+
+		var heroes = Object.values(NODE_MAPS["Hero"]).map(function(heroNode) { return processHeroNode(heroNode); });
 
 		base.info("Validating %d heroes...", heroes.length);
 		heroes.forEach(validateHero);
@@ -138,33 +146,34 @@ tiptoe(
 	}
 );
 
-function getMergedNodeMap(xmlDocs, nodeName, ignoredids)
+function loadMergedNodeMap(xmlDocs)
 {
-	var nodes = {};
-	ignoredids = ignoredids || [];
-
 	xmlDocs.forEach(function(xmlDoc)
 	{
-		xmlDoc.find("/Catalog/" + nodeName).forEach(function(node)
+		xmlDoc.find("/Catalog/*").forEach(function(node)
 		{
 			if(!node.attr("id") || node.childNodes().length===0)
 				return;
 
-			var nodeid = attributeValue(node, "id");
-			if(ignoredids.contains(nodeid))
+			var nodeType = NODE_MAP_TYPES.filter(function(NODE_MAP_TYPE) { return node.name().startsWith("C" + NODE_MAP_TYPE); });
+			if(!nodeType || nodeType.length!==1)
 				return;
 
-			if(!nodes.hasOwnProperty(nodeid))
+			nodeType = nodeType[0];
+
+			var nodeid = attributeValue(node, "id");
+			if(IGNORED_NODE_TYPE_IDS.hasOwnProperty(nodeType) && IGNORED_NODE_TYPE_IDS[nodeType].contains(nodeid))
+				return;
+
+			if(!NODE_MAPS[nodeType].hasOwnProperty(nodeid))
 			{
-				nodes[nodeid] = node;
+				NODE_MAPS[nodeType][nodeid] = node;
 				return;
 			}
 
-			mergeXML(node, nodes[nodeid]);
+			mergeXML(node, NODE_MAPS[nodeType][nodeid]);
 		});
 	});
-
-	return nodes;
 }
 
 function mergeXML(fromNode, toNode)
@@ -182,7 +191,7 @@ function mergeXML(fromNode, toNode)
 	});
 }
 
-function processHeroNode(heroNode, talentNodeMap, behaviorNodeMap)
+function processHeroNode(heroNode)
 {
 	var hero = {};
 
@@ -232,7 +241,7 @@ function processHeroNode(heroNode, talentNodeMap, behaviorNodeMap)
 
 		talent.id = attributeValue(talentTreeNode, "Talent");
 
-		var talentNode = talentNodeMap[talent.id];
+		var talentNode = NODE_MAPS["Talent"][talent.id];
 		var faceid = getValue(talentNode, "Face");
 
 		talent.description = S["Button/Tooltip/" + faceid];
@@ -246,27 +255,58 @@ function processHeroNode(heroNode, talentNodeMap, behaviorNodeMap)
 			return;
 		}
 
-		talent.name = talent.description.replace(/<s val="StandardTooltipHeader">([^<]+)<\/s>.+/, "$1");
-		talent.description = talent.description.replace(/<s val="StandardTooltipHeader">[^<]+<\/s>(.+)/, "$1").replace(/<s val="StandardTooltip">?(.+)/, "$1");
-		if(talent.description.indexOf("<n/>")===0)
-			talent.description = talent.description.replace(/(?:<n\/>)+(.+)/, "$1");
+		talent.name = talent.description.replace(/<s val="StandardTooltipHeader">([^<]+)<.+/, "$1").trim();
+		talent.description = talent.description.replace(/<s val="StandardTooltipHeader">[^<]+(<.+)/, "$1").replace(/<s val="StandardTooltip">?(.+)/, "$1");
+		//if(talent.description.indexOf("<n/>")===0)
+		//	talent.description = talent.description.replace(/(?:<n\/>)+(.+)/, "$1");
 
 		//talent.name = S["Button/Name/" + faceid];
 
-		if(talent.id==="NovaCombatStyleOneintheChamber")
+		if(hero.id==="Nova")
 		{
-			var dynamics = talent.description.match(/<d ref="[^"]+"\/>/g);
-			dynamics.forEach(function(dynamic)
+			var dynamics = talent.description.match(/<d [^/]+\/>/g);
+			if(dynamics)
 			{
-				base.info(dynamic);
-				var formula = dynamic.replace(/<d ref="([^"]+)"\/>/, "$1");
+				dynamics.forEach(function(dynamic)
+				{
+					var formula = dynamic.match(/ref\s*=\s*"([^"]+)"/, "$1")[1];
+					var precision = dynamic.match(/precision\s*=\s*"([^"]+)"/, "$1") ? +dynamic.match(/precision\s*=\s*"([^"]+)"/, "$1")[1] : 0;
 
-				var result = "";
+					base.info("(%s) PARSING: %s (precision=%s)", talent.name, formula, precision);
+					var result = FORMULA_PARSER.parse(formula);
 
-				talent.description = talent.description.replace(dynamic, result);
-			});
+					talent.description = talent.description.replace(dynamic, result);
+					//talent.description = talent.description.replace(/<s val="StandardTooltipDetails">([^<]+)<\/s>/, "$1");
+				});
 
-			base.info(talent.description);
+				talent.description = talent.description.replace(/<\/?n\/?><\/?n\/?>/g, "\n").replace(/<\/?n\/?>/g, "");
+				talent.description = talent.description.replace(/<s\s*val\s*=\s*"StandardTooltipDetails">/gm, "").replace(/<s\s*val\s*=\s*"StandardTooltip">/gm, "").replace(/<\/?s\/?>/g, "").trim();
+				base.info("%s\n", talent.description);
+			}
+			/*
+100*Behavior,TalentGatheringPowerCarry,Modification.DamageDealtFraction[Spell]
+100*Behavior,TalentGatheringPowerStack,Modification.DamageDealtFraction[Spell]
+((Behavior,TalentGatheringPowerStack,MaxStackCount*Behavior,TalentGatheringPowerStack,Modification.DamageDealtFraction[Spell])+Behavior,TalentGatheringPowerCarry,Modification.DamageDealtFraction[Spell])*100
+100*Behavior,TalentGatheringPowerCarry,Modification.DamageDealtFraction[Spell]
+Abil,TalentHealingWard,Cost[0].Cooldown.TimeUse
+Effect,EnvenomDamage,Amount * (Behavior,Envenom,Duration + 1)
+Behavior,Envenom,Duration
+100*Behavior,NovaOneintheChamber,Modification.DamageDealtFraction[Ranged]
+Effect,TripleTapLaunchPersistent,PeriodCount
+Effect,TripleTapMissileDamage,Amount
+Effect,PrecisionStrikeDamage,Amount*(Behavior,Artifact_AP_Base,Modification.DamageDealtFraction[Spell]+1)
+Behavior,CloakMoveSpeedBuff,Modification.UnifiedMoveSpeedFactor*100
+Effect,NovaAdvancedCloakingCreateHealer,RechargeVitalFraction*100
+Behavior,DamageReductionSpell50Controller,DamageResponse.ModifyFraction *100
+Behavior,SpellShieldActive,Duration
+Behavior,SpellShieldCooldown,Duration
+Abil,TalentOverdrive,Cost[0].Cooldown.TimeUse
+Behavior,BucketOverdrive,Modification.DamageDealtFraction[Spell]*100
+Behavior,BucketOverdrive,Duration
+Abil,TalentRewind,Cost[0].Cooldown.TimeUse
+Abil,FlashoftheStorms,Cost[0].Cooldown.TimeUse*/
+
+			//base.info(talent.description);
 			//100*Behavior,NovaOneintheChamber,Modification.DamageDealtFraction[Ranged]
 			
 			//<d ref="100*Behavior,NovaOneintheChamber,Modification.DamageDealtFraction[Ranged]"/>

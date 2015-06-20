@@ -9,6 +9,11 @@
 		"xutil"				: "git://github.com/Sembiance/xutil.git",
 		"tiptoe"			: ">= 1.0.0",
 		"xbase"				: "git://github.com/Sembiance/xbase.git",
-		"rimraf"			: ">= 2.2.6"
+		"rimraf"			: ">= 2.2.6",
+		"pegjs"             : ">= 0.8.0",
+		"libxmljs"          : ">= 0.14.1",
+		"moment"            : ">= 2.10.3",
+		"JSONSelect"        : ">= 0.4.0",
+		"jsen"              : ">= 0.4.1"
 	}
 }

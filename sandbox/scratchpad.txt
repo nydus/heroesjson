@@ -63,3 +63,10 @@ Button/Tooltip/NovaSnipeAmbushSnipeTalent=<s val="StandardTooltipHeader">Ambush 
 Button/Tooltip/NovaSnipeAmbushSnipeTalentSimple=<s val="TalentChoiceNameLabel">Ambush Snipe </s><n/><s val="TalentChoiceDescriptionLabel">Increased Snipe damage while Cloaked</s>
 Button/TooltipAppender/NovaSnipeAmbushSnipe=<n/><n/><s val="StandardTooltipUpgrade">[Ambush Snipe]</s> <s val="StandardTooltip">Increase damage by <s val="StandardTooltipDetails">20%</s> when used from Cloak or within one second of being Cloaked.</s>
 Talent/Nova/Snipe/AmbushSnipe=Increases damage by 20% when used while cloaked
+
+
+
+<s val="StandardTooltipHeader">Conjurer's Pursuit</s><n/><n/><s val="StandardTooltip">Increases Mana Regeneration by <s val="StandardTooltipDetails"><d ref="Behavior,ConjurersPursuitCarry,Modification.VitalRegenArray[Energy]"precision="2"/></s> per second. Every <s val="StandardTooltipDetails">3</s> Regeneration Globes gathered increases this bonus by <s val="StandardTooltipDetails"><d ref="Behavior,ConjurersPursuit,Modification.VitalRegenArray[Energy]"precision="2"/></s>.</s>
+
+<s val="StandardTooltipHeader">Precision Strike <n/><s val="StandardTooltipDetails">Cooldown: <d ref="Abil,NovaPrecisionStrike,Cost[0].Charge.TimeUse" precision="1"/> seconds<n/><n/><s val="StandardTooltip">After a <s val="StandardTooltipDetails"><d ref="Effect,PrecisionStrikeWarningCreatePersistent,ExpireDelay" precision="1"/></s> second delay, deals <s val="StandardTooltipDetails"><d ref="Effect,PrecisionStrikeDamage,Amount*(Behavior,Artifact_AP_Base,Modification.DamageDealtFraction[Spell]+1)"/></s> damage in an area. Unlimited range.
+
