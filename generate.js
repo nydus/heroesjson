@@ -35,15 +35,14 @@ var OUT_PATH = path.join(__dirname, "out");
 var HEROES_OUT_PATH = path.join(OUT_PATH, "heroes.json");
 
 var EXTRA_HEROES = ["anubarak", "chen", "crusader", "jaina", "kaelthas", "lostvikings", "murky", "sonyarework", "sylvanas", "thrall"];
-var NEEDED_SUBFIXES =
-[
-	"enus.stormdata\\LocalizedData\\GameStrings.txt",
-	"base.stormdata\\GameData\\BehaviorData.xml",
-	"base.stormdata\\GameData\\TalentData.xml",
-	"base.stormdata\\GameData\\AbilData.xml",
-	"base.stormdata\\GameData\\EffectData.xml",
-	"base.stormdata\\GameData\\HeroData.xml",
-];
+var NODE_MAPS = {};
+var NODE_MAP_TYPES = ["Hero", "Talent", "Behavior", "Effect", "Abil", "Unit" ];
+
+var NEEDED_SUBFIXES = [ "enus.stormdata\\LocalizedData\\GameStrings.txt" ];
+NODE_MAP_TYPES.forEach(function(NODE_MAP_TYPE) {
+	NODE_MAPS[NODE_MAP_TYPE] = {};
+	NEEDED_SUBFIXES.push("base.stormdata\\GameData\\" + NODE_MAP_TYPE.toProperCase() + "Data.xml");
+});
 
 var NEEDED_PREFIXES = ["heroesdata.stormmod"];
 EXTRA_HEROES.forEach(function(EXTRA_HERO)
@@ -62,13 +61,11 @@ NEEDED_PREFIXES.forEach(function(NEEDED_PREFIX)
 });
 
 NEEDED_FILE_PATHS.push("mods\\heroesdata.stormmod\\base.stormdata\\GameData\\Heroes\\ZagaraData.xml");
+NEEDED_FILE_PATHS.remove("mods\\heromods\\sonyarework.stormmod\\base.stormdata\\GameData\\UnitData.xml");
 
 var FORMULA_PARSER = PEG.buildParser(fs.readFileSync(path.join(__dirname, "heroes.pegjs"), {encoding:"utf8"}));
 
 var S = {};
-var NODE_MAP_TYPES = ["Hero", "Talent", "Behavior", "Effect", "Abil" ];
-var NODE_MAPS = {};
-NODE_MAP_TYPES.forEach(function(NODE_MAP_TYPE) { NODE_MAPS[NODE_MAP_TYPE] = {}; });
 var IGNORED_NODE_TYPE_IDS = {"Hero" : ["Random", "AI", "_Empty"]};
 
 tiptoe(
@@ -231,12 +228,12 @@ function processHeroNode(heroNode)
 	// Talents
 	hero.talents = {};
 	C.HERO_TALENT_LEVELS.forEach(function(HERO_TALENT_LEVEL) { hero.talents[HERO_TALENT_LEVEL] = []; });
-	heroNode.find("TalentTreeArray").forEach(function(talentTreeNode)
+	var talentTreeNodes = heroNode.find("TalentTreeArray").filter(function(talentTreeNode) { return !!!attributeValue(talentTreeNode, "removed"); });
+	talentTreeNodes.sort(function(a, b) { return (+((+attributeValue(a, "Tier"))*10)+(+attributeValue(a, "Column")))-(+((+attributeValue(b, "Tier"))*10)+(+attributeValue(b, "Column"))); });
+
+	talentTreeNodes.forEach(function(talentTreeNode)
 	{
 		var talent = {};
-
-		if(!!attributeValue(talentTreeNode, "removed"))
-			return;
 
 		talent.id = attributeValue(talentTreeNode, "Talent");
 
@@ -257,29 +254,33 @@ function processHeroNode(heroNode)
 		talent.name = talent.description.replace(/<s val="StandardTooltipHeader">([^<]+)<.+/, "$1").trim();
 		talent.description = talent.description.replace(/<s val="StandardTooltipHeader">[^<]+(<.+)/, "$1").replace(/<s val="StandardTooltip">?(.+)/, "$1");
 
-		if(hero.id==="Nova")
+		//if(hero.id==="LiLi") {
+		var dynamics = talent.description.match(/<d [^/]+\/>/g);
+		if(dynamics)
 		{
-			base.info("BEFORE: %s", talent.description);
-
-			var dynamics = talent.description.match(/<d [^/]+\/>/g);
-			if(dynamics)
+			dynamics.forEach(function(dynamic)
 			{
-				dynamics.forEach(function(dynamic)
+				var formula = dynamic.match(/ref\s*=\s*"([^"]+)"/)[1];
+				try
 				{
-					var formula = dynamic.match(/ref\s*=\s*"([^"]+)"/)[1];
 					var result = FORMULA_PARSER.parse(formula, {lookupXMLRef : lookupXMLRef});
-					/*var precision = dynamic.match(/precision\s*=\s*"([^"]+)"/) ? +dynamic.match(/precision\s*=\s*"([^"]+)"/)[1] : null;
-					if(precision!==null)
-					{
-						base.info("%s (precision=%s)", result, precision);
-						result = result.toFixed(precision);
-					}*/
-
 					talent.description = talent.description.replace(dynamic, result);
-				});
-			}
-		}
+				}
+				catch(err)
+				{
+					base.error("Failed to parse: %s", formula);
+					throw err;
+				}
+				/*var precision = dynamic.match(/precision\s*=\s*"([^"]+)"/) ? +dynamic.match(/precision\s*=\s*"([^"]+)"/)[1] : null;
+				if(precision!==null)
+				{
+					base.info("%s (precision=%s)", result, precision);
+					result = result.toFixed(precision);
+				}*/
 
+			});
+		}
+		//}
 		talent.description = talent.description.replace(/<\/?n\/?><\/?n\/?>/g, "\n").replace(/<\/?n\/?>/g, "");
 		talent.description = talent.description.replace(/<s\s*val\s*=\s*"StandardTooltipDetails">/gm, "").replace(/<s\s*val\s*=\s*"StandardTooltip">/gm, "").replace(/<\/?s\/?>/g, "").trim();
 
@@ -287,8 +288,7 @@ function processHeroNode(heroNode)
 		if(talentPrerequisiteNode)
 			talent.prerequisite = attributeValue(talentPrerequisiteNode, "value");
 
-		//if(hero.id==="Nova")
-		//	base.info("AFTER: %s\n", talent.description);
+		//if(hero.id==="LiLi") { base.info("AFTER: %s\n", talent.description); }
 
 		hero.talents[C.HERO_TALENT_LEVELS[((+attributeValue(talentTreeNode, "Tier"))-1)]].push(talent);
 	});
@@ -299,18 +299,16 @@ function processHeroNode(heroNode)
 	return hero;
 }
 
-function lookupXMLRef(query)
+function lookupXMLRef(query, negative)
 {
 	var result = 0;
 
 	//base.info("QUERY: %s", query);
 
 	var mainParts = query.split(",");
+
 	if(!NODE_MAP_TYPES.contains(mainParts[0]))
-	{
-		base.warn("No valid node map type for XML query: %s", query);
-		return result;
-	}
+		throw new Error("No valid node map type for XML query: " + query);
 
 	var nodeMap = NODE_MAPS[mainParts[0]];
 	if(!nodeMap.hasOwnProperty(mainParts[1]))
@@ -328,7 +326,7 @@ function lookupXMLRef(query)
 	}
 
 	var subparts = mainParts[2].split(".");
-	//base.info("Start: %s", subparts);
+	//base.info("Start (negative:%s): %s", negative, subparts);
 	subparts.forEach(function(subpart)
 	{
 		var xpath = !subpart.match(/\[[0-9]+\]/) ? subpart.replace(/([^[]+)\[([^\]]+)]/, "$1[@index = '$2']") : subpart.replace(/\[([0-9]+)\]/, "[" + (+subpart.match(/\[([0-9]+)\]/)[1]+1) + "]");
@@ -343,6 +341,9 @@ function lookupXMLRef(query)
 		result = +attributeValue(target, "value");
 
 	//base.info("%s => %d", query, result);
+
+	if(negative)
+		result = result*-1;
 
 	return result;
 }
