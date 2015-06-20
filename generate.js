@@ -256,16 +256,11 @@ function processHeroNode(heroNode)
 
 		talent.name = talent.description.replace(/<s val="StandardTooltipHeader">([^<]+)<.+/, "$1").trim();
 		talent.description = talent.description.replace(/<s val="StandardTooltipHeader">[^<]+(<.+)/, "$1").replace(/<s val="StandardTooltip">?(.+)/, "$1");
-		//if(talent.description.indexOf("<n/>")===0)
-		//	talent.description = talent.description.replace(/(?:<n\/>)+(.+)/, "$1");
-
-		//talent.name = S["Button/Name/" + faceid];
-		//
-		//if(hero.id==="Nova")
-		//	base.info("BEFORE: %s", talent.description);
 
 		if(hero.id==="Nova")
 		{
+			base.info("BEFORE: %s", talent.description);
+
 			var dynamics = talent.description.match(/<d [^/]+\/>/g);
 			if(dynamics)
 			{
@@ -281,7 +276,6 @@ function processHeroNode(heroNode)
 					}*/
 
 					talent.description = talent.description.replace(dynamic, result);
-					//talent.description = talent.description.replace(/<s val="StandardTooltipDetails">([^<]+)<\/s>/, "$1");
 				});
 			}
 		}
