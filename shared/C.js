@@ -66,9 +66,10 @@ var HERO_TALENT_TIER_JSON_SCHEMA =
 			required : ["id", "name", "description"],
 			properties :
 			{
-				id          : { type : "string", minLength : 1 },
-				name        : { type : "string", minLength : 1 },
-				description : { type : "string", minLength : 1 }
+				id           : { type : "string", minLength : 1 },
+				name         : { type : "string", minLength : 1 },
+				description  : { type : "string", minLength : 1 },
+				prerequisite : { type : "string", minLength : 1 }
 			}
 		}
 };

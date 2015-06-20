@@ -69,7 +69,7 @@ var S = {};
 var NODE_MAP_TYPES = ["Hero", "Talent", "Behavior", "Effect", "Abil" ];
 var NODE_MAPS = {};
 NODE_MAP_TYPES.forEach(function(NODE_MAP_TYPE) { NODE_MAPS[NODE_MAP_TYPE] = {}; });
-var IGNORED_NODE_TYPE_IDS = {"Hero" : ["Random"]};
+var IGNORED_NODE_TYPE_IDS = {"Hero" : ["Random", "AI", "_Empty"]};
 
 tiptoe(
 	/*function clearOut()
@@ -151,7 +151,7 @@ function loadMergedNodeMap(xmlDocs)
 	{
 		xmlDoc.find("/Catalog/*").forEach(function(node)
 		{
-			if(!node.attr("id") || node.childNodes().length===0)
+			if(!node.attr("id"))
 				return;
 
 			var nodeType = NODE_MAP_TYPES.filter(function(NODE_MAP_TYPE) { return node.name().startsWith("C" + NODE_MAP_TYPE); });
@@ -260,6 +260,9 @@ function processHeroNode(heroNode)
 		//	talent.description = talent.description.replace(/(?:<n\/>)+(.+)/, "$1");
 
 		//talent.name = S["Button/Name/" + faceid];
+		//
+		//if(hero.id==="Nova")
+		//	base.info("BEFORE: %s", talent.description);
 
 		if(hero.id==="Nova")
 		{
@@ -268,21 +271,30 @@ function processHeroNode(heroNode)
 			{
 				dynamics.forEach(function(dynamic)
 				{
-					var formula = dynamic.match(/ref\s*=\s*"([^"]+)"/, "$1")[1];
-					var precision = dynamic.match(/precision\s*=\s*"([^"]+)"/, "$1") ? +dynamic.match(/precision\s*=\s*"([^"]+)"/, "$1")[1] : 0;
-
-					//base.info("(%s) PARSING: %s (precision=%s)", talent.name, formula, precision);
+					var formula = dynamic.match(/ref\s*=\s*"([^"]+)"/)[1];
 					var result = FORMULA_PARSER.parse(formula, {lookupXMLRef : lookupXMLRef});
+					/*var precision = dynamic.match(/precision\s*=\s*"([^"]+)"/) ? +dynamic.match(/precision\s*=\s*"([^"]+)"/)[1] : null;
+					if(precision!==null)
+					{
+						base.info("%s (precision=%s)", result, precision);
+						result = result.toFixed(precision);
+					}*/
 
 					talent.description = talent.description.replace(dynamic, result);
 					//talent.description = talent.description.replace(/<s val="StandardTooltipDetails">([^<]+)<\/s>/, "$1");
 				});
-
-				talent.description = talent.description.replace(/<\/?n\/?><\/?n\/?>/g, "\n").replace(/<\/?n\/?>/g, "");
-				talent.description = talent.description.replace(/<s\s*val\s*=\s*"StandardTooltipDetails">/gm, "").replace(/<s\s*val\s*=\s*"StandardTooltip">/gm, "").replace(/<\/?s\/?>/g, "").trim();
-				base.info("%s\n", talent.description);
 			}
 		}
+
+		talent.description = talent.description.replace(/<\/?n\/?><\/?n\/?>/g, "\n").replace(/<\/?n\/?>/g, "");
+		talent.description = talent.description.replace(/<s\s*val\s*=\s*"StandardTooltipDetails">/gm, "").replace(/<s\s*val\s*=\s*"StandardTooltip">/gm, "").replace(/<\/?s\/?>/g, "").trim();
+
+		var talentPrerequisiteNode = talentTreeNode.get("PrerequisiteTalentArray");
+		if(talentPrerequisiteNode)
+			talent.prerequisite = attributeValue(talentPrerequisiteNode, "value");
+
+		//if(hero.id==="Nova")
+		//	base.info("AFTER: %s\n", talent.description);
 
 		hero.talents[C.HERO_TALENT_LEVELS[((+attributeValue(talentTreeNode, "Tier"))-1)]].push(talent);
 	});
@@ -299,41 +311,46 @@ function lookupXMLRef(query)
 
 	//base.info("QUERY: %s", query);
 
-	var parts = query.split(",");
-	if(!NODE_MAP_TYPES.contains(parts[0]))
+	var mainParts = query.split(",");
+	if(!NODE_MAP_TYPES.contains(mainParts[0]))
 	{
 		base.warn("No valid node map type for XML query: %s", query);
 		return result;
 	}
 
-	var nodeMap = NODE_MAPS[parts[0]];
-	if(!nodeMap.hasOwnProperty(parts[1]))
+	var nodeMap = NODE_MAPS[mainParts[0]];
+	if(!nodeMap.hasOwnProperty(mainParts[1]))
 	{
-		base.warn("No valid id for nodeMapType XML parts: %s", parts);
+		base.warn("No valid id for nodeMapType XML parts: %s", mainParts);
 		return result;
 	}
 
-	base.info("%s => %d", query, result);
+	var target = nodeMap[mainParts[1]];
+
+	if(target.childNodes().length===0)
+	{
+		base.warn("No child nodes for nodeMapType XML parts [%s] with xml:", mainParts, target.toString());
+		return result;
+	}
+
+	var subparts = mainParts[2].split(".");
+	//base.info("Start: %s", subparts);
+	subparts.forEach(function(subpart)
+	{
+		var xpath = !subpart.match(/\[[0-9]+\]/) ? subpart.replace(/([^[]+)\[([^\]]+)]/, "$1[@index = '$2']") : subpart.replace(/\[([0-9]+)\]/, "[" + (+subpart.match(/\[([0-9]+)\]/)[1]+1) + "]");
+		//base.info("Next xpath: %s\nCurrent target: %s", xpath, target.toString());
+		var nextTarget = target.get(xpath);
+		if(!nextTarget)
+			result = +attributeValue(target, xpath);
+		target = nextTarget;
+	});
+
+	if(target)
+		result = +attributeValue(target, "value");
+
+	//base.info("%s => %d", query, result);
 
 	return result;
-	//Behavior,NovaOneintheChamber,Modification.DamageDealtFraction[Ranged]
-
-	//100*Behavior,NovaOneintheChamber,Modification.DamageDealtFraction[Ranged]
-	/*<CBehaviorBuff id="NovaOneintheChamber">
-        <Alignment value="Positive"/>
-        <Modification>
-            <DamageDealtFraction index="Ranged" value="0.8"/>
-        </Modification>
-        <DamageResponse Chance="1" Handled="NovaOneintheChamberRemoveBehavior" Location="Attacker">
-            <Kind index="Spell" value="0"/>
-            <Kind index="Melee" value="0"/>
-            <Kind index="NoProc" value="0"/>
-        </DamageResponse>
-        <InfoIcon value="Assets\Textures\storm_btn-extra_int_0.dds"/>
-        <Duration value="3"/>
-    </CBehaviorBuff>
-
- */
 }
 
 function performHeroModifications(hero)

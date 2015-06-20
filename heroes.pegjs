@@ -1,16 +1,43 @@
 {
 	var lookupXMLRef = options.lookupXMLRef;
+
+	var addNumbers = function(num1, num2)
+	{
+		function isInt(num)
+		{
+			return typeof num === 'number' && parseFloat(num) == parseInt(num, 10) && !isNaN(num);
+		}
+
+		function findDec(num)
+		{
+			var a = Math.abs(num);
+			num = a, count = 1;
+
+			while(!isInt(num) && isFinite(num))
+			{
+				num = a * Math.pow(10,count++);
+			}
+
+			return count-1;
+		}
+
+		var dec1 = findDec(num1);
+		var dec2 = findDec(num2);
+		var fixed = dec1>dec2 ? dec1 : dec2;
+		var n = (num1+num2).toFixed(fixed);
+		return +n;
+	}   
 }
 
 START
   = additive
 
 additive
-	= left:multiplicative _ "+" _ right:additive { return left + right; }
+	= left:multiplicative _ "+" _ right:additive { /*console.log("adding %d to %d", left, right);*/ return addNumbers(left, right); }
 	/ multiplicative
 
 multiplicative
-	= left:primary _ "*" _ right:primary { return left * right; }
+	= left:primary _ "*" _ right:primary { /*console.log("multiplying %d by %d", left, right);*/ return left * right; }
 	/ primary
 
 primary

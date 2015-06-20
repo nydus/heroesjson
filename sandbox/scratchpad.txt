@@ -70,3 +70,27 @@ Talent/Nova/Snipe/AmbushSnipe=Increases damage by 20% when used while cloaked
 
 <s val="StandardTooltipHeader">Precision Strike <n/><s val="StandardTooltipDetails">Cooldown: <d ref="Abil,NovaPrecisionStrike,Cost[0].Charge.TimeUse" precision="1"/> seconds<n/><n/><s val="StandardTooltip">After a <s val="StandardTooltipDetails"><d ref="Effect,PrecisionStrikeWarningCreatePersistent,ExpireDelay" precision="1"/></s> second delay, deals <s val="StandardTooltipDetails"><d ref="Effect,PrecisionStrikeDamage,Amount*(Behavior,Artifact_AP_Base,Modification.DamageDealtFraction[Spell]+1)"/></s> damage in an area. Unlimited range.
 
+
+
+Button/Tooltip/GenericGatheringPowerTalent=<s val="StandardTooltipHeader">Gathering Power</s><n/><s val="StandardTooltip"><n/>Passively grants <s val="StandardTooltipDetails"><d ref="100*Behavior,TalentGatheringPowerCarry,Modification.DamageDealtFraction[Spell]"/>%</s> Ability Power. Each Hero takedown increases this bonus by <s val="StandardTooltipDetails"><d ref="100*Behavior,TalentGatheringPowerStack,Modification.DamageDealtFraction[Spell]"/>%</s> to a maximum of <s val="StandardTooltipDetails"><d ref="((Behavior,TalentGatheringPowerStack,MaxStackCount*Behavior,TalentGatheringPowerStack,Modification.DamageDealtFraction[Spell])+Behavior,TalentGatheringPowerCarry,Modification.DamageDealtFraction[Spell])*100"/>%</s>. This bonus Ability Power is reset to <s val="StandardTooltipDetails"><d ref="100*Behavior,TalentGatheringPowerCarry,Modification.DamageDealtFraction[Spell]"/>%</s> on death.
+
+
+BEFORE: <n/><s val="StandardTooltipDetails">Cooldown: <d ref="Abil,NovaPrecisionStrike,Cost[0].Charge.TimeUse" precision="1"/> seconds<n/><n/>After a <s val="StandardTooltipDetails"><d ref="Effect,PrecisionStrikeWarningCreatePersistent,ExpireDelay" precision="1"/></s> second delay, deals <s val="StandardTooltipDetails"><d ref="Effect,PrecisionStrikeDamage,Amount*(Behavior,Artifact_AP_Base,Modification.DamageDealtFraction[Spell]+1)"/></s> damage in an area. Unlimited range.
+No child nodes for nodeMapType XML parts [Behavior,Artifact_AP_Base,Modification.DamageDealtFraction[Spell]] with xml: <CBehaviorBuff id="Artifact_AP_Base" parent="TalentBucketParent"/>
+
+Cooldown: 60 seconds\nAfter a 1.5 second delay, deals 300 damage in an area. Unlimited range.
+
+
+
+[Behavior,Artifact_AP_Base,Modification.DamageDealtFraction[Spell]] with xml: <CBehaviorBuff id="Artifact_AP_Base" parent="TalentBucketParent"/>
+
+<CTalent id="NovaHeroicAbilityPrecisionStrike">
+        <Face value="NovaPrecisionStrikeTalent"/>
+        <RankArray Face="NovaPrecisionStrikeTalentSimple">
+            <BehaviorArray value="Ultimate2Unlocked"/>
+            <BehaviorArray value="NovaOrbitalStrikeCarryBehavior"/>
+        </RankArray>
+        <MasteryAbility value="NovaPrecisionStrike"/>
+        <Active value="1"/>
+        <Abil value="NovaPrecisionStrike"/>
+    </CTalent>
