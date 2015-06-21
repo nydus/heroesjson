@@ -53,12 +53,9 @@ function processFile(fileName, cb)
 				return this();
 			}
 
-			if(fileName==="heroes")
-			{
-				var result = compareHeroes(JSON.parse(oldJSON[0]), JSON.parse(newJSON));
-				if(result)
-					console.log(result);
-			}
+			var result = diffUtil.diff(JSON.parse(oldJSON[0]), JSON.parse(newJSON), {compareArraysDirectly:true});
+			if(result)
+				console.log(result);
 
 			this();
 		},
@@ -67,35 +64,4 @@ function processFile(fileName, cb)
 			setImmediate(function() { cb(err); });
 		}
 	);
-}
-
-function compareHeroes(oldHeroes, newHeroes)
-{
-	var result = "";
-	var oldHeroesMap = oldHeroes.mutate(function(hero, result) { result[(hero.name + " (" + hero.id + ")")] = hero; return result; }, {});
-	var newHeroesMap = newHeroes.mutate(function(hero, result) { result[(hero.name + " (" + hero.id + ")")] = hero; return result; }, {});
-
-	var herosChanged = diffUtil.diff(Object.keys(oldHeroesMap), Object.keys(newHeroesMap));
-	if(herosChanged)
-	{
-		result += "Heros Changed : ";
-		result += herosChanged;
-	}
-
-	Object.forEach(oldHeroesMap, function(key, oldHero)
-	{
-		if(!newHeroesMap.hasOwnProperty(key))
-			return;
-
-		var newHero = newHeroesMap[key];
-
-		var subResult = diffUtil.diff(oldHero, newHero, {compareArraysDirectly:true});
-		if(subResult)
-		{
-			result += color.magenta(JSON.stringify(key)) + " : \n";
-			result += subResult;
-		}
-	});
-
-	return result;
 }

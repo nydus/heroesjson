@@ -14,6 +14,18 @@ exports.HERO_MODIFICATIONS =
 	]
 };
 
+exports.FORMULA_PRE_REPLACEMENTS = 
+[
+	{
+		  match : "$GalaxyVar:libGDHL_gv_bALHeroKerriganAssimilationRangedDamageModifier$",
+		replace : "0.1"
+	},
+	{
+		  match : "Behavior,CrusaderPunishStackingSlow,Modification.UnifiedMoveSpeedFactor*(-100)6",
+		replace : "Behavior,CrusaderPunishStackingSlow,Modification.UnifiedMoveSpeedFactor*(-100)*6"
+	}
+];
+
 exports.XMLREF_REPLACEMENTS =
 [
 	{
@@ -23,6 +35,10 @@ exports.XMLREF_REPLACEMENTS =
 	{
 		from : "Effect,ArcaneIntellectAbilityDamageManaRestore,VitalArray[2].Change",
 		  to : "Effect,ArcaneIntellectAbilityDamageManaRestore,VitalArray[0].Change"
+	},
+	{
+		from : "Effect,FrostmourneHungersManaRestoreModifyUnit,VitalArray[2].Change",
+		  to : "Effect,FrostmourneHungersManaRestoreModifyUnit,VitalArray[0].Change"
 	}
 ];
 
@@ -64,6 +80,28 @@ exports.HERO_JSON_SCHEMA =
 				type : "object",
 				additionalProperties : false,
 				properties : {}
+			},
+		abilities :
+			{
+				type : "array",
+				minItems : 1,
+				items :
+				{
+					type : "object",
+					additionalProperties : false,
+					required : ["name", "description"],
+					properties :
+					{
+						name              : { type : "string", minLength : 1 },
+						description       : { type : "string", minLength : 1 },
+						trait             : { type : "boolean" },
+						heroic            : { type : "boolean" },
+						cooldown          : { type : "integer", minimum : 0 },
+						manaCost          : { type : "integer", minimum : 0 },
+						manaCostPerSecond : { type : "integer", minimum : 0 },
+						aimType           : { type : "string", minLength : 1 }
+					}
+				}
 			}
 	}
 };
@@ -83,7 +121,8 @@ var HERO_TALENT_TIER_JSON_SCHEMA =
 				id           : { type : "string", minLength : 1 },
 				name         : { type : "string", minLength : 1 },
 				description  : { type : "string", minLength : 1 },
-				prerequisite : { type : "string", minLength : 1 }
+				prerequisite : { type : "string", minLength : 1 },
+				cooldown     : { type : "integer", minimum : 0 },
 			}
 		}
 };

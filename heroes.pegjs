@@ -56,9 +56,9 @@ primary
 	/ integer
 	/ xmlref
 	/ "-" _ any:any { return -1*any; }
-	/ "(" any:any ")" { return any; }
+	/ _ "(" _ any:any _ ")" _ { return any; }
 	/ "" { return 0; }
-	
+
 additive
 	= left:primary _ "+" _ right:any { return doNumbers(left, right, "+"); }
  

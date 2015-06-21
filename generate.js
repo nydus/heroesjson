@@ -264,38 +264,86 @@ function processHeroNode(heroNode)
 	});
 
 	// Abilities
-	
-	/*<HeroAbilArray Abil="NovaSnipeStorm" Button="NovaSnipeHeroSelect">
-            <Flags index="ShowInHeroSelect" value="1"/>
-            <Flags index="AffectedByCooldownReduction" value="1"/>
-            <Flags index="AffectedByOverdrive" value="1"/>
-        </HeroAbilArray>
-        <HeroAbilArray Abil="NovaPinningShot" Button="NovaPinningShotHeroSelect">
-            <Flags index="ShowInHeroSelect" value="1"/>
-            <Flags index="AffectedByCooldownReduction" value="1"/>
-            <Flags index="AffectedByOverdrive" value="1"/>
-        </HeroAbilArray>
-        <HeroAbilArray Abil="NovaHoloDecoy" Button="NovaHoloDecoyHeroSelect">
-            <Flags index="ShowInHeroSelect" value="1"/>
-            <Flags index="AffectedByCooldownReduction" value="1"/>
-        </HeroAbilArray>
-        <HeroAbilArray Abil="NovaTripleTap" Button="NovaTripleTapHeroSelect">
-            <Flags index="ShowInHeroSelect" value="1"/>
-            <Flags index="AffectedByCooldownReduction" value="1"/>
-            <Flags index="AffectedByOverdrive" value="1"/>
-            <Flags index="Heroic" value="1"/>
-        </HeroAbilArray>
-        <HeroAbilArray Abil="NovaPrecisionStrike" Button="NovaPrecisionStrikeHeroSelect">
-            <Flags index="ShowInHeroSelect" value="1"/>
-            <Flags index="UsesCharges" value="1"/>
-            <Flags index="AffectedByCooldownReduction" value="1"/>
-            <Flags index="AffectedByOverdrive" value="1"/>
-            <Flags index="Heroic" value="1"/>
-        </HeroAbilArray>
-        <HeroAbilArray Button="NovaPermanentCloakSniperHeroSelect">
-            <Flags index="ShowInHeroSelect" value="1"/>
-            <Flags index="Trait" value="1"/>
-        </HeroAbilArray>*/
+	hero.abilities = [];
+	heroNode.find("HeroAbilArray").forEach(function(heroAbilNode)
+	{
+		if(!heroAbilNode.get("Flags[@index='ShowInHeroSelect' and @value='1']"))
+			return;
+
+		var ability = {};
+
+		var buttonid = attributeValue(heroAbilNode, "Button");
+		var abilid = attributeValue(heroAbilNode, "Abil");
+		if(!abilid && !buttonid)
+			throw new Error("No abil or button for: " + heroAbilNode.toString());
+
+		if(heroAbilNode.get("Flags[@index='Heroic' and @value='1']"))
+			ability.heroic = true;
+		if(heroAbilNode.get("Flags[@index='Trait' and @value='1']"))
+			ability.trait = true;
+
+		//ability.name = abilid ? (S["Abil/Name/" + abilid] || S["Button/Name/" + abilid]) : S["Button/Name/" + buttonid];
+		ability.name = buttonid ? S["Button/Name/" + buttonid] : (S["Abil/Name/" + abilid] || S["Button/Name/" + abilid]);
+
+		var abilityDescription;
+		var descriptionIdsToTry = [];
+		if(buttonid)
+		{
+			var buttonidShort = ["HeroSelect", "HeroSelectButton"].mutateOnce(function(buttonSuffix) { if(buttonid.endsWith(buttonSuffix)) { return buttonid.substring(0, buttonid.length-buttonSuffix.length); } });
+			descriptionIdsToTry.push(buttonidShort);
+			descriptionIdsToTry.push(hero.id + buttonidShort);
+			if(ability.trait)
+			{
+				descriptionIdsToTry.push(buttonidShort + "Trait");
+				if(buttonidShort.contains(hero.id))
+					descriptionIdsToTry.push(buttonidShort.replace(hero.id, hero.id + "Trait"));
+			}
+			descriptionIdsToTry.push(buttonidShort + "Talent");
+		}
+		descriptionIdsToTry.push(abilid);
+		descriptionIdsToTry.push(abilid + "Hotbar");
+
+		descriptionIdsToTry.forEach(function(descriptionIdToTry)
+		{
+			if(abilityDescription)
+				return;
+
+			abilityDescription = S["Button/Tooltip/" + descriptionIdToTry];
+		});
+
+		ability.description = getFullDescription(abilityDescription, hero.id, 0);
+
+		ability.description = ability.description.replace("Heroic Ability\n", "").replace("Trait\n", "");
+
+		addCooldownInfo(ability, "description");
+
+		var manaPerSecondMatch = ability.description.match(/Mana:\s*([0-9]+)\s+per\s+second\n/m);
+		if(manaPerSecondMatch)
+		{
+			ability.manaCostPerSecond = +manaPerSecondMatch[1];
+			ability.description = ability.description.replace(manaPerSecondMatch[0], "");
+		}
+
+		if(abilid)
+		{
+			var abilNode = NODE_MAPS["Abil"][abilid];
+			if(!abilNode)
+				throw new Error("Failed to find ability node: " + abilid);
+
+			var energyCostNode = abilNode.get("Cost/Vital[@index='Energy']");
+			if(energyCostNode)
+				ability.manaCost = +attributeValue(energyCostNode, "value");
+		}
+
+		var aimTypeMatch = ability.description.match(/((?:Skillshot)|(?:Area of Effect)|(?:Cone))\n/);
+		if(aimTypeMatch)
+		{
+			ability.aimType = aimTypeMatch[1];
+			ability.description = ability.description.replace(aimTypeMatch[0], "");
+		}
+
+		hero.abilities.push(ability);
+	});
 
 	// Talents
 	hero.talents = {};
@@ -324,18 +372,89 @@ function processHeroNode(heroNode)
 		}
 
 		talent.name = talentDescription.replace(/<s val="StandardTooltipHeader">([^<]+)<.+/, "$1").replace(/<s\s*val\s*=\s*"StandardTooltip">/gm, "").trim();
-		talentDescription = talentDescription.replace(/<s val="StandardTooltipHeader">[^<]+(<.+)/, "$1").replace(/<s val="StandardTooltip">?(.+)/, "$1");
-		talentDescription = talentDescription.replace(/<s val="StandardTooltipHeader">/g, "");
+		talent.description = getFullDescription(talentDescription, hero.id, 0);
 
-		talent.description = getTalentDescription(talentDescription, hero.id, 0);
+		addCooldownInfo(talent, "description");
 
-		var talentDescriptionLevel1 = getTalentDescription(talentDescription, hero.id, 1);
-		if(talent.description!==talentDescriptionLevel1)
+		var talentPrerequisiteNode = talentTreeNode.get("PrerequisiteTalentArray");
+		if(talentPrerequisiteNode)
+			talent.prerequisite = attributeValue(talentPrerequisiteNode, "value");
+
+		hero.talents[C.HERO_TALENT_LEVELS[((+attributeValue(talentTreeNode, "Tier"))-1)]].push(talent);
+	});
+	
+	// Final modifications
+    performHeroModifications(hero);
+	
+	return hero;
+}
+
+function addCooldownInfo(o, field)
+{
+	var cooldownMatch = o[field].match(/(?:Charge )?Cooldown:\s*([0-9]+)\s+[sS]econds?\n/m);
+	if(cooldownMatch)
+	{
+		o.cooldown = +cooldownMatch[1];
+		o[field] = o[field].replace(cooldownMatch[0], "");
+	}
+}
+
+function getFullDescription(_fullDescription, heroid, heroLevel)
+{
+	var fullDescription = _fullDescription;
+
+	fullDescription = fullDescription.replace(/<s val="StandardTooltipHeader">[^<]+(<.+)/, "$1").replace(/<s val="StandardTooltip">?(.+)/, "$1");
+	fullDescription = fullDescription.replace(/<s val="StandardTooltipHeader">/g, "");
+
+	(fullDescription.match(/<d ref="[^"]+"[^/]*\/>/g) || []).forEach(function(dynamic)
+	{
+		var formula = dynamic.match(/ref\s*=\s*"([^"]+)"/)[1];
+		if(formula.endsWith(")") && !formula.contains("("))
+			formula = formula.substring(0, formula.length-1);
+		try
 		{
-			var beforeWords = talent.description.split(" ");
-			var afterWords = talentDescriptionLevel1.split(" ");
+			C.FORMULA_PRE_REPLACEMENTS.forEach(function(FORMULA_PRE_REPLACEMENT)
+			{
+				if(formula.contains(FORMULA_PRE_REPLACEMENT.match))
+					formula = formula.replace(FORMULA_PRE_REPLACEMENT.match, FORMULA_PRE_REPLACEMENT.replace);
+			});
+
+			var result = FORMULA_PARSER.parse(formula, {heroid:heroid, heroLevel:heroLevel, lookupXMLRef : lookupXMLRef});
+			//if(heroid==="L90ETC") { base.info("Formula: %s\nResult: %d", formula, result); }
+		
+			var MAX_PRECISION = 4;
+			if(result.toFixed(MAX_PRECISION).length<(""+result).length)
+				result = +result.toFixed(MAX_PRECISION);
+
+			//var precision = dynamic.match(/precision\s*=\s*"([^"]+)"/) ? +dynamic.match(/precision\s*=\s*"([^"]+)"/)[1] : null;
+			//if(precision!==null && Math.floor(result)!==result)
+			//	result = result.toFixed(precision);
+
+			fullDescription = fullDescription.replace(dynamic, result);
+		}
+		catch(err)
+		{
+			base.error("Failed to parse: %s", formula);
+			throw err;
+		}
+
+	});
+
+	fullDescription = fullDescription.replace(/<\/?n\/?>/g, "\n");
+	fullDescription = fullDescription.replace(/<s\s*val\s*=\s*"StandardTooltipDetails">/gm, "").replace(/<s\s*val\s*=\s*"StandardTooltip">/gm, "").replace(/<\/?[cs]\/?>/g, "");
+	fullDescription = fullDescription.replace(/<c\s*val\s*=\s*"[^"]+">/gm, "").replace(/<\/?if\/?>/g, "").trim();
+	fullDescription = fullDescription.replace(/ [.]/g, ".");
+	while(fullDescription.indexOf("\n\n")!==-1) { fullDescription = fullDescription.replace(/\n\n/gm, "\n"); } 
+
+	if(heroLevel===0)
+	{
+		var fullDescriptionLevel1 = getFullDescription(_fullDescription, heroid, 1);
+		if(fullDescription!==fullDescriptionLevel1)
+		{
+			var beforeWords = fullDescription.split(" ");
+			var afterWords = fullDescriptionLevel1.split(" ");
 			if(beforeWords.length!==afterWords.length)
-				throw new Error("Talent description words length MISMATCH " + beforeWords.length + " vs " + afterWords.length + " for hero (" + hero.id + ") and talent: " + talent.description);
+				throw new Error("Talent description words length MISMATCH " + beforeWords.length + " vs " + afterWords.length + " for hero (" + heroid + ") and talent: " + fullDescription);
 
 			var updatedWords = [];
 			beforeWords.forEach(function(beforeWord, i)
@@ -365,64 +484,14 @@ function processHeroNode(heroNode)
 
 				var resultWord = beforeWord + (isPercentage ? "%" : "") + " (" + (valueDifference>0 ? "+" : "") + valueDifference + (isPercentage ? "%" : "") + " per level)" + (endWithPeriod ? "." : "");
 
-				//base.info("%d vs %d: %s", beforeWord, afterWord, resultWord);
 				updatedWords.push(resultWord);
 			});
 
-			talent.description = updatedWords.join(" ");
+			fullDescription = updatedWords.join(" ");
 		}
+	}
 
-		var talentPrerequisiteNode = talentTreeNode.get("PrerequisiteTalentArray");
-		if(talentPrerequisiteNode)
-			talent.prerequisite = attributeValue(talentPrerequisiteNode, "value");
-
-		hero.talents[C.HERO_TALENT_LEVELS[((+attributeValue(talentTreeNode, "Tier"))-1)]].push(talent);
-	});
-	
-	// Final modifications
-    performHeroModifications(hero);
-	
-	return hero;
-}
-
-function getTalentDescription(_talentDescription, heroid, heroLevel)
-{
-	var talentDescription = _talentDescription;
-
-	(talentDescription.match(/<d ref="[^"]+"[^/]*\/>/g) || []).forEach(function(dynamic)
-	{
-		var formula = dynamic.match(/ref\s*=\s*"([^"]+)"/)[1];
-		if(formula.endsWith(")") && !formula.contains("("))
-			formula = formula.substring(0, formula.length-1);
-		try
-		{
-			var result = FORMULA_PARSER.parse(formula, {heroid:heroid, heroLevel:heroLevel, lookupXMLRef : lookupXMLRef});
-			//if(heroid==="L90ETC") { base.info("Formula: %s\nResult: %d", formula, result); }
-		
-			var MAX_PRECISION = 4;
-			if(result.toFixed(MAX_PRECISION).length<(""+result).length)
-				result = +result.toFixed(MAX_PRECISION);
-
-			//var precision = dynamic.match(/precision\s*=\s*"([^"]+)"/) ? +dynamic.match(/precision\s*=\s*"([^"]+)"/)[1] : null;
-			//if(precision!==null && Math.floor(result)!==result)
-			//	result = result.toFixed(precision);
-
-			talentDescription = talentDescription.replace(dynamic, result);
-		}
-		catch(err)
-		{
-			base.error("Failed to parse: %s", formula);
-			throw err;
-		}
-
-	});
-
-	talentDescription = talentDescription.replace(/<\/?n\/?><\/?n\/?>/g, "\n").replace(/<\/?n\/?>/g, "");
-	talentDescription = talentDescription.replace(/<s\s*val\s*=\s*"StandardTooltipDetails">/gm, "").replace(/<s\s*val\s*=\s*"StandardTooltip">/gm, "").replace(/<\/?[cs]\/?>/g, "");
-	talentDescription = talentDescription.replace(/<c\s*val\s*=\s*"[^"]+">/gm, "").replace(/<\/?if\/?>/g, "").trim();
-	talentDescription = talentDescription.replace(/ [.]/g, ".");
-
-	return talentDescription;
+	return fullDescription;
 }
 
 function lookupXMLRef(heroid, heroLevel, query, negative)
@@ -435,7 +504,7 @@ function lookupXMLRef(heroid, heroLevel, query, negative)
 			query = XMLREF_REPLACEMENT.to;
 	});
 
-	//if(heroid==="L90ETC") { base.info("QUERY: %s", query); }
+	//if(heroid==="Azmodan") { base.info("QUERY: %s", query); }
 
 	var mainParts = query.split(",");
 
@@ -475,14 +544,14 @@ function lookupXMLRef(heroid, heroLevel, query, negative)
 		additionalAmount = heroLevel*HERO_LEVEL_SCALING_MOD.value;
 	});
 
-	//if(heroid==="L90ETC") { base.info("Start (negative:%s): %s", negative, subparts); }
+	//if(heroid==="Azmodan") { base.info("Start (negative:%s): %s", negative, subparts); }
 	subparts.forEach(function(subpart)
 	{
 		var xpath = !subpart.match(/\[[0-9]+\]/) ? subpart.replace(/([^[]+)\[([^\]]+)]/, "$1[@index = '$2']") : subpart.replace(/\[([0-9]+)\]/, "[" + (+subpart.match(/\[([0-9]+)\]/)[1]+1) + "]");
-		//if(heroid==="L90ETC") { base.info("Next xpath: %s\nCurrent target: %s\n", xpath, target.toString()); }
+		//if(heroid==="Azmodan") { base.info("Next xpath: %s\nCurrent target: %s\n", xpath, target.toString()); }
 		var nextTarget = target.get(xpath);
 		if(!nextTarget)
-			result = +attributeValue(target, xpath);
+			result = +attributeValue(target, xpath.replace(/([^\[]+).*/, "$1"));
 		target = nextTarget;
 	});
 
@@ -490,7 +559,7 @@ function lookupXMLRef(heroid, heroLevel, query, negative)
 		result = +attributeValue(target, "value");
 
 	result += additionalAmount;
-	//if(heroid==="L90ETC") { base.info("%s => %d", query, result); }
+	//if(heroid==="Azmodan") { base.info("%s => %d", query, result); }
 
 	if(negative)
 		result = result*-1;
