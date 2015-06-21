@@ -83,26 +83,10 @@ var HERO_TALENT_TIER_JSON_SCHEMA =
 				id           : { type : "string", minLength : 1 },
 				name         : { type : "string", minLength : 1 },
 				description  : { type : "string", minLength : 1 },
-				prerequisite : { type : "string", minLength : 1 },
-				levels       :
-					{
-						type : "array",
-						items :
-							{
-								type : "object",
-								additionalProperties : false,
-								required : ["description"],
-								properties :
-								{
-									description  : { type : "string", minLength : 1 }
-								}
-							}
-					}
+				prerequisite : { type : "string", minLength : 1 }
 			}
 		}
 };
-HERO_TALENT_TIER_JSON_SCHEMA.items.properties.levels.minItems = exports.HERO_MAX_LEVEL;
-HERO_TALENT_TIER_JSON_SCHEMA.items.properties.levels.maxItems = exports.HERO_MAX_LEVEL;
 
 exports.HERO_TALENT_LEVELS.forEach(function(HERO_TALENT_LEVEL) { exports.HERO_JSON_SCHEMA.properties.talents.properties[HERO_TALENT_LEVEL] = base.clone(HERO_TALENT_TIER_JSON_SCHEMA, true); });
 exports.HERO_JSON_SCHEMA.properties.talents.required = exports.HERO_TALENT_LEVELS.map(function(HERO_TALENT_LEVEL) { return ""+HERO_TALENT_LEVEL; });

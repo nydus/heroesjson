@@ -33,13 +33,13 @@
 			n = (num1*num2);
 		else if(op==="-")
 			n = (num1-num2);
-		else if(op==="/")
-			n = (num1/num2);
 
 		n = n.toFixed(fixed);
 		return +n;
 	}
 }
+
+//   ((75/50)-1)*100
 
 START
 	= any
@@ -69,7 +69,7 @@ subtractive
 	= left:primary _ "-" _ right:any { return doNumbers(left, right, "-"); }
  
 divisive
-	= left:primary _ "/" _ right:any { return doNumbers(left, right, "/"); }
+	= left:primary _ "/" _ right:any { return left/right; }
    
 float "float"
 	= neg:"-"? _? left:[0-9]* "." right:[0-9]+ { return parseFloat((neg ? "-" : "") + left.join("") + "." + right.join("")); }

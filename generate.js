@@ -8,6 +8,7 @@ var base = require("xbase"),
 	moment = require("moment"),
 	jsen = require("jsen"),
 	jsonselect = require("JSONSelect"),
+	diffUtil = require("xutil").diff,
 	libxmljs = require("libxmljs"),
 	C = require("C"),
 	PEG = require("pegjs"),
@@ -287,14 +288,48 @@ function processHeroNode(heroNode)
 
 		talent.description = getTalentDescription(talentDescription, hero.id, 0);
 
-		var levelDescriptions = [];
-		[].pushSequence(1, C.HERO_MAX_LEVEL).forEach(function(heroLevel)
+		var talentDescriptionLevel1 = getTalentDescription(talentDescription, hero.id, 1);
+		if(talent.description!==talentDescriptionLevel1)
 		{
-			levelDescriptions.push(getTalentDescription(talentDescription, hero.id, heroLevel));
-		});
+			var beforeWords = talent.description.split(" ");
+			var afterWords = talentDescriptionLevel1.split(" ");
+			if(beforeWords.length!==afterWords.length)
+				throw new Error("Talent description words length MISMATCH " + beforeWords.length + " vs " + afterWords.length + " for hero (" + hero.id + ") and talent: " + talent.description);
 
-		if(levelDescriptions.unique().length>1 || levelDescriptions.unique()[0]!==talent.description)
-			talent.levels = levelDescriptions.map(function(levelDescription) { return {description:levelDescription}; });
+			var updatedWords = [];
+			beforeWords.forEach(function(beforeWord, i)
+			{
+				var afterWord = afterWords[i];
+				if(beforeWord===afterWord)
+				{
+					updatedWords.push(beforeWord);
+					return;
+				}
+
+				var endWithPeriod = beforeWord.endsWith(".");
+				if(endWithPeriod)
+				{
+					beforeWord = beforeWord.substring(0, beforeWord.length-1);
+					afterWord = afterWord.substring(0, afterWord.length-1);
+				}
+
+				var isPercentage = beforeWord.endsWith("%");
+				if(isPercentage)
+				{
+					beforeWord = beforeWord.substring(0, beforeWord.length-1);
+					afterWord = afterWord.substring(0, afterWord.length-1);
+				}
+
+				var valueDifference = (+afterWord).subtract(+beforeWord);
+
+				var resultWord = beforeWord + (isPercentage ? "%" : "") + " (" + (valueDifference>0 ? "+" : "") + valueDifference + (isPercentage ? "%" : "") + " per level)" + (endWithPeriod ? "." : "");
+
+				//base.info("%d vs %d: %s", beforeWord, afterWord, resultWord);
+				updatedWords.push(resultWord);
+			});
+
+			talent.description = updatedWords.join(" ");
+		}
 
 		var talentPrerequisiteNode = talentTreeNode.get("PrerequisiteTalentArray");
 		if(talentPrerequisiteNode)
@@ -321,6 +356,16 @@ function getTalentDescription(_talentDescription, heroid, heroLevel)
 		try
 		{
 			var result = FORMULA_PARSER.parse(formula, {heroid:heroid, heroLevel:heroLevel, lookupXMLRef : lookupXMLRef});
+			//if(heroid==="L90ETC") { base.info("Formula: %s\nResult: %d", formula, result); }
+		
+			var MAX_PRECISION = 4;
+			if(result.toFixed(MAX_PRECISION).length<(""+result).length)
+				result = +result.toFixed(MAX_PRECISION);
+
+			//var precision = dynamic.match(/precision\s*=\s*"([^"]+)"/) ? +dynamic.match(/precision\s*=\s*"([^"]+)"/)[1] : null;
+			//if(precision!==null && Math.floor(result)!==result)
+			//	result = result.toFixed(precision);
+
 			talentDescription = talentDescription.replace(dynamic, result);
 		}
 		catch(err)
@@ -329,12 +374,6 @@ function getTalentDescription(_talentDescription, heroid, heroLevel)
 			throw err;
 		}
 
-		/*var precision = dynamic.match(/precision\s*=\s*"([^"]+)"/) ? +dynamic.match(/precision\s*=\s*"([^"]+)"/)[1] : null;
-		if(precision!==null)
-		{
-			base.info("%s (precision=%s)", result, precision);
-			result = result.toFixed(precision);
-		}*/
 	});
 
 	talentDescription = talentDescription.replace(/<\/?n\/?><\/?n\/?>/g, "\n").replace(/<\/?n\/?>/g, "");
@@ -355,7 +394,7 @@ function lookupXMLRef(heroid, heroLevel, query, negative)
 			query = XMLREF_REPLACEMENT.to;
 	});
 
-	//base.info("QUERY: %s", query);
+	//if(heroid==="L90ETC") { base.info("QUERY: %s", query); }
 
 	var mainParts = query.split(",");
 
@@ -395,11 +434,11 @@ function lookupXMLRef(heroid, heroLevel, query, negative)
 		additionalAmount = heroLevel*HERO_LEVEL_SCALING_MOD.value;
 	});
 
-	//base.info("Start (negative:%s): %s", negative, subparts);
+	//if(heroid==="L90ETC") { base.info("Start (negative:%s): %s", negative, subparts); }
 	subparts.forEach(function(subpart)
 	{
 		var xpath = !subpart.match(/\[[0-9]+\]/) ? subpart.replace(/([^[]+)\[([^\]]+)]/, "$1[@index = '$2']") : subpart.replace(/\[([0-9]+)\]/, "[" + (+subpart.match(/\[([0-9]+)\]/)[1]+1) + "]");
-		//base.info("Next xpath: %s\nCurrent target: %s\n", xpath, target.toString());
+		//if(heroid==="L90ETC") { base.info("Next xpath: %s\nCurrent target: %s\n", xpath, target.toString()); }
 		var nextTarget = target.get(xpath);
 		if(!nextTarget)
 			result = +attributeValue(target, xpath);
@@ -410,7 +449,7 @@ function lookupXMLRef(heroid, heroLevel, query, negative)
 		result = +attributeValue(target, "value");
 
 	result += additionalAmount;
-	//base.info("%s => %d", query, result);
+	//if(heroid==="L90ETC") { base.info("%s => %d", query, result); }
 
 	if(negative)
 		result = result*-1;
