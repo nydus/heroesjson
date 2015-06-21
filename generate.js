@@ -38,8 +38,11 @@ var EXTRA_HEROES = ["anubarak", "chen", "crusader", "jaina", "kaelthas", "lostvi
 var NODE_MAPS = {};
 var NODE_MAP_TYPES = ["Hero", "Talent", "Behavior", "Effect", "Abil", "Unit", "Validator", "Weapon" ];
 
+var HERO_LEVEL_SCALING_MODS = {};
+
 var NEEDED_SUBFIXES = [ "enus.stormdata\\LocalizedData\\GameStrings.txt" ];
-NODE_MAP_TYPES.forEach(function(NODE_MAP_TYPE) {
+NODE_MAP_TYPES.forEach(function(NODE_MAP_TYPE)
+{
 	NODE_MAPS[NODE_MAP_TYPE] = {};
 	NEEDED_SUBFIXES.push("base.stormdata\\GameData\\" + NODE_MAP_TYPE.toProperCase() + "Data.xml");
 });
@@ -228,6 +231,30 @@ function processHeroNode(heroNode)
 	if(releaseDateNode)
 		hero.releaseDate = moment(attributeValue(releaseDateNode, "Month", 1) + "-" + attributeValue(releaseDateNode, "Day", 1) + "-" + attributeValue(releaseDateNode, "Year", "2014"), "M-D-YYYY").format("YYYY-MM-DD");
 
+	// Level Scaling Info
+	HERO_LEVEL_SCALING_MODS[hero.id] = [];
+
+	heroNode.find("LevelScalingArray/Modifications").forEach(function(modNode)
+	{
+		var modType = getValue(modNode, "Catalog", attributeValue(modNode, "Catalog"));
+		if(!NODE_MAP_TYPES.contains(modType))
+			throw new Error("Unsupported LevelScalingArray Modification Catalog modType: " + modType);
+
+		var modKey = getValue(modNode, "Entry", attributeValue(modNode, "Entry"));
+		if(!modKey)
+			throw new Error("No Entry node in LevelScalingArray Modification (" + modKey + ") for hero: " + hero.id);
+
+		var modTarget = getValue(modNode, "Field", attributeValue(modNode, "Field"));
+		if(!modTarget)
+			throw new Error("No Field node in LevelScalingArray Modification (" + modTarget + ") for hero: " + hero.id);
+
+		var modValue = getValue(modNode, "Value", attributeValue(modNode, "Value"));
+		if(!modValue)
+			return;
+
+		HERO_LEVEL_SCALING_MODS[hero.id].push({type:modType,key:modKey,target:modTarget,value:(+modValue)});
+	});
+
 	// Talents
 	hero.talents = {};
 	C.HERO_TALENT_LEVELS.forEach(function(HERO_TALENT_LEVEL) { hero.talents[HERO_TALENT_LEVEL] = []; });
@@ -243,49 +270,31 @@ function processHeroNode(heroNode)
 		var talentNode = NODE_MAPS["Talent"][talent.id];
 		var faceid = getValue(talentNode, "Face");
 
-		talent.description = S["Button/Tooltip/" + faceid];
+		var talentDescription = S["Button/Tooltip/" + faceid];
 
-		if(!talent.description && faceid==="TyrandeHuntersMarkTrueshotAuraTalent")
-			talent.description = S["Button/Tooltip/TyrandeTrueshotBowTalent"];
+		if(!talentDescription && faceid==="TyrandeHuntersMarkTrueshotAuraTalent")
+			talentDescription = S["Button/Tooltip/TyrandeTrueshotBowTalent"];
 
-		if(!talent.description)
+		if(!talentDescription)
 		{
 			base.warn("Missing talent description for hero [%s] and talentid [%s] and faceid [%s]", hero.id, talent.id, faceid);
 			return;
 		}
 
-		talent.name = talent.description.replace(/<s val="StandardTooltipHeader">([^<]+)<.+/, "$1").replace(/<s\s*val\s*=\s*"StandardTooltip">/gm, "").trim();
-		talent.description = talent.description.replace(/<s val="StandardTooltipHeader">[^<]+(<.+)/, "$1").replace(/<s val="StandardTooltip">?(.+)/, "$1");
-		talent.description = talent.description.replace(/<s val="StandardTooltipHeader">/g, "");
+		talent.name = talentDescription.replace(/<s val="StandardTooltipHeader">([^<]+)<.+/, "$1").replace(/<s\s*val\s*=\s*"StandardTooltip">/gm, "").trim();
+		talentDescription = talentDescription.replace(/<s val="StandardTooltipHeader">[^<]+(<.+)/, "$1").replace(/<s val="StandardTooltip">?(.+)/, "$1");
+		talentDescription = talentDescription.replace(/<s val="StandardTooltipHeader">/g, "");
 
-		(talent.description.match(/<d ref="[^"]+"[^/]*\/>/g) || []).forEach(function(dynamic)
+		talent.description = getTalentDescription(talentDescription, hero.id, 0);
+
+		talent.levelDescriptions = [];
+		[].pushSequence(1, C.HERO_MAX_LEVEL).forEach(function(heroLevel)
 		{
-			var formula = dynamic.match(/ref\s*=\s*"([^"]+)"/)[1];
-			if(formula.endsWith(")") && !formula.contains("("))
-				formula = formula.substring(0, formula.length-1);
-			try
-			{
-				var result = FORMULA_PARSER.parse(formula, {lookupXMLRef : lookupXMLRef});
-				talent.description = talent.description.replace(dynamic, result);
-			}
-			catch(err)
-			{
-				base.error("Failed to parse: %s", formula);
-				throw err;
-			}
-			/*var precision = dynamic.match(/precision\s*=\s*"([^"]+)"/) ? +dynamic.match(/precision\s*=\s*"([^"]+)"/)[1] : null;
-			if(precision!==null)
-			{
-				base.info("%s (precision=%s)", result, precision);
-				result = result.toFixed(precision);
-			}*/
-
+			talent.levelDescriptions.push(getTalentDescription(talentDescription, hero.id, heroLevel));
 		});
 
-		talent.description = talent.description.replace(/<\/?n\/?><\/?n\/?>/g, "\n").replace(/<\/?n\/?>/g, "");
-		talent.description = talent.description.replace(/<s\s*val\s*=\s*"StandardTooltipDetails">/gm, "").replace(/<s\s*val\s*=\s*"StandardTooltip">/gm, "").replace(/<\/?[cs]\/?>/g, "");
-		talent.description = talent.description.replace(/<c\s*val\s*=\s*"[^"]+">/gm, "").replace(/<\/?if\/?>/g, "").trim();
-		talent.description = talent.description.replace(/^(.+) [.]$/, "$1.");
+		if(talent.levelDescriptions.unique().length===1 && talent.levelDescriptions.unique()[0]===talent.description)
+			delete talent.levelDescriptions;
 
 		var talentPrerequisiteNode = talentTreeNode.get("PrerequisiteTalentArray");
 		if(talentPrerequisiteNode)
@@ -300,7 +309,43 @@ function processHeroNode(heroNode)
 	return hero;
 }
 
-function lookupXMLRef(query, negative)
+function getTalentDescription(_talentDescription, heroid, heroLevel)
+{
+	var talentDescription = _talentDescription;
+
+	(talentDescription.match(/<d ref="[^"]+"[^/]*\/>/g) || []).forEach(function(dynamic)
+	{
+		var formula = dynamic.match(/ref\s*=\s*"([^"]+)"/)[1];
+		if(formula.endsWith(")") && !formula.contains("("))
+			formula = formula.substring(0, formula.length-1);
+		try
+		{
+			var result = FORMULA_PARSER.parse(formula, {heroid:heroid, heroLevel:heroLevel, lookupXMLRef : lookupXMLRef});
+			talentDescription = talentDescription.replace(dynamic, result);
+		}
+		catch(err)
+		{
+			base.error("Failed to parse: %s", formula);
+			throw err;
+		}
+
+		/*var precision = dynamic.match(/precision\s*=\s*"([^"]+)"/) ? +dynamic.match(/precision\s*=\s*"([^"]+)"/)[1] : null;
+		if(precision!==null)
+		{
+			base.info("%s (precision=%s)", result, precision);
+			result = result.toFixed(precision);
+		}*/
+	});
+
+	talentDescription = talentDescription.replace(/<\/?n\/?><\/?n\/?>/g, "\n").replace(/<\/?n\/?>/g, "");
+	talentDescription = talentDescription.replace(/<s\s*val\s*=\s*"StandardTooltipDetails">/gm, "").replace(/<s\s*val\s*=\s*"StandardTooltip">/gm, "").replace(/<\/?[cs]\/?>/g, "");
+	talentDescription = talentDescription.replace(/<c\s*val\s*=\s*"[^"]+">/gm, "").replace(/<\/?if\/?>/g, "").trim();
+	talentDescription = talentDescription.replace(/^(.+) [.]$/, "$1.");
+
+	return talentDescription;
+}
+
+function lookupXMLRef(heroid, heroLevel, query, negative)
 {
 	var result = 0;
 
@@ -328,11 +373,28 @@ function lookupXMLRef(query, negative)
 
 	if(target.childNodes().length===0)
 	{
-		base.warn("No child nodes for nodeMapType XML parts [%s] with xml:", mainParts, target.toString());
+		if(attributeValue(target, "id")!=="Artifact_AP_Base")
+			base.warn("No child nodes for nodeMapType XML parts [%s] with xml:", mainParts, target.toString());
 		return result;
 	}
 
 	var subparts = mainParts[2].split(".");
+
+	var additionalAmount = 0;
+	HERO_LEVEL_SCALING_MODS[heroid].forEach(function(HERO_LEVEL_SCALING_MOD)
+	{
+		if(HERO_LEVEL_SCALING_MOD.type!==mainParts[0])
+			return;
+
+		if(HERO_LEVEL_SCALING_MOD.key!==mainParts[1])
+			return;
+
+		if(HERO_LEVEL_SCALING_MOD.target!==subparts[0])
+			return;
+
+		additionalAmount = heroLevel*HERO_LEVEL_SCALING_MOD.value;
+	});
+
 	//base.info("Start (negative:%s): %s", negative, subparts);
 	subparts.forEach(function(subpart)
 	{
@@ -347,6 +409,7 @@ function lookupXMLRef(query, negative)
 	if(target)
 		result = +attributeValue(target, "value");
 
+	result += additionalAmount;
 	//base.info("%s => %d", query, result);
 
 	if(negative)

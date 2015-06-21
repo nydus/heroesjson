@@ -1,5 +1,7 @@
 {
 	var lookupXMLRef = options.lookupXMLRef;
+	var heroid = options.heroid;
+	var heroLevel = options.heroLevel;
 
 	function isInt(num)
 	{
@@ -76,7 +78,7 @@ integer "integer"
 	= neg:"-"? _? digits:[0-9]+ { return parseInt((neg ? "-" : "") + digits.join(""), 10); }
 
 xmlref "xmlref"
-	= neg:"-"? _? chars:[A-Za-z0-9,._\[\]]+ { return lookupXMLRef(chars.join(""), neg); }
+	= neg:"-"? _? chars:[A-Za-z0-9,._\[\]]+ { return lookupXMLRef(heroid, heroLevel, chars.join(""), neg); }
 
 _ "whitespace"
 	= whitespace*
