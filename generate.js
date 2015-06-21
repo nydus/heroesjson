@@ -36,7 +36,7 @@ var HEROES_OUT_PATH = path.join(OUT_PATH, "heroes.json");
 
 var EXTRA_HEROES = ["anubarak", "chen", "crusader", "jaina", "kaelthas", "lostvikings", "murky", "sonyarework", "sylvanas", "thrall"];
 var NODE_MAPS = {};
-var NODE_MAP_TYPES = ["Hero", "Talent", "Behavior", "Effect", "Abil", "Unit" ];
+var NODE_MAP_TYPES = ["Hero", "Talent", "Behavior", "Effect", "Abil", "Unit", "Validator", "Weapon" ];
 
 var NEEDED_SUBFIXES = [ "enus.stormdata\\LocalizedData\\GameStrings.txt" ];
 NODE_MAP_TYPES.forEach(function(NODE_MAP_TYPE) {
@@ -62,6 +62,7 @@ NEEDED_PREFIXES.forEach(function(NEEDED_PREFIX)
 
 NEEDED_FILE_PATHS.push("mods\\heroesdata.stormmod\\base.stormdata\\GameData\\Heroes\\ZagaraData.xml");
 NEEDED_FILE_PATHS.remove("mods\\heromods\\sonyarework.stormmod\\base.stormdata\\GameData\\UnitData.xml");
+NEEDED_FILE_PATHS.remove("mods\\heromods\\sonyarework.stormmod\\base.stormdata\\GameData\\WeaponData.xml");
 
 var FORMULA_PARSER = PEG.buildParser(fs.readFileSync(path.join(__dirname, "heroes.pegjs"), {encoding:"utf8"}));
 
@@ -194,6 +195,8 @@ function processHeroNode(heroNode)
 	// Core hero data
 	hero.id = heroNode.attr("id").value();
 	hero.name = S["Unit/Name/" + getValue(heroNode, "Unit", "Hero" + hero.id)];
+
+	base.info("Processing hero: %s", hero.name);
 	hero.title =  S["Hero/Title/" + hero.id];
 
 	hero.role = getValue(heroNode, "Role");
@@ -255,12 +258,14 @@ function processHeroNode(heroNode)
 		talent.description = talent.description.replace(/<s val="StandardTooltipHeader">[^<]+(<.+)/, "$1").replace(/<s val="StandardTooltip">?(.+)/, "$1");
 
 		//if(hero.id==="LiLi") {
-		var dynamics = talent.description.match(/<d [^/]+\/>/g);
+		var dynamics = talent.description.match(/<d ref="[^"]+"[^/]*\/>/g);
 		if(dynamics)
 		{
 			dynamics.forEach(function(dynamic)
 			{
 				var formula = dynamic.match(/ref\s*=\s*"([^"]+)"/)[1];
+				if(formula.endsWith(")") && !formula.contains("("))
+					formula = formula.substring(0, formula.length-1);
 				try
 				{
 					var result = FORMULA_PARSER.parse(formula, {lookupXMLRef : lookupXMLRef});
@@ -303,6 +308,12 @@ function lookupXMLRef(query, negative)
 {
 	var result = 0;
 
+	C.XMLREF_REPLACEMENTS.forEach(function(XMLREF_REPLACEMENT)
+	{
+		if(query===XMLREF_REPLACEMENT.from)
+			query = XMLREF_REPLACEMENT.to;
+	});
+
 	//base.info("QUERY: %s", query);
 
 	var mainParts = query.split(",");
@@ -330,7 +341,7 @@ function lookupXMLRef(query, negative)
 	subparts.forEach(function(subpart)
 	{
 		var xpath = !subpart.match(/\[[0-9]+\]/) ? subpart.replace(/([^[]+)\[([^\]]+)]/, "$1[@index = '$2']") : subpart.replace(/\[([0-9]+)\]/, "[" + (+subpart.match(/\[([0-9]+)\]/)[1]+1) + "]");
-		//base.info("Next xpath: %s\nCurrent target: %s", xpath, target.toString());
+		//base.info("Next xpath: %s\nCurrent target: %s\n", xpath, target.toString());
 		var nextTarget = target.get(xpath);
 		if(!nextTarget)
 			result = +attributeValue(target, xpath);

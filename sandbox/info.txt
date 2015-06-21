@@ -1,7 +1,19 @@
 Heroes Sites:
 http://www.heroesnexus.com/
 http://us.battle.net/heroes/en/heroes/
-http://heroesofthestorm.gamepedia.com/Heroes_of_the_Storm_Wiki
+http://heroesofthestorm.gamepedia.com/
 http://www.heroesfire.com/
 
 https://www.hotslogs.com
+
+
+
+The sites have conflicting data between them.
+For example, for Azmodan's "First Aid" skill, the correct value is 11.07%
+Both heroesnexus.com and heroesofthestorm.gamepedia.com get it correct.
+But heroesfire.com incorrectly shows 35.49%
+
+Another example, Nova's "Precision Strike" ability does 300 damage, plus another 35 damage per level.
+heroesnexus.com assumes you are maximum level 20 for all abilities so it says does 1000 damage  (335 + 35 per level)
+First the '335' is wrong, it is '300' but I guess they are not counting level 1.
+

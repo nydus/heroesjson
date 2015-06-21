@@ -14,6 +14,18 @@ exports.HERO_MODIFICATIONS =
 	]
 };
 
+exports.XMLREF_REPLACEMENTS =
+[
+	{
+		from : "Effect,ArcaneIntellectBasicAttackManaRestore,VitalArray[2].Change",
+		  to : "Effect,ArcaneIntellectBasicAttackManaRestore,VitalArray[0].Change",
+	},
+	{
+		from : "Effect,ArcaneIntellectAbilityDamageManaRestore,VitalArray[2].Change",
+		  to : "Effect,ArcaneIntellectAbilityDamageManaRestore,VitalArray[0].Change"
+	}
+];
+
 exports.HERO_TALENT_LEVELS = [1, 4, 7, 10, 13, 16, 20];
 
 exports.HERO_JSON_SCHEMA =

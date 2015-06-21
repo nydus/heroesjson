@@ -19,46 +19,64 @@
 		return count-1;
 	}
 
-	var addNumbers = function(num1, num2)
+	var doNumbers = function(num1, num2, op)
 	{
 		var dec1 = findDec(num1);
 		var dec2 = findDec(num2);
 		var fixed = dec1>dec2 ? dec1 : dec2;
-		var n = (num1+num2).toFixed(fixed);
-		return +n;
-	}
+		var n;
+		if(op==="+")
+			n = (num1+num2);
+		else if(op==="*")
+			n = (num1*num2);
+		else if(op==="-")
+			n = (num1-num2);
+		else if(op==="/")
+			n = (num1/num2);
 
-	var multiplyNumbers = function(num1, num2)
-	{
-		var dec1 = findDec(num1);
-		var dec2 = findDec(num2);
-		var fixed = dec1>dec2 ? dec1 : dec2;
-		var n = (num1*num2).toFixed(fixed);
+		n = n.toFixed(fixed);
 		return +n;
 	}
 }
 
 START
-  = additive
-
-additive
-	= left:multiplicative _ "+" _ right:additive { return addNumbers(left, right); }
-	/ multiplicative
-
-multiplicative
-	= left:primary _ "*" _ right:multiplicative { return multiplyNumbers(left, right); }
+	= any
+ 
+any
+	= multiplicative
+	/ divisive
+	/ additive
+	/ subtractive
 	/ primary
-
+ 
 primary
-	= integer
-	/ xmlprimary
-	/ neg:"-"? _? "(" additive:additive ")" { return neg ? (-1*additive) : additive; }
-
-xmlprimary
-	= neg:"-"? _? chars:[A-Za-z0-9,._\[\]]+ { return lookupXMLRef(chars.join(""), neg); }
-
+	= float
+	/ integer
+	/ xmlref
+	/ "-" _ any:any { return -1*any; }
+	/ "(" any:any ")" { return any; }
+	/ "" { return 0; }
+	
+additive
+	= left:primary _ "+" _ right:any { return doNumbers(left, right, "+"); }
+ 
+multiplicative
+	= left:primary _ "*" _ right:any { return doNumbers(left, right, "*"); }
+ 
+subtractive
+	= left:primary _ "-" _ right:any { return doNumbers(left, right, "-"); }
+ 
+divisive
+	= left:primary _ "/" _ right:any { return doNumbers(left, right, "/"); }
+   
+float "float"
+	= neg:"-"? _? left:[0-9]* "." right:[0-9]+ { return parseFloat((neg ? "-" : "") + left.join("") + "." + right.join("")); }
+ 
 integer "integer"
-	= neg:"-"? _? digits:[0-9-]+ { return parseInt((neg ? "-" : "") + digits.join(""), 10); }
+	= neg:"-"? _? digits:[0-9]+ { return parseInt((neg ? "-" : "") + digits.join(""), 10); }
+
+xmlref "xmlref"
+	= neg:"-"? _? chars:[A-Za-z0-9,._\[\]]+ { return lookupXMLRef(chars.join(""), neg); }
 
 _ "whitespace"
 	= whitespace*
