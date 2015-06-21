@@ -254,46 +254,42 @@ function processHeroNode(heroNode)
 			return;
 		}
 
-		talent.name = talent.description.replace(/<s val="StandardTooltipHeader">([^<]+)<.+/, "$1").trim();
+		talent.name = talent.description.replace(/<s val="StandardTooltipHeader">([^<]+)<.+/, "$1").replace(/<s\s*val\s*=\s*"StandardTooltip">/gm, "").trim();
 		talent.description = talent.description.replace(/<s val="StandardTooltipHeader">[^<]+(<.+)/, "$1").replace(/<s val="StandardTooltip">?(.+)/, "$1");
+		talent.description = talent.description.replace(/<s val="StandardTooltipHeader">/g, "");
 
-		//if(hero.id==="LiLi") {
-		var dynamics = talent.description.match(/<d ref="[^"]+"[^/]*\/>/g);
-		if(dynamics)
+		(talent.description.match(/<d ref="[^"]+"[^/]*\/>/g) || []).forEach(function(dynamic)
 		{
-			dynamics.forEach(function(dynamic)
+			var formula = dynamic.match(/ref\s*=\s*"([^"]+)"/)[1];
+			if(formula.endsWith(")") && !formula.contains("("))
+				formula = formula.substring(0, formula.length-1);
+			try
 			{
-				var formula = dynamic.match(/ref\s*=\s*"([^"]+)"/)[1];
-				if(formula.endsWith(")") && !formula.contains("("))
-					formula = formula.substring(0, formula.length-1);
-				try
-				{
-					var result = FORMULA_PARSER.parse(formula, {lookupXMLRef : lookupXMLRef});
-					talent.description = talent.description.replace(dynamic, result);
-				}
-				catch(err)
-				{
-					base.error("Failed to parse: %s", formula);
-					throw err;
-				}
-				/*var precision = dynamic.match(/precision\s*=\s*"([^"]+)"/) ? +dynamic.match(/precision\s*=\s*"([^"]+)"/)[1] : null;
-				if(precision!==null)
-				{
-					base.info("%s (precision=%s)", result, precision);
-					result = result.toFixed(precision);
-				}*/
+				var result = FORMULA_PARSER.parse(formula, {lookupXMLRef : lookupXMLRef});
+				talent.description = talent.description.replace(dynamic, result);
+			}
+			catch(err)
+			{
+				base.error("Failed to parse: %s", formula);
+				throw err;
+			}
+			/*var precision = dynamic.match(/precision\s*=\s*"([^"]+)"/) ? +dynamic.match(/precision\s*=\s*"([^"]+)"/)[1] : null;
+			if(precision!==null)
+			{
+				base.info("%s (precision=%s)", result, precision);
+				result = result.toFixed(precision);
+			}*/
 
-			});
-		}
-		//}
+		});
+
 		talent.description = talent.description.replace(/<\/?n\/?><\/?n\/?>/g, "\n").replace(/<\/?n\/?>/g, "");
-		talent.description = talent.description.replace(/<s\s*val\s*=\s*"StandardTooltipDetails">/gm, "").replace(/<s\s*val\s*=\s*"StandardTooltip">/gm, "").replace(/<\/?s\/?>/g, "").trim();
+		talent.description = talent.description.replace(/<s\s*val\s*=\s*"StandardTooltipDetails">/gm, "").replace(/<s\s*val\s*=\s*"StandardTooltip">/gm, "").replace(/<\/?[cs]\/?>/g, "");
+		talent.description = talent.description.replace(/<c\s*val\s*=\s*"[^"]+">/gm, "").replace(/<\/?if\/?>/g, "").trim();
+		talent.description = talent.description.replace(/^(.+) [.]$/, "$1.");
 
 		var talentPrerequisiteNode = talentTreeNode.get("PrerequisiteTalentArray");
 		if(talentPrerequisiteNode)
 			talent.prerequisite = attributeValue(talentPrerequisiteNode, "value");
-
-		//if(hero.id==="LiLi") { base.info("AFTER: %s\n", talent.description); }
 
 		hero.talents[C.HERO_TALENT_LEVELS[((+attributeValue(talentTreeNode, "Tier"))-1)]].push(talent);
 	});
