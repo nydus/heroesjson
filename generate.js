@@ -287,14 +287,14 @@ function processHeroNode(heroNode)
 
 		talent.description = getTalentDescription(talentDescription, hero.id, 0);
 
-		talent.levelDescriptions = [];
+		var levelDescriptions = [];
 		[].pushSequence(1, C.HERO_MAX_LEVEL).forEach(function(heroLevel)
 		{
-			talent.levelDescriptions.push(getTalentDescription(talentDescription, hero.id, heroLevel));
+			levelDescriptions.push(getTalentDescription(talentDescription, hero.id, heroLevel));
 		});
 
-		if(talent.levelDescriptions.unique().length===1 && talent.levelDescriptions.unique()[0]===talent.description)
-			delete talent.levelDescriptions;
+		if(levelDescriptions.unique().length>1 || levelDescriptions.unique()[0]!==talent.description)
+			talent.levels = levelDescriptions.map(function(levelDescription) { return {description:levelDescription}; });
 
 		var talentPrerequisiteNode = talentTreeNode.get("PrerequisiteTalentArray");
 		if(talentPrerequisiteNode)
