@@ -33,6 +33,8 @@ if(!fs.existsSync(HOTS_DATA_PATH))
 var CASCEXTRATOR_PATH = path.join(__dirname, "CASCExtractor", "build", "bin", "CASCExtractor");
 
 var OUT_PATH = path.join(__dirname, "out");
+var OUT_MODS_PATH = path.join(OUT_PATH, "mods");
+
 var HEROES_OUT_PATH = path.join(OUT_PATH, "heroes.json");
 
 var EXTRA_HEROES = ["anubarak", "chen", "crusader", "jaina", "kaelthas", "lostvikings", "murky", "sonyarework", "sylvanas", "thrall"];
@@ -133,6 +135,11 @@ tiptoe(
 
 		fs.writeFile(HEROES_OUT_PATH, JSON.stringify(heroes), {encoding:"utf8"}, this);
 	},
+	/*function cleanup()
+	{
+		base.info("Cleaning up 'out' directory...");
+		rimraf(OUT_MODS_PATH, this);
+	},*/
 	function finish(err)
 	{
 		if(err)
@@ -255,6 +262,40 @@ function processHeroNode(heroNode)
 
 		HERO_LEVEL_SCALING_MODS[hero.id].push({type:modType,key:modKey,target:modTarget,value:(+modValue)});
 	});
+
+	// Abilities
+	
+	/*<HeroAbilArray Abil="NovaSnipeStorm" Button="NovaSnipeHeroSelect">
+            <Flags index="ShowInHeroSelect" value="1"/>
+            <Flags index="AffectedByCooldownReduction" value="1"/>
+            <Flags index="AffectedByOverdrive" value="1"/>
+        </HeroAbilArray>
+        <HeroAbilArray Abil="NovaPinningShot" Button="NovaPinningShotHeroSelect">
+            <Flags index="ShowInHeroSelect" value="1"/>
+            <Flags index="AffectedByCooldownReduction" value="1"/>
+            <Flags index="AffectedByOverdrive" value="1"/>
+        </HeroAbilArray>
+        <HeroAbilArray Abil="NovaHoloDecoy" Button="NovaHoloDecoyHeroSelect">
+            <Flags index="ShowInHeroSelect" value="1"/>
+            <Flags index="AffectedByCooldownReduction" value="1"/>
+        </HeroAbilArray>
+        <HeroAbilArray Abil="NovaTripleTap" Button="NovaTripleTapHeroSelect">
+            <Flags index="ShowInHeroSelect" value="1"/>
+            <Flags index="AffectedByCooldownReduction" value="1"/>
+            <Flags index="AffectedByOverdrive" value="1"/>
+            <Flags index="Heroic" value="1"/>
+        </HeroAbilArray>
+        <HeroAbilArray Abil="NovaPrecisionStrike" Button="NovaPrecisionStrikeHeroSelect">
+            <Flags index="ShowInHeroSelect" value="1"/>
+            <Flags index="UsesCharges" value="1"/>
+            <Flags index="AffectedByCooldownReduction" value="1"/>
+            <Flags index="AffectedByOverdrive" value="1"/>
+            <Flags index="Heroic" value="1"/>
+        </HeroAbilArray>
+        <HeroAbilArray Button="NovaPermanentCloakSniperHeroSelect">
+            <Flags index="ShowInHeroSelect" value="1"/>
+            <Flags index="Trait" value="1"/>
+        </HeroAbilArray>*/
 
 	// Talents
 	hero.talents = {};
@@ -379,7 +420,7 @@ function getTalentDescription(_talentDescription, heroid, heroLevel)
 	talentDescription = talentDescription.replace(/<\/?n\/?><\/?n\/?>/g, "\n").replace(/<\/?n\/?>/g, "");
 	talentDescription = talentDescription.replace(/<s\s*val\s*=\s*"StandardTooltipDetails">/gm, "").replace(/<s\s*val\s*=\s*"StandardTooltip">/gm, "").replace(/<\/?[cs]\/?>/g, "");
 	talentDescription = talentDescription.replace(/<c\s*val\s*=\s*"[^"]+">/gm, "").replace(/<\/?if\/?>/g, "").trim();
-	talentDescription = talentDescription.replace(/^(.+) [.]$/, "$1.");
+	talentDescription = talentDescription.replace(/ [.]/g, ".");
 
 	return talentDescription;
 }

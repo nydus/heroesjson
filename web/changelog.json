@@ -1,0 +1,10 @@
+[
+	{
+		"version" : "1.0.0",
+		"when" : "2014-06-25",
+		"patchVersion" : "???????",
+		"changes" : [
+			"First release!"
+		]
+	}
+]

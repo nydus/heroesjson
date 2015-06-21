@@ -4,3 +4,5 @@ node_modules
 CascLib-build
 wip
 out
+nginx
+deploy

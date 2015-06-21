@@ -8,6 +8,8 @@
   Will likely need to make a 'levels' array similar to the talent descriptions
   NOTE: Lost Vikings is three seperate units, so will need to support this some how?
 
+* In index.dust docs: releaseDate: MAke sure to mention that this is only present for heros that were patched in, that those present before patches were made public do not have a known release date
+
 /-----------------\
 | Medium Priority |
 \-----------------/
