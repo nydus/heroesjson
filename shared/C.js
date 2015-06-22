@@ -14,6 +14,24 @@ exports.HERO_MODIFICATIONS =
 	]
 };
 
+exports.HERO_UNIT_ID_REPLACEMENTS =
+{
+	"LostVikings" : "LostVikingsController"
+};
+
+exports.ADDITIONAL_HERO_SUBUNIT_IDS =
+{
+	"Abathur" : ["AbathurSymbiote"]
+};
+
+exports.VALID_SUBUNIT_ABILITY_IDS =
+{
+	"AbathurSymbiote" : ["AbathurSymbioteCancel", "AbathurSymbioteStab", "AbathurSymbioteSpikeBurst", "AbathurSymbioteCarapace"],
+	"HeroBaleog" : ["LostVikingsPressA", "LostVikingsSpinToWin", "LostVikingsNorseForce"],
+	"HeroErik" : ["LostVikingsPressA", "LostVikingsSpinToWin", "LostVikingsNorseForce"],
+	"HeroOlaf" : ["LostVikingsPressA", "LostVikingsSpinToWin", "LostVikingsNorseForce"]
+};
+
 exports.FORMULA_PRE_REPLACEMENTS = 
 [
 	{
@@ -25,6 +43,43 @@ exports.FORMULA_PRE_REPLACEMENTS =
 		replace : "Behavior,CrusaderPunishStackingSlow,Modification.UnifiedMoveSpeedFactor*(-100)*6"
 	}
 ];
+
+exports.REMOVE_SUBUNITS =
+{
+	"LostVikings" : ["HeroBaleog", "HeroErik", "HeroOlaf"]
+};
+
+exports.IMPORT_ABILITIES_FROM_SUBUNIT =
+{
+	"LostVikings" : "HeroBaleog"
+};
+
+exports.IMPORT_ABILITIES =
+{
+	"HeroBaleog" :
+	[
+		{
+			id : "LostVikingSelectOlaf",
+			shortcut : "1",
+			name : "Select Olaf"
+		},
+		{
+			id : "LostVikingSelectBaleog",
+			shortcut : "2",
+			name : "Select Baleog"
+		},
+		{
+			id : "LostVikingSelectErik",
+			shortcut : "3",
+			name : "Select Erik"
+		},
+		{
+			id : "LostVikingSelectAll",
+			shortcut : "4",
+			name : "Select All Vikings"
+		}
+	]
+};
 
 exports.XMLREF_REPLACEMENTS =
 [
@@ -104,23 +159,29 @@ exports.HERO_JSON_SCHEMA =
 			},
 		abilities :
 			{
-				type : "array",
-				minItems : 1,
-				items :
+				type       : "object",
+				additionalProperties :
 				{
-					type : "object",
-					additionalProperties : false,
-					required : ["name", "description"],
-					properties :
+					type : "array",
+					minItems : 1,
+					items :
 					{
-						name              : { type : "string", minLength : 1 },
-						description       : { type : "string", minLength : 1 },
-						trait             : { type : "boolean" },
-						heroic            : { type : "boolean" },
-						cooldown          : { type : "number", minimum : 0 },
-						manaCost          : { type : "number", minimum : 0 },
-						manaCostPerSecond : { type : "number", minimum : 0 },
-						aimType           : { type : "string", minLength : 1 }
+						type : "object",
+						additionalProperties : false,
+						required : ["id", "name", "description"],
+						properties :
+						{
+							id                : { type : "string", minLength : 1 },
+							name              : { type : "string", minLength : 1 },
+							description       : { type : "string", minLength : 1 },
+							trait             : { type : "boolean" },
+							heroic            : { type : "boolean" },
+							cooldown          : { type : "number", minimum : 0 },
+							manaCost          : { type : "number", minimum : 0 },
+							manaCostPerSecond : { type : "number", minimum : 0 },
+							aimType           : { type : "string", minLength : 1 },
+							shortcut          : { type : "string", minLength : 1, maxLength : 1 }
+						}
 					}
 				}
 			}

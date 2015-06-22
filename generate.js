@@ -240,6 +240,23 @@ function processHeroNode(heroNode)
 	if(releaseDateNode)
 		hero.releaseDate = moment(attributeValue(releaseDateNode, "Month", 1) + "-" + attributeValue(releaseDateNode, "Day", 1) + "-" + attributeValue(releaseDateNode, "Year", "2014"), "M-D-YYYY").format("YYYY-MM-DD");
 
+	var heroUnitids = [];
+	var alternateUnitArrayNodes = heroNode.find("AlternateUnitArray");
+	if(alternateUnitArrayNodes && alternateUnitArrayNodes.length>0)
+	{
+		alternateUnitArrayNodes.forEach(function(alternateUnitArrayNode)
+		{
+			var alternateHeroid = attributeValue(alternateUnitArrayNode, "value");
+			heroUnitids.push(alternateHeroid);
+		});
+	}
+	else
+	{
+		heroUnitids.push(hero.id);
+	}
+
+	heroUnitids = heroUnitids.concat(C.ADDITIONAL_HERO_SUBUNIT_IDS[hero.id] || []);
+
 	// Level Scaling Info
 	HERO_LEVEL_SCALING_MODS[hero.id] = [];
 
@@ -266,102 +283,15 @@ function processHeroNode(heroNode)
 
 	// Hero Stats
 	hero.stats = {};
-
-	var alternateUnitArrayNodes = heroNode.find("AlternateUnitArray");
-	if(alternateUnitArrayNodes && alternateUnitArrayNodes.length>0)
+	heroUnitids.forEach(function(heroUnitid)
 	{
-		alternateUnitArrayNodes.forEach(function(alternateUnitArrayNode)
-		{
-			var alternateHeroid = attributeValue(alternateUnitArrayNode, "value");
-			hero.stats[alternateHeroid.substring(4)] = getHeroStats(alternateHeroid);
-		});
-	}
-	else
-	{
-		hero.stats[hero.id] = getHeroStats("Hero" + hero.id);
-	}
+		hero.stats[heroUnitid] = getHeroStats(heroUnitid);
+		if(Object.keys(hero.stats[heroUnitid]).length===0)
+			delete hero.stats[heroUnitid];
+	});
 
 	// Abilities
-	hero.abilities = [];
-	heroNode.find("HeroAbilArray").forEach(function(heroAbilNode)
-	{
-		if(!heroAbilNode.get("Flags[@index='ShowInHeroSelect' and @value='1']"))
-			return;
-
-		var ability = {};
-
-		var buttonid = attributeValue(heroAbilNode, "Button");
-		var abilid = attributeValue(heroAbilNode, "Abil");
-		if(!abilid && !buttonid)
-			throw new Error("No abil or button for: " + heroAbilNode.toString());
-
-		if(heroAbilNode.get("Flags[@index='Heroic' and @value='1']"))
-			ability.heroic = true;
-		if(heroAbilNode.get("Flags[@index='Trait' and @value='1']"))
-			ability.trait = true;
-
-		//ability.name = abilid ? (S["Abil/Name/" + abilid] || S["Button/Name/" + abilid]) : S["Button/Name/" + buttonid];
-		ability.name = buttonid ? S["Button/Name/" + buttonid] : (S["Abil/Name/" + abilid] || S["Button/Name/" + abilid]);
-
-		var abilityDescription;
-		var descriptionIdsToTry = [];
-		if(buttonid)
-		{
-			var buttonidShort = ["HeroSelect", "HeroSelectButton"].mutateOnce(function(buttonSuffix) { if(buttonid.endsWith(buttonSuffix)) { return buttonid.substring(0, buttonid.length-buttonSuffix.length); } });
-			descriptionIdsToTry.push(buttonidShort);
-			descriptionIdsToTry.push(hero.id + buttonidShort);
-			if(ability.trait)
-			{
-				descriptionIdsToTry.push(buttonidShort + "Trait");
-				if(buttonidShort.contains(hero.id))
-					descriptionIdsToTry.push(buttonidShort.replace(hero.id, hero.id + "Trait"));
-			}
-			descriptionIdsToTry.push(buttonidShort + "Talent");
-		}
-		descriptionIdsToTry.push(abilid);
-		descriptionIdsToTry.push(abilid + "Hotbar");
-
-		descriptionIdsToTry.forEach(function(descriptionIdToTry)
-		{
-			if(abilityDescription)
-				return;
-
-			abilityDescription = S["Button/Tooltip/" + descriptionIdToTry];
-		});
-
-		ability.description = getFullDescription(abilityDescription, hero.id, 0);
-
-		ability.description = ability.description.replace("Heroic Ability\n", "").replace("Trait\n", "");
-
-		addCooldownInfo(ability, "description");
-
-		var manaPerSecondMatch = ability.description.match(/Mana:\s*([0-9]+)\s+per\s+second\n/m);
-		if(manaPerSecondMatch)
-		{
-			ability.manaCostPerSecond = +manaPerSecondMatch[1];
-			ability.description = ability.description.replace(manaPerSecondMatch[0], "");
-		}
-
-		if(abilid)
-		{
-			var abilNode = NODE_MAPS["Abil"][abilid];
-			if(!abilNode)
-				throw new Error("Failed to find ability node: " + abilid);
-
-			var energyCostNode = abilNode.get("Cost/Vital[@index='Energy']");
-			if(energyCostNode)
-				ability.manaCost = +attributeValue(energyCostNode, "value");
-		}
-
-		var aimTypeMatch = ability.description.match(/((?:Skillshot)|(?:Area of Effect)|(?:Cone))\n/);
-		if(aimTypeMatch)
-		{
-			ability.aimType = aimTypeMatch[1];
-			ability.description = ability.description.replace(aimTypeMatch[0], "");
-		}
-
-		hero.abilities.push(ability);
-	});
+	hero.abilities = getHeroAbilities(hero.id, heroUnitids);
 
 	// Talents
 	hero.talents = {};
@@ -407,6 +337,204 @@ function processHeroNode(heroNode)
 	return hero;
 }
 
+function getHeroAbilities(heroid, heroUnitids)
+{
+	var abilities = {};
+
+	var heroHeroicAbilityids = [];
+	var heroTraitAbilityids = [];
+	var heroAbilityids = [];
+	var heroNode = NODE_MAPS["Hero"][heroid];
+	heroNode.find("HeroAbilArray").forEach(function(heroAbilNode)
+	{
+		if(!heroAbilNode.get("Flags[@index='ShowInHeroSelect' and @value='1']"))
+			return;
+
+		var abilityIsTrait = !!heroAbilNode.get("Flags[@index='Trait' and @value='1']");
+
+		var abilid = attributeValue(heroAbilNode, "Abil");
+		if(!abilid)
+		{
+			var buttonid = attributeValue(heroAbilNode, "Button");
+			if(!buttonid)
+				throw new Error("No abil or button for: " + heroAbilNode.toString());
+
+			var descriptionIdsToTry = [];
+			var buttonidShort = ["HeroSelect", "HeroSelectButton"].mutateOnce(function(buttonSuffix) { if(buttonid.endsWith(buttonSuffix)) { return buttonid.substring(0, buttonid.length-buttonSuffix.length); } });
+			descriptionIdsToTry.push(buttonidShort);
+			descriptionIdsToTry.push(heroid + buttonidShort);
+			if(abilityIsTrait)
+			{
+				descriptionIdsToTry.push(buttonidShort + "Trait");
+				if(buttonidShort.contains(heroid))
+					descriptionIdsToTry.push(buttonidShort.replace(heroid, heroid + "Trait"));
+			}
+			descriptionIdsToTry.push(buttonidShort + "Talent");
+
+			abilid = descriptionIdsToTry.mutateOnce(function(descriptionIdToTry) { if(S["Button/Tooltip/" + descriptionIdToTry]) { return descriptionIdToTry; }});
+		}
+
+		if(abilityIsTrait)
+			heroTraitAbilityids.push(abilid);
+
+		if(heroAbilNode.get("Flags[@index='Heroic' and @value='1']"))
+			heroHeroicAbilityids.push(abilid);
+
+		heroAbilityids.push(abilid);
+	});
+
+	abilities[heroid] = getUnitAbilities(heroid, heroAbilityids, heroHeroicAbilityids, heroTraitAbilityids, "Hero" + (C.HERO_UNIT_ID_REPLACEMENTS[heroid] || heroid));
+
+	heroUnitids.forEach(function(heroUnitid)
+	{
+		if(heroUnitid===heroid)
+			return;
+
+		abilities[heroUnitid] = getUnitAbilities(heroid, heroAbilityids.concat((C.VALID_SUBUNIT_ABILITY_IDS[heroUnitid] || [])), heroHeroicAbilityids, heroTraitAbilityids, heroUnitid);
+	});
+
+	heroUnitids.concat([heroid]).forEach(function(heroUnitid)
+	{
+		Object.forEach(C.IMPORT_ABILITIES_FROM_SUBUNIT, function(importToid, importFromid)
+		{
+			if(importToid!==heroUnitid)
+				return;
+
+			abilities[importToid] = abilities[importFromid];
+		});
+	});
+
+	(C.REMOVE_SUBUNITS[heroid] || []).forEach(function(REMOVE_SUBUNIT)
+	{
+		delete abilities[REMOVE_SUBUNIT];
+	});
+
+	return abilities;
+}
+
+function getUnitAbilities(heroid, heroAbilityids, heroHeroicAbilityids, heroTraitAbilityids, unitid)
+{
+	var SHORTCUT_KEY_ORDER = ["Q", "W", "E", "R", "D", "1", "2", "3", "4", "5"];
+	var abilities = [];
+
+	var unitNode = NODE_MAPS["Unit"][unitid];
+	if(!unitNode)
+		throw new Error("Could not find unit for: " + unitid);
+
+	(unitNode.find("CardLayouts[@index='0']/LayoutButtons") || []).forEach(function(layoutButtonNode)
+	{
+		var buttonRow = attributeValue(layoutButtonNode, "Row", getValue(layoutButtonNode, "Row", null));
+		var buttonColumn = attributeValue(layoutButtonNode, "Column", getValue(layoutButtonNode, "Column", null));
+		if(buttonRow===null || buttonColumn===null)
+			return;
+
+		buttonRow = +buttonRow;
+		buttonColumn = +buttonColumn;
+
+		var ability = {};
+		ability.id = attributeValue(layoutButtonNode, "Face", getValue(layoutButtonNode, "Face"));
+
+		var abilityCmdid = attributeValue(layoutButtonNode, "AbilCmd", getValue(layoutButtonNode, "AbilCmd"));
+		if(abilityCmdid)
+			abilityCmdid = abilityCmdid.split(",")[0];
+
+		if(!heroAbilityids.contains(ability.id) && !heroAbilityids.contains(abilityCmdid))
+			return;
+
+		var abilNode = NODE_MAPS["Abil"][ability.id];
+		if(!abilNode && abilityCmdid)
+			abilNode = NODE_MAPS["Abil"][abilityCmdid];
+
+		if(heroTraitAbilityids.contains(ability.id) || heroTraitAbilityids.contains(abilityCmdid))
+			ability.trait = true;
+
+		if(!ability.trait && !abilNode)
+			throw new Error("Failed to find ability node: " + layoutButtonNode.toString());
+		
+		if(abilNode)
+		{
+			var energyCostNode = abilNode.get("Cost/Vital[@index='Energy']");
+			if(energyCostNode)
+				ability.manaCost = +attributeValue(energyCostNode, "value");
+		}
+
+		if(heroHeroicAbilityids.contains(ability.id) || heroHeroicAbilityids.contains(abilityCmdid))
+			ability.heroic = true;
+
+		addAbilityDetails(ability, heroid, abilityCmdid);
+
+		ability.tempSortOrder = (buttonRow*5)+buttonColumn;
+
+		if(!ability.trait)
+		{
+			ability.shortcut = SHORTCUT_KEY_ORDER[ability.tempSortOrder];
+	
+			if(!NODE_MAPS["Abil"][ability.id] && NODE_MAPS["Abil"][abilityCmdid])
+				ability.id = abilityCmdid;
+		}
+		else
+		{
+			if(!heroTraitAbilityids.contains(ability.id) && heroTraitAbilityids.contains(abilityCmdid))
+				ability.id = abilityCmdid;
+		}
+
+		if(abilities.filter(function (existingAbility) { return existingAbility.id===ability.id; }).length===0)
+			abilities.push(ability);
+	});
+
+	(C.IMPORT_ABILITIES[unitid] || []).forEach(function(abilityToAdd)
+	{
+		var ability = {};
+		ability.id = abilityToAdd.id;
+
+		addAbilityDetails(ability, heroid, undefined, abilityToAdd.name);
+
+		if(abilityToAdd.shortcut)
+			ability.shortcut = abilityToAdd.shortcut;
+
+		abilities.push(ability);
+	});
+
+	abilities.sort(function(a, b) { return a.tempSortOrder-b.tempSortOrder; });
+	abilities.forEach(function(ability)
+	{
+		delete ability.tempSortOrder;
+	});
+
+	return abilities;
+}
+
+function addAbilityDetails(ability, heroid, abilityCmdid, abilityName)
+{
+	ability.name = abilityName || S["Button/Name/" + ability.id] || S["Button/Name/" + abilityCmdid];
+	if(!ability.name)
+		throw new Error("Failed to get ability name: " + ability.id + " and " + abilityCmdid);
+
+	var abilityDescription = S["Button/Tooltip/" + ability.id] || S["Button/Tooltip/" + abilityCmdid];
+	if(!abilityDescription)
+		throw new Error("Failed to get ability description: " + ability.id + " and " + abilityCmdid);
+	
+	ability.description = getFullDescription(abilityDescription, heroid, 0);
+
+	ability.description = ability.description.replace("Heroic Ability\n", "").replace("Trait\n", "");
+
+	addCooldownInfo(ability, "description");
+
+	var manaPerSecondMatch = ability.description.match(/Mana:\s*([0-9]+)\s+per\s+second\n/m);
+	if(manaPerSecondMatch)
+	{
+		ability.manaCostPerSecond = +manaPerSecondMatch[1];
+		ability.description = ability.description.replace(manaPerSecondMatch[0], "");
+	}
+
+	var aimTypeMatch = ability.description.match(/((?:Skillshot)|(?:Area of Effect)|(?:Cone))\n/);
+	if(aimTypeMatch)
+	{
+		ability.aimType = aimTypeMatch[1];
+		ability.description = ability.description.replace(aimTypeMatch[0], "");
+	}
+}
+
 function addCooldownInfo(o, field)
 {
 	var cooldownMatch = o[field].match(/(?:Charge )?Cooldown:\s*([0-9]+)\s+[sS]econds?\n/m);
@@ -421,7 +549,7 @@ function getHeroStats(heroUnitid)
 {
 	var heroStats = {};
 
-	var heroUnitNode = NODE_MAPS["Unit"][heroUnitid];
+	var heroUnitNode = NODE_MAPS["Unit"][(!heroUnitid.startsWith("Hero") ? "Hero" : "") + heroUnitid];
 	if(heroUnitNode)
 	{
 		heroStats.hp = +getValue(heroUnitNode, "LifeMax");
