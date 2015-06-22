@@ -127,6 +127,7 @@ tiptoe(
 		loadMergedNodeMap(xmlDocs);
 
 		var heroes = Object.values(NODE_MAPS["Hero"]).map(function(heroNode) { return processHeroNode(heroNode); });
+		heroes.sort(function(a, b) { return (a.name.startsWith("The ") ? a.name.substring(4) : a.name).localeCompare((b.name.startsWith("The ") ? b.name.substring(4) : b.name)); });
 
 		base.info("Validating %d heroes...", heroes.length);
 		heroes.forEach(validateHero);
@@ -263,6 +264,23 @@ function processHeroNode(heroNode)
 		HERO_LEVEL_SCALING_MODS[hero.id].push({type:modType,key:modKey,target:modTarget,value:(+modValue)});
 	});
 
+	// Hero Stats
+	hero.stats = {};
+
+	var alternateUnitArrayNodes = heroNode.find("AlternateUnitArray");
+	if(alternateUnitArrayNodes && alternateUnitArrayNodes.length>0)
+	{
+		alternateUnitArrayNodes.forEach(function(alternateUnitArrayNode)
+		{
+			var alternateHeroid = attributeValue(alternateUnitArrayNode, "value");
+			hero.stats[alternateHeroid.substring(4)] = getHeroStats(alternateHeroid);
+		});
+	}
+	else
+	{
+		hero.stats[hero.id] = getHeroStats("Hero" + hero.id);
+	}
+
 	// Abilities
 	hero.abilities = [];
 	heroNode.find("HeroAbilArray").forEach(function(heroAbilNode)
@@ -397,6 +415,57 @@ function addCooldownInfo(o, field)
 		o.cooldown = +cooldownMatch[1];
 		o[field] = o[field].replace(cooldownMatch[0], "");
 	}
+}
+
+function getHeroStats(heroUnitid)
+{
+	var heroStats = {};
+
+	var heroUnitNode = NODE_MAPS["Unit"][heroUnitid];
+	if(heroUnitNode)
+	{
+		heroStats.hp = +getValue(heroUnitNode, "LifeMax");
+		heroStats.hpPerLevel = 0;
+		heroStats.hpRegen = +getValue(heroUnitNode, "LifeRegenRate");
+		heroStats.hpRegenPerLevel = 0;
+
+		heroStats.mana = +getValue(heroUnitNode, "EnergyMax", 500);
+		heroStats.manaPerLevel = 0;
+		heroStats.manaRegen = +getValue(heroUnitNode, "EnergyRegenRate", 3);
+		heroStats.manaRegenPerLevel = 0;
+
+		(heroUnitNode.find("BehaviorArray") || []).forEach(function(behaviorArrayNode)
+		{
+			var behaviorNode = NODE_MAPS["Behavior"][attributeValue(behaviorArrayNode, "Link")];
+			if(!behaviorNode)
+				return;
+
+			if(attributeValue(behaviorNode, "parent")!=="HeroXPCurve")
+				return;
+
+			var levelOneNode = behaviorNode.get("VeterancyLevelArray[@index='1']/Modification");
+			if(!levelOneNode)
+				return;
+
+			var hpPerLevelAttribute = levelOneNode.get("VitalMaxArray[@index='Life']/@value");
+			if(hpPerLevelAttribute)
+				heroStats.hpPerLevel = (heroStats.hpPerLevel || 0) + (+hpPerLevelAttribute.value());
+
+			var hpRegenPerLevelAttribute = levelOneNode.get("VitalRegenArray[@index='Life']/@value");
+			if(hpRegenPerLevelAttribute)
+				heroStats.hpRegenPerLevel = (heroStats.hpRegenPerLevel || 0) + (+hpRegenPerLevelAttribute.value());
+
+			var manaPerLevelAttribute = levelOneNode.get("VitalMaxArray[@index='Energy']/@value");
+			if(manaPerLevelAttribute)
+				heroStats.manaPerLevel = (heroStats.manaPerLevel || 0) + (+manaPerLevelAttribute.value());
+
+			var manaRegenPerLevelAttribute = levelOneNode.get("VitalRegenArray[@index='Energy']/@value");
+			if(manaRegenPerLevelAttribute)
+				heroStats.manaRegenPerLevel = (heroStats.manaRegenPerLevel || 0) + (+manaRegenPerLevelAttribute.value());
+		});
+	}
+
+	return heroStats;
 }
 
 function getFullDescription(_fullDescription, heroid, heroLevel)

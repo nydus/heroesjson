@@ -1,14 +1,7 @@
 /---------------\
 | High Priority |
 \---------------/
-* Add hero abilities including 'levels' scaling
-
-* Get Hero HP, Mana and other info from UnitData.xml <CUnit id="HeroJaina"
-  Note: To figure out how this changes per level, look at all the 'BehaviorArray' nodes and for each one visit it in the BehaviorData.xml
-  Will likely need to make a 'levels' array similar to the talent descriptions
-  NOTE: Lost Vikings is three seperate units, so will need to support this some how?
-
-* In index.dust docs: releaseDate: MAke sure to mention that this is only present for heros that were patched in, that those present before patches were made public do not have a known release date
+* Attack damage and attack speed (tied to weapon, down a deep and complex chain of XML)
 
 /-----------------\
 | Medium Priority |

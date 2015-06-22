@@ -8,6 +8,7 @@ var base = require("xbase"),
 	path = require("path"),
 	fileUtil = require("xutil").file,
 	dustUtil = require("xutil").dust,
+	printUtil = require("xutil").print,
 	tiptoe = require("tiptoe");
 
 var dustData = 
@@ -40,6 +41,7 @@ tiptoe(
 	{
 		base.info("Rendering index...");
 
+		dustData.heroesSize = printUtil.toSize(fs.statSync(path.join(WEB_OUT_PATH, "heroes.json")).size, 1);
 		dustData.changeLog = JSON.parse(fs.readFileSync(path.join(__dirname, "changelog.json"), {encoding : "utf8"})).map(function(o) { o.when = moment(o.when, "YYYY-MM-DD").format("MMM D, YYYY"); return o; });
 		dustData.lastUpdated = dustData.changeLog[0].when;
 		dustData.version = dustData.changeLog[0].version;

@@ -1,8 +1,8 @@
 [
 	{
 		"version" : "1.0.0",
-		"when" : "2014-06-25",
-		"patchVersion" : "???????",
+		"when" : "2014-06-21",
+		"patchVersion" : "35702",
 		"changes" : [
 			"First release!"
 		]

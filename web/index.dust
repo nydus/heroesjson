@@ -19,12 +19,12 @@
 		<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 		<link type="text/css" rel="stylesheet" href="solarized-dark.css">
 	</head>
-	<body style="display: none;"><a name="top"></a>
+	<body><a name="top"></a>
 		<script type="text/javascript" src="rainbow-custom.min.js"></script>
 		<center><h1 style="font-size: 240%;">Heroes of the Storm JSON</h1></center>
 		<p style="margin-top: 1.0em;">This project provides up to date <a href="http://heroesofthestorm.com">Heroes of the Storm</a> data in <a href="http://www.json.org/">JSON</a> format for developers to easily use in their projects.<br>
 		<br>
-		For more details see: <a href="#exampleData">Example Data</a> and <a href="#documentation">Documentation</a><br>
+		For more details see: <a href="#exampleHero">Example Hero</a> and <a href="#documentation">Documentation</a><br>
 		<br>
 		Any bugs or feedback, e-mail me at <a href="mailto:robert@cosmicrealms.com">robert@cosmicrealms.com</a><br>
 		</p>
@@ -37,6 +37,520 @@
 		<br>
 		<h2 style="display: none;"><span style="color: red; text-decoration: underline;">ALERT:</span> alert message goes here</h2>
 		<br>
+		<table class="downloads downloadsAll">
+			<thead>
+				<tr>
+					<th colspan="2">Download JSON Data</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="sizeColLeft">
+						<a href="json/heroes.json">heroes.json</a>
+					</td>
+					<td class="sizeColRight">
+						<span class="size">{heroesSize}</span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<br>
+		<hr>
+		<a name="documentation"></a>
+		<h1>heroes.json Documentation<a href="#top">(back to top)</a></h1>
+		<p>All JSON files are UTF8 encoded and may contain UTF8 characters.<br>
+		<br>The 'heroes.json' file is an array where each entry is a hero object with key/value pairs.<br>
+		<br>Below you will find a table detailing each key.<br>
+		<br>
+		The heros are sorted by 'name'.<br>
+		<br>
+		All data is extracted directly from the Heros of the Storm game files.<br>
+		<br>
+		</p>
+		<table>
+			<thead>
+				<tr>
+					<th>Key</th>
+					<th>Example</th>
+					<th>Description</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>id</td>
+					<td>"Nova"</td>
+					<td>The internal ID of this hero.</td>
+				</tr>
+				<tr>
+					<td>name</td>
+					<td>"Nova"</td>
+					<td>The name of this hero.</td>
+				</tr>
+				<tr>
+					<td>title</td>
+					<td>"Dominion Ghost"</td>
+					<td>The title of this hero.</td>
+				</tr>
+				<tr>
+					<td>role</td>
+					<td>"Assassin"</td>
+					<td>The role of this hero.</td>
+				</tr>
+				<tr>
+					<td>type</td>
+					<td>"Ranged"</td>
+					<td>The type of this hero.</td>
+				</tr>
+				<tr>
+					<td>gender</td>
+					<td>"Female"</td>
+					<td>The gender of this hero.</td>
+				</tr>
+				<tr>
+					<td>franchise</td>
+					<td>"Starcraft"</td>
+					<td>Which universe/franchise this hero comes from.</td>
+				</tr>
+				<tr>
+					<td>difficulty</td>
+					<td>"Medium"</td>
+					<td>The level of difficulty to play this hero.</td>
+				</tr>
+				<tr>
+					<td>releaseDate</td>
+					<td>"2014-07-22"</td>
+					<td>Present if the release date is known for this hero. Date format: YYYY-MM-DD</td>
+				</tr>
+				<tr>
+					<td>ratings</td>
+					<td colspan="2">
+						<table>
+							<thead>
+								<tr><th colspan="3">Type: object</th></tr>
+								<tr>
+									<th>Key</th>
+									<th>Example</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>damage</td>
+									<td>10</td>
+									<td>A rating between 1 and 10 for this hero's damage.</td>
+								</tr>
+								<tr>
+									<td>utility</td>
+									<td>4</td>
+									<td>A rating between 1 and 10 for this hero's utility.</td>
+								</tr>
+								<tr>
+									<td>survivability</td>
+									<td>2</td>
+									<td>A rating between 1 and 10 for this hero's survivability.</td>
+								</tr>
+								<tr>
+									<td>complexity</td>
+									<td>5</td>
+									<td>A rating between 1 and 10 for this hero's complexity.</td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td>stats</td>
+					<td colspan="2">
+						<table>
+							<thead>
+								<tr><th colspan="3">Type: object<br>Keys are hero id's, values are objects:</th></tr>
+								<tr>
+									<th>Key</th>
+									<th>Example</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>hp</td>
+									<td>700</td>
+									<td>The base HP for this hero.</td>
+								</tr>
+								<tr>
+									<td>hpPerLevel</td>
+									<td>110</td>
+									<td>How much additional 'hp' this hero gains per level.</td>
+								</tr>
+								<tr>
+									<td>hpRegen</td>
+									<td>1.457</td>
+									<td>How much 'hp' this hero regenerates per second in game.</td>
+								</tr>
+								<tr>
+									<td>hpRegenPerLevel</td>
+									<td>0.2265</td>
+									<td>How much additional 'hpRegen' this hero gains per level.</td>
+								</tr>
+								<tr>
+									<td>mana</td>
+									<td>500</td>
+									<td>The base mana for this hero.</td>
+								</tr>
+								<tr>
+									<td>manaPerLevel</td>
+									<td>10</td>
+									<td>How much additional 'mana' this hero gains per level.</td>
+								</tr>
+								<tr>
+									<td>manaRegen</td>
+									<td>3</td>
+									<td>How much 'mana' this hero regenerates per second in game.</td>
+								</tr>
+								<tr>
+									<td>manaRegenPerLevel</td>
+									<td>0.0976</td>
+									<td>How much additional 'manaRegen' this hero gains per level.</td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td>abilities</td>
+					<td colspan="2">
+						<table>
+							<thead>
+								<tr><th colspan="3">Type: array<br>Each item is an ability object:</th></tr>
+								<tr>
+									<th>Key</th>
+									<th>Example</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>name</td>
+									<td>"Snipe"</td>
+									<td>The name of the ability.</td>
+								</tr>
+								<tr>
+									<td>description</td>
+									<td>"Deals 115 (+31 per level) damage to the first enemy hit."</td>
+									<td>The description of the ability.</td>
+								</tr>
+								<tr>
+									<td>cooldown</td>
+									<td>10</td>
+									<td>The cooldown, in seconds, of the ability.</td>
+								</tr>
+								<tr>
+									<td>manaCost</td>
+									<td>65</td>
+									<td>How much mana the ability costs to use.</td>
+								</tr>
+								<tr>
+									<td>aimType</td>
+									<td>"Skillshot"</td>
+									<td>The type of aiming used for the ability.</td>
+								</tr>
+								<tr>
+									<td>heroic</td>
+									<td>true</td>
+									<td>Present and set to true if this ability is a heroic ability.</td>
+								</tr>
+								<tr>
+									<td>trait</td>
+									<td>true</td>
+									<td>Present and set to true if this ability is a trait.</td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td>talents</td>
+					<td colspan="2">
+						<table>
+							<thead>
+								<tr><th colspan="3">Type: object<br>Keys are the level of the talents.<br>Values are arrays of talent objects:</th></tr>
+								<tr>
+									<th>Key</th>
+									<th>Example</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>id</td>
+									<td>"NovaHeroicAbilityTripleTap"</td>
+									<td>The internal ID of this talent.</td>
+								</tr>
+								<tr>
+									<td>id</td>
+									<td>"Triple Tap"</td>
+									<td>The name of this talent.</td>
+								</tr>
+								<tr>
+									<td>description</td>
+									<td>"Locks in on the target Hero, then fires 3 shots that strike the first Hero or Structure they come in contact with for 80 (+33 per level) damage each."</td>
+									<td>The description of this talent.</td>
+								</tr>
+								<tr>
+									<td>cooldown</td>
+									<td>100</td>
+									<td>The cooldown of this talent.</td>
+								</tr>
+								<tr>
+									<td>prerequisite</td>
+									<td>"NovaHeroicAbilityTripleTap"</td>
+									<td>The prerequisite talent id needed in order to take this talent.</td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<br>
+		<hr>
+		<a name="exampleHero"></a>
+		<h1>Example Hero<a href="#top">(back to top)</a></h1>
+		<pre id="heroExampleCode"><code data-language="javascript">
+{
+    "id"         : "Nova",
+    "name"       : "Nova",
+    "title"      : "Dominion Ghost",
+    "role"       : "Assassin",
+    "type"       : "Ranged",
+    "gender"     : "Female",
+    "franchise"  : "Starcraft",
+    "difficulty" : "Medium",
+    "ratings":
+    {
+        "damage"        : 10,
+        "utility"       : 4,
+        "survivability" : 2,
+        "complexity"    : 5
+    },
+    "stats":
+    {
+        "Nova":
+        {
+            "hp"                : 700,
+            "hpPerLevel"        : 110,
+            "hpRegen"           : 1.457,
+            "hpRegenPerLevel"   : 0.2265,
+            "mana"              : 500,
+            "manaPerLevel"      : 10,
+            "manaRegen"         : 3,
+            "manaRegenPerLevel" : 0.0976
+        }
+    },
+    "abilities":
+    [
+        {
+          "name": "Snipe",
+          "description": "Deals 115 (+31 per level) damage to the first enemy hit.",
+          "cooldown": 10,
+          "manaCost": 65,
+          "aimType": "Skillshot"
+        },
+        {
+          "name": "Pinning Shot",
+          "description": "Deal 40 (+10 per level) damage to an enemy and slow it by 30% for 2.25 seconds.",
+          "cooldown": 12,
+          "manaCost": 65
+        },
+        {
+          "name": "Holo Decoy",
+          "description": "Create a Decoy for 5 seconds that appears to attack enemies. \nUsing this Ability does not break Cloak.",
+          "cooldown": 15,
+          "manaCost": 50
+        },
+        {
+          "heroic": true,
+          "name": "Triple Tap",
+          "description": "Locks in on the target Hero, then fires 3 shots that hit the first Hero or Structure they come in contact with for 80 (+33 per level) damage each.",
+          "cooldown": 100,
+          "manaCost": 100
+        },
+        {
+          "heroic": true,
+          "name": "Precision Strike",
+          "description": "After a 1.5 second delay, deals 300 (+35 per level) damage to enemies within an area. Unlimited range.",
+          "cooldown": 60,
+          "manaCost": 100
+        },
+        {
+          "trait": true,
+          "name": "Permanent Cloak, Sniper",
+          "description": "Gain Stealth when out of combat for 3 seconds. Taking damage, attacking, or channeling reveals you.\nBasic Attack range is 20% further than other ranged Heroes, and you see 10% further than other Heroes."
+        }
+    ],
+    "talents":
+    {
+      "1":
+      [
+          {
+            "id": "GenericTalentConjurersPursuit",
+            "name": "Conjurer's Pursuit",
+            "description": "Increases Mana Regeneration by 0.5 per second. Every 3 Regeneration Globes gathered increases this bonus by 0.25."
+          },
+          {
+            "id": "NovaMasteryPsiOpRangefinder",
+            "name": "Psi-Op Rangefinder",
+            "description": "Increases Snipe's range by 20% and reduces the Cooldown by 2 seconds."
+          },
+          {
+            "id": "NovaMasteryAmbushSnipe",
+            "name": "Ambush Snipe",
+            "description": "Increases Snipe's damage by 20% when used from Cloak or within one second of being Cloaked."
+          },
+          {
+            "id": "NovaMasteryTazerRounds",
+            "name": "Tazer Rounds",
+            "description": "Increases the duration of Pinning Shot's slow to 4 seconds."
+          }
+      ],
+      "4":
+      [
+          {
+            "id": "NovaMasteryPerfectShotSnipe",
+            "name": "Perfect Shot",
+            "description": "Hitting an enemy Hero with Snipe refunds 50% of the Mana cost. Killing an enemy Hero with Snipe refunds 100% of the Mana cost."
+          },
+          {
+            "id": "NovaExtendedProjection",
+            "name": "Remote Delivery",
+            "description": "Reduces the cooldown of Holo Decoy by 3 seconds, and increases the range by 100%."
+          },
+          {
+            "id": "GenericTalentGatheringPower",
+            "name": "Gathering Power",
+            "description": "Passively grants 5% Ability Power. Each Hero takedown increases this bonus by 2% to a maximum of 15%. This bonus Ability Power is reset to 5% on death."
+          },
+          {
+            "id": "GenericTalentEnvenom",
+            "name": "Envenom",
+            "description": "Activate to poison an enemy Hero, dealing 180 damage over 5 seconds.",
+            "cooldown": 60
+          }
+      ],
+      "7":
+      [
+          {
+            "id": "NovaMasteryExplosiveShot",
+            "name": "Explosive Round",
+            "description": "Snipe also deals 50% damage to enemies near the impact."
+          },
+          {
+            "id": "NovaCombatStyleOneintheChamber",
+            "name": "One in the Chamber",
+            "description": "After using an ability, your next Basic Attack deals 80% additional damage."
+          },
+          {
+            "id": "NovaCombatStyleAntiArmorShells",
+            "name": "Anti-Armor Shells",
+            "description": "Your Basic Attacks deal 250% damage, but your Attack Speed is proportionally slower."
+          },
+          {
+            "id": "NovaMasteryCovertOpsPinningShot",
+            "name": "Covert Ops",
+            "description": "Increases the Movement Speed slow of Pinning Shot by 1% for every second that Nova is Cloaked, to a maximum of a 50% slow. Bonus fades when Nova is un-Cloaked for one second."
+          }
+      ],
+      "10":
+      [
+          {
+            "id": "NovaHeroicAbilityTripleTap",
+            "name": "Triple Tap",
+            "description": "Locks in on the target Hero, then fires 3 shots that strike the first Hero or Structure they come in contact with for 80 (+33 per level) damage each.",
+            "cooldown": 100
+          },
+          {
+            "id": "NovaHeroicAbilityPrecisionStrike",
+            "name": "Precision Strike",
+            "description": "After a 1.5 second delay, deals 300 (+35 per level) damage in an area. Unlimited range.",
+            "cooldown": 60
+          }
+      ],
+      "13":
+      [
+          {
+            "id": "NovaMasteryHoloDrone",
+            "name": "Lethal Decoy",
+            "description": "Holo Decoy now deals 25% of Nova's damage."
+          },
+          {
+            "id": "NovaCombatStyleAdvancedCloaking",
+            "name": "Advanced Cloaking",
+            "description": "While Stealthed from Permanent Cloak, your Movement Speed is increased by 25% and you heal for 1.95% of your maximum Health per second."
+          },
+          {
+            "id": "NovaCombatStyleMyKill",
+            "name": "Headshot",
+            "description": "Reduces your Ability cooldowns by 4 seconds when you kill an enemy Hero."
+          },
+          {
+            "id": "GenericTalentSpellShield",
+            "name": "Spell Shield",
+            "description": "Upon taking Ability Damage, reduce that damage and further Ability Damage by 50% for 2 seconds.  Can only trigger once every 30 seconds."
+          }
+      ],
+      "16":
+      [
+          {
+            "id": "NovaRailgun",
+            "name": "Railgun",
+            "description": "Snipe penetrates through the first enemy hit and deals 50% damage to subsequent targets. Snipe cooldown is reduced by 1 second for each target hit."
+          },
+          {
+            "id": "NovaMasteryCripplingShot",
+            "name": "Crippling Shot",
+            "description": "Enemies hit by Pinning shot become Vulnerable, taking 25% increased damage for the duration of the slow."
+          },
+          {
+            "id": "NovaMasteryDoubleFakeHoloDecoy",
+            "name": "Double Fake",
+            "description": "Casting Holo Decoy creates an additional Decoy at your current location."
+          },
+          {
+            "id": "GenericTalentOverdrive",
+            "name": "Overdrive",
+            "description": "Activate to increase Ability Power by 25% and Mana costs by 40% for 5 seconds.",
+            "cooldown": 25
+          }
+      ],
+      "20":
+      [
+          {
+            "id": "NovaMasteryFastReload",
+            "name": "Fast Reload",
+            "description": "Triple Tap's cooldown is reset if it kills an enemy Hero.",
+            "prerequisite": "NovaHeroicAbilityTripleTap"
+          },
+          {
+            "id": "NovaMasteryPrecisionBarrage",
+            "name": "Precision Barrage",
+            "description": "Precision Strike now holds two charges with a short cooldown.",
+            "prerequisite": "NovaHeroicAbilityPrecisionStrike"
+          },
+          {
+            "id": "GenericTalentRewind",
+            "name": "Rewind",
+            "description": "Activate to reset the cooldowns of your Basic Abilities.",
+            "cooldown": 60
+          },
+          {
+            "id": "GenericTalentFlashoftheStorms",
+            "name": "Bolt of the Storm",
+            "description": "Activate to teleport to a nearby location.",
+            "cooldown": 40
+          }
+      ]
+   }
+}
+		</code></pre>
 		<hr>
 		<a name="changeLog"></a>
 		<h1>Change Log<a href="#top">(back to top)</a></h1>
@@ -81,7 +595,7 @@
 		<ul>
 			<li>Thank you <strong>VERY MUCH</strong> to these folks who reported bugs and helped in other ways:
 				<ul>
-					<li>Nobody Yet</li>
+					<li>Larry Moe, Crazy Edo, Anonymous Bosch, Julius Deane</li>
 				</ul>
 			</li>
 			<li><a href="http://ethanschoonover.com/solarized">Solarized</a> is a great color scheme, I used a bunch of those colors here on this page</li>
@@ -93,7 +607,12 @@
 		<a name="todo"></a>
 		<h1>To-Do List<a href="#top">(back to top)</a></h1>
 		<ul>
-			<li>???</li>
+			<li>Attack damage</li>
+			<li>Attack speed</li>
 		</ul>
+		<hr>
+		<h1>Source Code<a href="#top">(back to top)</a></h1>
+		<p>Source code used to generate the JSON is available here: <a href="https://github.com/Sembiance/heroesjson">https://github.com/Sembiance/heroesjson</a><br>
+		<br>		
 	</body>
 </html>

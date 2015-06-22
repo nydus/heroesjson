@@ -1,3 +1,0 @@
-Button/Tooltip/AbathurLocustStrain=<s val="StandardTooltipDetails">Trait</s><n/><n/><s val="StandardTooltip">Spawns a Locust to attack down the nearest lane every <s val="StandardTooltipDetails"><d ref="Abil,AbathurSpawnLocusts,Cost[0].Cooldown.TimeUse" precision="1"/></s> seconds. Locusts last for <s val="StandardTooltipDetails"><d ref="Behavior,LocustTimedLife,Duration"/></s> seconds.
-
-

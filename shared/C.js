@@ -48,10 +48,10 @@ exports.HERO_TALENT_LEVELS = [1, 4, 7, 10, 13, 16, 20];
 
 exports.HERO_JSON_SCHEMA =
 {
-	name : "hero",
-	type : "object",
+	name                 : "hero",
+	type                 : "object",
 	additionalProperties : false,
-	properties :
+	properties           :
 	{
 		id          : { type : "string", minLength : 1 },
 		name        : { type : "string", minLength : 1 },
@@ -62,6 +62,27 @@ exports.HERO_JSON_SCHEMA =
 		franchise   : { type : "string", minLength : 1 },
 		difficulty  : { type : "string", enum : ["Easy", "Medium", "Hard", "Very Hard"] },
 		releaseDate : { type : "string", pattern : "2[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]" },
+		stats :
+			{
+				type       : "object",
+				additionalProperties :
+				{
+					type                 : "object",
+					additionalProperties : false,
+					required             : ["hp", "hpPerLevel", "hpRegen", "hpRegenPerLevel", "mana", "manaPerLevel", "manaRegen", "manaRegenPerLevel"],
+					properties           :
+					{
+						hp                : { type : "number", minimum : 0 },
+						hpPerLevel        : { type : "number", minimum : 0 },
+						hpRegen           : { type : "number", minimum : 0 },
+						hpRegenPerLevel   : { type : "number", minimum : 0 },
+						mana              : { type : "number", minimum : 0 },
+						manaPerLevel      : { type : "number", minimum : 0 },
+						manaRegen         : { type : "number", minimum : 0 },
+						manaRegenPerLevel : { type : "number", minimum : 0 }
+					}
+				}
+			},
 		ratings     :
 			{
 				type : "object",
@@ -96,9 +117,9 @@ exports.HERO_JSON_SCHEMA =
 						description       : { type : "string", minLength : 1 },
 						trait             : { type : "boolean" },
 						heroic            : { type : "boolean" },
-						cooldown          : { type : "integer", minimum : 0 },
-						manaCost          : { type : "integer", minimum : 0 },
-						manaCostPerSecond : { type : "integer", minimum : 0 },
+						cooldown          : { type : "number", minimum : 0 },
+						manaCost          : { type : "number", minimum : 0 },
+						manaCostPerSecond : { type : "number", minimum : 0 },
 						aimType           : { type : "string", minLength : 1 }
 					}
 				}
@@ -122,7 +143,7 @@ var HERO_TALENT_TIER_JSON_SCHEMA =
 				name         : { type : "string", minLength : 1 },
 				description  : { type : "string", minLength : 1 },
 				prerequisite : { type : "string", minLength : 1 },
-				cooldown     : { type : "integer", minimum : 0 },
+				cooldown     : { type : "number", minimum : 0 },
 			}
 		}
 };
