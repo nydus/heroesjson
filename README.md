@@ -19,7 +19,7 @@ Build
 
 Run
 ---
-    node ???.js ???
+    node generate.js /path/to/heroes/install/dir
 
 
 Results

@@ -76,7 +76,7 @@ var S = {};
 var IGNORED_NODE_TYPE_IDS = {"Hero" : ["Random", "AI", "_Empty"]};
 
 tiptoe(
-	/*function clearOut()
+	function clearOut()
 	{
 		base.info("Clearing 'out' directory...");
 		rimraf(OUT_PATH, this);
@@ -97,7 +97,7 @@ tiptoe(
 		{
 			runUtil.run(CASCEXTRATOR_PATH, [HOTS_DATA_PATH, "-o", OUT_PATH, "-f", NEEDED_FILE_PATH], {silent:true}, subcb);
 		}, this, 10);
-	},*/
+	},
 	function loadDataAndSaveJSON()
 	{
 		var xmlDocs = [];
@@ -136,11 +136,11 @@ tiptoe(
 
 		fs.writeFile(HEROES_OUT_PATH, JSON.stringify(heroes), {encoding:"utf8"}, this);
 	},
-	/*function cleanup()
+	function cleanup()
 	{
 		base.info("Cleaning up 'out' directory...");
 		rimraf(OUT_MODS_PATH, this);
-	},*/
+	},
 	function finish(err)
 	{
 		if(err)
