@@ -210,6 +210,7 @@ function processHeroNode(heroNode)
 
 	base.info("Processing hero: %s", hero.name);
 	hero.title =  S["Hero/Title/" + hero.id];
+	hero.description = S["Hero/Description/" + hero.id];
 
 	hero.role = getValue(heroNode, "Role");
 	if(hero.role==="Damage")

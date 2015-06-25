@@ -92,6 +92,11 @@
 					<td>The title of this hero.</td>
 				</tr>
 				<tr>
+					<td>description</td>
+					<td>"Automatically cloaks while out of combat. Snipes enemies from afar, and creates Decoys of herself to fool enemies."</td>
+					<td>The description of this hero.</td>
+				</tr>
+				<tr>
 					<td>role</td>
 					<td>"Assassin"</td>
 					<td>The role of this hero.</td>
@@ -330,6 +335,7 @@
   "id": "Nova",
   "name": "Nova",
   "title": "Dominion Ghost",
+  "description" : "Automatically cloaks while out of combat. Snipes enemies from afar, and creates Decoys of herself to fool enemies.",
   "role": "Assassin",
   "type": "Ranged",
   "gender": "Female",
