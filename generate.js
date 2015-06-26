@@ -77,20 +77,32 @@ var IGNORED_NODE_TYPE_IDS = {"Hero" : ["Random", "AI", "_Empty"]};
 tiptoe(
 	function clearOut()
 	{
+		if(process.argv[3]==="dev")
+			return this();
+
 		base.info("Clearing 'out' directory...");
 		rimraf(OUT_PATH, this);
 	},
 	function createOut()
 	{
+		if(process.argv[3]==="dev")
+			return this();
+
 		fs.mkdir(OUT_PATH, this);
 	},
 	function copyBuildInfo()
 	{
+		if(process.argv[3]==="dev")
+			return this();
+
 		base.info("Copying latest .build.info file...");
 		fileUtil.copy(path.join(HOTS_PATH, ".build.info"), path.join(HOTS_DATA_PATH, ".build.info"), this);
 	},
 	function extractFiles()
 	{
+		if(process.argv[3]==="dev")
+			return this();
+
 		base.info("Extracting needed files...");
 		NEEDED_FILE_PATHS.parallelForEach(function(NEEDED_FILE_PATH, subcb)
 		{
@@ -128,16 +140,19 @@ tiptoe(
 		var heroes = Object.values(NODE_MAPS["Hero"]).map(function(heroNode) { return processHeroNode(heroNode); });
 		heroes.sort(function(a, b) { return (a.name.startsWith("The ") ? a.name.substring(4) : a.name).localeCompare((b.name.startsWith("The ") ? b.name.substring(4) : b.name)); });
 
-		base.info("Validating %d heroes...", heroes.length);
+		base.info("\nValidating %d heroes...", heroes.length);
 		heroes.forEach(validateHero);
 		
-		base.info("Saving JSON...");
+		base.info("\nSaving JSON...");
 
 		fs.writeFile(HEROES_OUT_PATH, JSON.stringify(heroes), {encoding:"utf8"}, this);
 	},
 	function cleanup()
 	{
-		base.info("Cleaning up 'out' directory...");
+		if(process.argv[3]==="dev")
+			return this();
+
+		base.info("\nCleaning up 'out' directory...");
 		rimraf(OUT_MODS_PATH, this);
 	},
 	function finish(err)
@@ -291,7 +306,7 @@ function processHeroNode(heroNode)
 	});
 
 	// Abilities
-	hero.abilities = getHeroAbilities(hero.id, heroUnitids);
+	hero.abilities = getHeroAbilities(hero.id, hero.name, heroUnitids);
 
 	// Talents
 	hero.talents = {};
@@ -342,7 +357,7 @@ function processHeroNode(heroNode)
 	return hero;
 }
 
-function getHeroAbilities(heroid, heroUnitids)
+function getHeroAbilities(heroid, heroName, heroUnitids)
 {
 	var abilities = {};
 
@@ -388,14 +403,14 @@ function getHeroAbilities(heroid, heroUnitids)
 		heroAbilityids.push(abilid);
 	});
 
-	abilities[heroid] = getUnitAbilities(heroid, heroAbilityids, heroHeroicAbilityids, heroTraitAbilityids, "Hero" + (C.HERO_UNIT_ID_REPLACEMENTS[heroid] || heroid));
+	abilities[heroid] = getUnitAbilities(heroid, heroName, heroAbilityids, heroHeroicAbilityids, heroTraitAbilityids, "Hero" + (C.HERO_UNIT_ID_REPLACEMENTS[heroid] || heroid));
 
 	heroUnitids.forEach(function(heroUnitid)
 	{
 		if(heroUnitid===heroid)
 			return;
 
-		abilities[heroUnitid] = getUnitAbilities(heroid, heroAbilityids.concat((C.VALID_SUBUNIT_ABILITY_IDS[heroUnitid] || [])), heroHeroicAbilityids, heroTraitAbilityids, heroUnitid);
+		abilities[heroUnitid] = getUnitAbilities(heroid, heroName, heroAbilityids.concat((C.VALID_SUBUNIT_ABILITY_IDS[heroUnitid] || [])), heroHeroicAbilityids, heroTraitAbilityids, heroUnitid);
 	});
 
 	heroUnitids.concat([heroid]).forEach(function(heroUnitid)
@@ -417,7 +432,7 @@ function getHeroAbilities(heroid, heroUnitids)
 	return abilities;
 }
 
-function getUnitAbilities(heroid, heroAbilityids, heroHeroicAbilityids, heroTraitAbilityids, unitid)
+function getUnitAbilities(heroid, heroName, heroAbilityids, heroHeroicAbilityids, heroTraitAbilityids, unitid)
 {
 	var SHORTCUT_KEY_ORDER = ["Q", "W", "E", "R", "D", "1", "2", "3", "4", "5"];
 	var abilities = [];
@@ -478,7 +493,7 @@ function getUnitAbilities(heroid, heroAbilityids, heroHeroicAbilityids, heroTrai
 		if(heroHeroicAbilityids.contains(ability.id) || heroHeroicAbilityids.contains(abilityCmdid))
 			ability.heroic = true;
 
-		addAbilityDetails(ability, heroid, abilityCmdid);
+		addAbilityDetails(ability, heroid, heroName, abilityCmdid);
 
 		ability.tempSortOrder = (buttonRow*5)+buttonColumn;
 
@@ -505,7 +520,7 @@ function getUnitAbilities(heroid, heroAbilityids, heroHeroicAbilityids, heroTrai
 		ability.id = abilityToAdd.id;
 		ability.icon = abilityToAdd.icon;
 
-		addAbilityDetails(ability, heroid, undefined, abilityToAdd.name);
+		addAbilityDetails(ability, heroid, heroName, undefined, abilityToAdd.name);
 
 		if(abilityToAdd.shortcut)
 			ability.shortcut = abilityToAdd.shortcut;
@@ -522,11 +537,20 @@ function getUnitAbilities(heroid, heroAbilityids, heroHeroicAbilityids, heroTrai
 	return abilities;
 }
 
-function addAbilityDetails(ability, heroid, abilityCmdid, abilityName)
+function addAbilityDetails(ability, heroid, heroName, abilityCmdid, abilityName)
 {
-	ability.name = abilityName || S["Button/Name/" + ability.id] || S["Button/Name/" + abilityCmdid];
+	if(C.USE_ABILITY_NAME.contains(heroid))
+		ability.name = abilityName || S["Abil/Name/" + ability.id] || S["Abil/Name/" + abilityCmdid];
+	else
+		ability.name = abilityName || S["Button/Name/" + ability.id] || S["Button/Name/" + abilityCmdid];
+
 	if(!ability.name)
 		throw new Error("Failed to get ability name: " + ability.id + " and " + abilityCmdid);
+
+	if(ability.name.startsWith(heroid + " "))
+		ability.name = ability.name.substring(heroid.length+1).trim();
+	if(ability.name.startsWith(heroName + " "))
+		ability.name = ability.name.substring(heroName.length+1).trim();
 
 	var abilityDescription = S["Button/Tooltip/" + ability.id] || S["Button/Tooltip/" + abilityCmdid];
 	if(!abilityDescription)
@@ -816,6 +840,12 @@ function validateHero(hero)
 		base.warn("Hero %s (%s) has FAILED VALIDATION", hero.id, hero.name);
 		base.info(validator.errors);
 	}
+
+	Object.forEach(hero.abilities, function(unitName, abilities)
+	{
+		if(abilities.length!==abilities.map(function(ability) { return ability.name; }).unique().length)
+			base.warn("Hero %s has multiple abilities with the same name!", hero.name);
+	});
 }
 
 function getValue(node, subnodeName, defaultValue)

@@ -129,6 +129,11 @@ exports.IMPORT_ABILITIES =
 	]
 };
 
+exports.USE_ABILITY_NAME =
+[
+	"FaerieDragon", "Tassadar"
+];
+
 exports.HERO_MAX_LEVEL = 20;
 
 exports.HERO_TALENT_LEVELS = [1, 4, 7, 10, 13, 16, 20];

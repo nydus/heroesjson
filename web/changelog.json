@@ -1,5 +1,13 @@
 [
 	{
+		"version" : "1.2.1",
+		"when" : "2015-06-26",
+		"patchVersion" : "35702",
+		"changes" : [
+			"Fixed some incorrectly named abilities."
+		]
+	},
+	{
 		"version" : "1.2.0",
 		"when" : "2015-06-26",
 		"patchVersion" : "35702",
