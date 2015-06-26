@@ -41,6 +41,50 @@ exports.FORMULA_PRE_REPLACEMENTS =
 	{
 		  match : "Behavior,CrusaderPunishStackingSlow,Modification.UnifiedMoveSpeedFactor*(-100)6",
 		replace : "Behavior,CrusaderPunishStackingSlow,Modification.UnifiedMoveSpeedFactor*(-100)*6"
+	},
+	{
+		  match : "Effect,PixieDustApplyBlockStacks,Count",
+		replace : "1"
+	},
+	{
+		  match : "Effect,PixieDustApplyBlockController,Count",
+		replace : "1"
+	}
+];
+
+exports.XMLREF_REPLACEMENTS =
+[
+	{
+		from : "Effect,ArcaneIntellectBasicAttackManaRestore,VitalArray[2].Change",
+		  to : "Effect,ArcaneIntellectBasicAttackManaRestore,VitalArray[0].Change",
+	},
+	{
+		from : "Effect,ArcaneIntellectAbilityDamageManaRestore,VitalArray[2].Change",
+		  to : "Effect,ArcaneIntellectAbilityDamageManaRestore,VitalArray[0].Change"
+	},
+	{
+		from : "Effect,FrostmourneHungersManaRestoreModifyUnit,VitalArray[2].Change",
+		  to : "Effect,FrostmourneHungersManaRestoreModifyUnit,VitalArray[0].Change"
+	},
+	{
+		from : "Behavior,FeralHeartCarryBehavior,Modification.VitalRegenMultiplier[2]",
+		  to : "Behavior,FeralHeartCarryBehavior,Modification.VitalRegenMultiplier[1]"
+	},
+	{
+		from : "Behavior,TalentBucketVampiricAssault,Modification.VitalDamageLeechArray[0].KindArray[2]",
+		  to : "Behavior,TalentBucketVampiricAssault,Modification.VitalDamageLeechArray[0].KindArray[0]"
+	},
+	{
+		from : "Behavior,TalentBucketVampiricAssaultTychus,Modification.VitalDamageLeechArray[0].KindArray[2]",
+		  to : "Behavior,TalentBucketVampiricAssaultTychus,Modification.VitalDamageLeechArray[0].KindArray[0]"
+	},
+	{
+		from : "Effect,StormBoltRefundMasteryModifyUnit,Cost[0].Fraction.Vital[2]",
+		  to : "Effect,StormBoltRefundMasteryModifyUnit,Cost[0].Fraction.Vital[0]"
+	},
+	{
+		from : "Abil,MuradinStormBolt,Cost[0].Vital[2]",
+		  to : "Abil,MuradinStormBolt,Cost[0].Vital[0]"
 	}
 ];
 
@@ -61,41 +105,29 @@ exports.IMPORT_ABILITIES =
 		{
 			id : "LostVikingSelectOlaf",
 			shortcut : "1",
-			name : "Select Olaf"
+			name : "Select Olaf",
+			icon : "storm_ui_icon_lostvikings_selectolaf.dds"
 		},
 		{
 			id : "LostVikingSelectBaleog",
 			shortcut : "2",
-			name : "Select Baleog"
+			name : "Select Baleog",
+			icon : "storm_ui_icon_lostvikings_selectbaleog.dds"
 		},
 		{
 			id : "LostVikingSelectErik",
 			shortcut : "3",
-			name : "Select Erik"
+			name : "Select Erik",
+			icon : "storm_ui_icon_lostvikings_selecterik.dds"
 		},
 		{
 			id : "LostVikingSelectAll",
 			shortcut : "4",
-			name : "Select All Vikings"
+			name : "Select All Vikings",
+			icon : "storm_ui_icon_lostvikings_selectall.dds"
 		}
 	]
 };
-
-exports.XMLREF_REPLACEMENTS =
-[
-	{
-		from : "Effect,ArcaneIntellectBasicAttackManaRestore,VitalArray[2].Change",
-		  to : "Effect,ArcaneIntellectBasicAttackManaRestore,VitalArray[0].Change",
-	},
-	{
-		from : "Effect,ArcaneIntellectAbilityDamageManaRestore,VitalArray[2].Change",
-		  to : "Effect,ArcaneIntellectAbilityDamageManaRestore,VitalArray[0].Change"
-	},
-	{
-		from : "Effect,FrostmourneHungersManaRestoreModifyUnit,VitalArray[2].Change",
-		  to : "Effect,FrostmourneHungersManaRestoreModifyUnit,VitalArray[0].Change"
-	}
-];
 
 exports.HERO_MAX_LEVEL = 20;
 
@@ -169,7 +201,7 @@ exports.HERO_JSON_SCHEMA =
 					{
 						type : "object",
 						additionalProperties : false,
-						required : ["id", "name", "description"],
+						required : ["id", "name", "description", "icon"],
 						properties :
 						{
 							id                : { type : "string", minLength : 1 },
@@ -181,7 +213,8 @@ exports.HERO_JSON_SCHEMA =
 							manaCost          : { type : "number", minimum : 0 },
 							manaCostPerSecond : { type : "number", minimum : 0 },
 							aimType           : { type : "string", minLength : 1 },
-							shortcut          : { type : "string", minLength : 1, maxLength : 1 }
+							shortcut          : { type : "string", minLength : 1, maxLength : 1 },
+							icon              : { type : "string", minLength : 1 }
 						}
 					}
 				}
@@ -198,7 +231,7 @@ var HERO_TALENT_TIER_JSON_SCHEMA =
 		{
 			type : "object",
 			additionalProperties : false,
-			required : ["id", "name", "description"],
+			required : ["id", "name", "description", "icon"],
 			properties :
 			{
 				id           : { type : "string", minLength : 1 },
@@ -206,6 +239,7 @@ var HERO_TALENT_TIER_JSON_SCHEMA =
 				description  : { type : "string", minLength : 1 },
 				prerequisite : { type : "string", minLength : 1 },
 				cooldown     : { type : "number", minimum : 0 },
+				icon         : { type : "string", minLength : 1 }
 			}
 		}
 };

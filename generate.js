@@ -8,7 +8,6 @@ var base = require("xbase"),
 	moment = require("moment"),
 	jsen = require("jsen"),
 	jsonselect = require("JSONSelect"),
-	diffUtil = require("xutil").diff,
 	libxmljs = require("libxmljs"),
 	C = require("C"),
 	PEG = require("pegjs"),
@@ -39,7 +38,7 @@ var HEROES_OUT_PATH = path.join(OUT_PATH, "heroes.json");
 
 var EXTRA_HEROES = ["anubarak", "chen", "crusader", "jaina", "kaelthas", "lostvikings", "murky", "sonyarework", "sylvanas", "thrall"];
 var NODE_MAPS = {};
-var NODE_MAP_TYPES = ["Hero", "Talent", "Behavior", "Effect", "Abil", "Unit", "Validator", "Weapon" ];
+var NODE_MAP_TYPES = ["Hero", "Talent", "Behavior", "Effect", "Abil", "Unit", "Validator", "Weapon", "Button" ];
 
 var HERO_LEVEL_SCALING_MODS = {};
 
@@ -322,6 +321,11 @@ function processHeroNode(heroNode)
 
 		talent.name = talentDescription.replace(/<s val="StandardTooltipHeader">([^<]+)<.+/, "$1").replace(/<s\s*val\s*=\s*"StandardTooltip">/gm, "").trim();
 		talent.description = getFullDescription(talentDescription, hero.id, 0);
+		talent.icon = getValue(NODE_MAPS["Button"][faceid], "Icon");
+		if(!talent.icon)
+			delete talent.icon;
+		else
+			talent.icon = talent.icon.replace(/Assets\\Textures\\/, "");
 
 		addCooldownInfo(talent, "description");
 
@@ -454,10 +458,22 @@ function getUnitAbilities(heroid, heroAbilityids, heroHeroicAbilityids, heroTrai
 		
 		if(abilNode)
 		{
+			var cmdButtonNode = abilNode.get("CmdButtonArray[@index='Execute']");
+			if(cmdButtonNode)
+				ability.icon = getValue(NODE_MAPS["Button"][attributeValue(cmdButtonNode, "DefaultButtonFace")], "Icon");
+
 			var energyCostNode = abilNode.get("Cost/Vital[@index='Energy']");
 			if(energyCostNode)
 				ability.manaCost = +attributeValue(energyCostNode, "value");
 		}
+
+		if(!ability.icon)
+			ability.icon = getValue(NODE_MAPS["Button"][ability.id], "Icon");
+
+		if(!ability.icon)
+			delete ability.icon;
+		else
+			ability.icon = ability.icon.replace(/Assets\\Textures\\/, "");
 
 		if(heroHeroicAbilityids.contains(ability.id) || heroHeroicAbilityids.contains(abilityCmdid))
 			ability.heroic = true;
@@ -487,6 +503,7 @@ function getUnitAbilities(heroid, heroAbilityids, heroHeroicAbilityids, heroTrai
 	{
 		var ability = {};
 		ability.id = abilityToAdd.id;
+		ability.icon = abilityToAdd.icon;
 
 		addAbilityDetails(ability, heroid, undefined, abilityToAdd.name);
 
@@ -618,7 +635,7 @@ function getFullDescription(_fullDescription, heroid, heroLevel)
 			});
 
 			var result = FORMULA_PARSER.parse(formula, {heroid:heroid, heroLevel:heroLevel, lookupXMLRef : lookupXMLRef});
-			//if(heroid==="L90ETC") { base.info("Formula: %s\nResult: %d", formula, result); }
+			//if(heroid==="Anubarak") { base.info("Formula: %s\nResult: %d", formula, result); }
 		
 			var MAX_PRECISION = 4;
 			if(result.toFixed(MAX_PRECISION).length<(""+result).length)
@@ -702,7 +719,7 @@ function lookupXMLRef(heroid, heroLevel, query, negative)
 			query = XMLREF_REPLACEMENT.to;
 	});
 
-	//if(heroid==="Azmodan") { base.info("QUERY: %s", query); }
+	//if(heroid==="Rehgar") { base.info("QUERY: %s", query); }
 
 	var mainParts = query.split(",");
 
@@ -742,11 +759,11 @@ function lookupXMLRef(heroid, heroLevel, query, negative)
 		additionalAmount = heroLevel*HERO_LEVEL_SCALING_MOD.value;
 	});
 
-	//if(heroid==="Azmodan") { base.info("Start (negative:%s): %s", negative, subparts); }
+	//if(heroid==="Rehgar") { base.info("Start (negative:%s): %s", negative, subparts); }
 	subparts.forEach(function(subpart)
 	{
 		var xpath = !subpart.match(/\[[0-9]+\]/) ? subpart.replace(/([^[]+)\[([^\]]+)]/, "$1[@index = '$2']") : subpart.replace(/\[([0-9]+)\]/, "[" + (+subpart.match(/\[([0-9]+)\]/)[1]+1) + "]");
-		//if(heroid==="Azmodan") { base.info("Next xpath: %s\nCurrent target: %s\n", xpath, target.toString()); }
+		//if(heroid==="Rehgar") { base.info("Next xpath: %s\nCurrent target: %s\n", xpath, target.toString()); }
 		var nextTarget = target.get(xpath);
 		if(!nextTarget)
 			result = +attributeValue(target, xpath.replace(/([^\[]+).*/, "$1"));
@@ -756,8 +773,16 @@ function lookupXMLRef(heroid, heroLevel, query, negative)
 	if(target)
 		result = +attributeValue(target, "value");
 
+	if(isNaN(result))
+	{
+		if(query.contains("AttributeFactor"))	// These are only set at runtime with talent choices
+			result = 0;
+		else
+			throw new Error("Failed to get XML ref [" + query + "], result is NaN for hero: " + heroid);
+	}
+
 	result += additionalAmount;
-	//if(heroid==="Azmodan") { base.info("%s => %d", query, result); }
+	//if(heroid==="Rehgar") { base.info("%s => %d", query, result); }
 
 	if(negative)
 		result = result*-1;
@@ -795,6 +820,9 @@ function validateHero(hero)
 
 function getValue(node, subnodeName, defaultValue)
 {
+	if(!node)
+		return defaultValue || undefined;
+
 	var subnode = node.get(subnodeName);
 	if(!subnode)
 		return defaultValue || undefined;
@@ -804,6 +832,9 @@ function getValue(node, subnodeName, defaultValue)
 
 function attributeValue(node, attrName, defaultValue)
 {
+	if(!node)
+		return defaultValue || undefined;
+
 	var attr = node.attr(attrName);
 	if(!attr)
 		return defaultValue || undefined;

@@ -235,7 +235,7 @@
 							<tbody>
 								<tr>
 									<td>id</td>
-									<td>"NovaSnipe"</td>
+									<td>"NovaSnipeStorm"</td>
 									<td>The internal ID of this ability.</td>
 								</tr>
 								<tr>
@@ -277,6 +277,11 @@
 									<td>trait</td>
 									<td>true</td>
 									<td>Present and set to true if this ability is a trait.</td>
+								</tr>
+								<tr>
+									<td>icon</td>
+									<td>"storm_ui_icon_nova_snipe.dds"</td>
+									<td>The internal filename for the icon used for this ability.</td>
 								</tr>
 							</tbody>
 						</table>
@@ -320,6 +325,11 @@
 									<td>"NovaHeroicAbilityTripleTap"</td>
 									<td>The prerequisite talent id needed in order to take this talent.</td>
 								</tr>
+								<tr>
+									<td>icon</td>
+									<td>"storm_ui_icon_nova_tripletap.dds"</td>
+									<td>The internal filename for the icon used for this talent.</td>
+								</tr>
 							</tbody>
 						</table>
 					</td>
@@ -335,23 +345,20 @@
   "id": "Nova",
   "name": "Nova",
   "title": "Dominion Ghost",
-  "description" : "Automatically cloaks while out of combat. Snipes enemies from afar, and creates Decoys of herself to fool enemies.",
+  "description": "Automatically cloaks while out of combat. Snipes enemies from afar, and creates Decoys of herself to fool enemies.",
   "role": "Assassin",
   "type": "Ranged",
   "gender": "Female",
   "franchise": "Starcraft",
   "difficulty": "Medium",
-  "ratings":
-  {
+  "ratings": {
     "damage": 10,
     "utility": 4,
     "survivability": 2,
     "complexity": 5
   },
-  "stats":
-  {
-    "Nova":
-    {
+  "stats": {
+    "Nova": {
       "hp": 700,
       "hpPerLevel": 110,
       "hpRegen": 1.457,
@@ -362,12 +369,11 @@
       "manaRegenPerLevel": 0.0976
     }
   },
-  "abilities":
-  {
-    "Nova":
-    [
+  "abilities": {
+    "Nova": [
       {
         "id": "NovaSnipeStorm",
+        "icon": "storm_ui_icon_nova_snipe.dds",
         "manaCost": 65,
         "name": "Snipe",
         "description": "Deals 115 (+31 per level) damage to the first enemy hit.",
@@ -377,6 +383,7 @@
       },
       {
         "id": "NovaPinningShot",
+        "icon": "storm_ui_icon_Nova_PinningShot.dds",
         "manaCost": 65,
         "name": "Pinning Shot",
         "description": "Deal 40 (+10 per level) damage to an enemy and slow it by 30% for 2.25 seconds.",
@@ -385,6 +392,7 @@
       },
       {
         "id": "NovaHoloDecoy",
+        "icon": "storm_ui_icon_nova_holodecoy.dds",
         "manaCost": 50,
         "name": "Holo Decoy",
         "description": "Create a Decoy for 5 seconds that appears to attack enemies. \nUsing this Ability does not break Cloak.",
@@ -393,6 +401,7 @@
       },
       {
         "id": "NovaTripleTap",
+        "icon": "storm_ui_icon_nova_tripletap.dds",
         "manaCost": 100,
         "heroic": true,
         "name": "Triple Tap",
@@ -402,6 +411,7 @@
       },
       {
         "id": "NovaPrecisionStrike",
+        "icon": "storm_ui_icon_nova_orbitalstrike.dds",
         "manaCost": 100,
         "heroic": true,
         "name": "Precision Strike",
@@ -412,169 +422,188 @@
       {
         "id": "NovaPermanentCloakSniper",
         "trait": true,
+        "icon": "storm_ui_icon_nova_personalcloaking.dds",
         "name": "Permanent Cloak, Sniper",
         "description": "Gain Stealth when out of combat for 3 seconds. Taking damage, attacking, or channeling reveals you.\nBasic Attack range is 20% further than other ranged Heroes, and you see 10% further than other Heroes."
       }
     ]
   },
-  "talents":
-  {
-    "1":
-    [
+  "talents": {
+    "1": [
       {
         "id": "GenericTalentConjurersPursuit",
         "name": "Conjurer's Pursuit",
-        "description": "Increases Mana Regeneration by 0.5 per second. Every 3 Regeneration Globes gathered increases this bonus by 0.25."
+        "description": "Increases Mana Regeneration by 0.5 per second. Every 3 Regeneration Globes gathered increases this bonus by 0.25.",
+        "icon": "storm_btn_d3_monk_mantraofevasion.dds"
       },
       {
         "id": "NovaMasteryPsiOpRangefinder",
         "name": "Psi-Op Rangefinder",
-        "description": "Increases Snipe's range by 20% and reduces the Cooldown by 2 seconds."
+        "description": "Increases Snipe's range by 20% and reduces the Cooldown by 2 seconds.",
+        "icon": "storm_ui_icon_nova_snipe.dds"
       },
       {
         "id": "NovaMasteryAmbushSnipe",
         "name": "Ambush Snipe",
-        "description": "Increases Snipe's damage by 20% when used from Cloak or within one second of being Cloaked."
+        "description": "Increases Snipe's damage by 20% when used from Cloak or within one second of being Cloaked.",
+        "icon": "storm_ui_icon_nova_snipe.dds"
       },
       {
         "id": "NovaMasteryTazerRounds",
         "name": "Tazer Rounds",
-        "description": "Increases the duration of Pinning Shot's slow to 4 seconds."
+        "description": "Increases the duration of Pinning Shot's slow to 4 seconds.",
+        "icon": "storm_ui_icon_Nova_PinningShot.dds"
       }
     ],
-    "4":
-    [
+    "4": [
       {
         "id": "NovaMasteryPerfectShotSnipe",
         "name": "Perfect Shot",
-        "description": "Hitting an enemy Hero with Snipe refunds 50% of the Mana cost. Killing an enemy Hero with Snipe refunds 100% of the Mana cost."
+        "description": "Hitting an enemy Hero with Snipe refunds 50% of the Mana cost. Killing an enemy Hero with Snipe refunds 100% of the Mana cost.",
+        "icon": "storm_ui_icon_nova_snipe.dds"
       },
       {
         "id": "NovaExtendedProjection",
         "name": "Remote Delivery",
-        "description": "Reduces the cooldown of Holo Decoy by 3 seconds, and increases the range by 100%."
+        "description": "Reduces the cooldown of Holo Decoy by 3 seconds, and increases the range by 100%.",
+        "icon": "storm_ui_icon_nova_holodecoy.dds"
       },
       {
         "id": "GenericTalentGatheringPower",
         "name": "Gathering Power",
-        "description": "Passively grants 5% Ability Power. Each Hero takedown increases this bonus by 2% to a maximum of 15%. This bonus Ability Power is reset to 5% on death."
+        "description": "Passively grants 5% Ability Power. Each Hero takedown increases this bonus by 2% to a maximum of 15%. This bonus Ability Power is reset to 5% on death.",
+        "icon": "storm_temp_war3_btncontrolmagic.dds"
       },
       {
         "id": "GenericTalentEnvenom",
         "name": "Envenom",
         "description": "Activate to poison an enemy Hero, dealing 180 damage over 5 seconds.",
+        "icon": "storm_temp_war3_btnpoisonarrow.dds",
         "cooldown": 60
       }
     ],
-    "7":
-    [
+    "7": [
       {
         "id": "NovaMasteryExplosiveShot",
         "name": "Explosive Round",
-        "description": "Snipe also deals 50% damage to enemies near the impact."
+        "description": "Snipe also deals 50% damage to enemies near the impact.",
+        "icon": "storm_ui_icon_nova_snipe.dds"
       },
       {
         "id": "NovaCombatStyleOneintheChamber",
         "name": "One in the Chamber",
-        "description": "After using an ability, your next Basic Attack deals 80% additional damage."
+        "description": "After using an ability, your next Basic Attack deals 80% additional damage.",
+        "icon": "storm_btn-extra_int_0.dds"
       },
       {
         "id": "NovaCombatStyleAntiArmorShells",
         "name": "Anti-Armor Shells",
-        "description": "Your Basic Attacks deal 250% damage, but your Attack Speed is proportionally slower."
+        "description": "Your Basic Attacks deal 250% damage, but your Attack Speed is proportionally slower.",
+        "icon": "storm_temp_btn-upgrade-terran-u238shells.dds"
       },
       {
         "id": "NovaMasteryCovertOpsPinningShot",
         "name": "Covert Ops",
-        "description": "Increases the Movement Speed slow of Pinning Shot by 1% for every second that Nova is Cloaked, to a maximum of a 50% slow. Bonus fades when Nova is un-Cloaked for one second."
+        "description": "Increases the Movement Speed slow of Pinning Shot by 1% for every second that Nova is Cloaked, to a maximum of a 50% slow. Bonus fades when Nova is un-Cloaked for one second.",
+        "icon": "storm_ui_icon_Nova_PinningShot.dds"
       }
     ],
-    "10":
-    [
+    "10": [
       {
         "id": "NovaHeroicAbilityTripleTap",
         "name": "Triple Tap",
         "description": "Locks in on the target Hero, then fires 3 shots that strike the first Hero or Structure they come in contact with for 80 (+33 per level) damage each.",
+        "icon": "storm_ui_icon_nova_tripletap.dds",
         "cooldown": 100
       },
       {
         "id": "NovaHeroicAbilityPrecisionStrike",
         "name": "Precision Strike",
         "description": "After a 1.5 second delay, deals 300 (+35 per level) damage in an area. Unlimited range.",
+        "icon": "storm_ui_icon_nova_orbitalstrike.dds",
         "cooldown": 60
       }
     ],
-    "13":
-    [
+    "13": [
       {
         "id": "NovaMasteryHoloDrone",
         "name": "Lethal Decoy",
-        "description": "Holo Decoy now deals 25% of Nova's damage."
+        "description": "Holo Decoy now deals 25% of Nova's damage.",
+        "icon": "storm_ui_icon_nova_holodecoy.dds"
       },
       {
         "id": "NovaCombatStyleAdvancedCloaking",
         "name": "Advanced Cloaking",
-        "description": "While Stealthed from Permanent Cloak, your Movement Speed is increased by 25% and you heal for 1.95% of your maximum Health per second."
+        "description": "While Stealthed from Permanent Cloak, your Movement Speed is increased by 25% and you heal for 1.95% of your maximum Health per second.",
+        "icon": "storm_ui_icon_nova_personalcloaking.dds"
       },
       {
         "id": "NovaCombatStyleMyKill",
         "name": "Headshot",
-        "description": "Reduces your Ability cooldowns by 4 seconds when you kill an enemy Hero."
+        "description": "Reduces your Ability cooldowns by 4 seconds when you kill an enemy Hero.",
+        "icon": "storm_temp_btn-upgrade-terran-infantryweaponslevel2.dds"
       },
       {
         "id": "GenericTalentSpellShield",
         "name": "Spell Shield",
-        "description": "Upon taking Ability Damage, reduce that damage and further Ability Damage by 50% for 2 seconds.  Can only trigger once every 30 seconds."
+        "description": "Upon taking Ability Damage, reduce that damage and further Ability Damage by 50% for 2 seconds.  Can only trigger once every 30 seconds.",
+        "icon": "storm_temp_btn-ability-protoss-hardenedshields.dds"
       }
     ],
-    "16":
-    [
+    "16": [
       {
         "id": "NovaRailgun",
         "name": "Railgun",
-        "description": "Snipe penetrates through the first enemy hit and deals 50% damage to subsequent targets. Snipe cooldown is reduced by 1 second for each target hit."
+        "description": "Snipe penetrates through the first enemy hit and deals 50% damage to subsequent targets. Snipe cooldown is reduced by 1 second for each target hit.",
+        "icon": "storm_ui_icon_nova_snipe.dds"
       },
       {
         "id": "NovaMasteryCripplingShot",
         "name": "Crippling Shot",
-        "description": "Enemies hit by Pinning shot become Vulnerable, taking 25% increased damage for the duration of the slow."
+        "description": "Enemies hit by Pinning shot become Vulnerable, taking 25% increased damage for the duration of the slow.",
+        "icon": "storm_ui_icon_Nova_PinningShot.dds"
       },
       {
         "id": "NovaMasteryDoubleFakeHoloDecoy",
         "name": "Double Fake",
-        "description": "Casting Holo Decoy creates an additional Decoy at your current location."
+        "description": "Casting Holo Decoy creates an additional Decoy at your current location.",
+        "icon": "storm_ui_icon_nova_holodecoy.dds"
       },
       {
         "id": "GenericTalentOverdrive",
         "name": "Overdrive",
         "description": "Activate to increase Ability Power by 25% and Mana costs by 40% for 5 seconds.",
+        "icon": "storm_btn_d3_wizard_archon.dds",
         "cooldown": 25
       }
     ],
-    "20":
-    [
+    "20": [
       {
         "id": "NovaMasteryFastReload",
         "name": "Fast Reload",
         "description": "Triple Tap's cooldown is reset if it kills an enemy Hero.",
+        "icon": "storm_ui_icon_nova_tripletap.dds",
         "prerequisite": "NovaHeroicAbilityTripleTap"
       },
       {
         "id": "NovaMasteryPrecisionBarrage",
         "name": "Precision Barrage",
         "description": "Precision Strike now holds two charges with a short cooldown.",
+        "icon": "storm_ui_icon_nova_orbitalstrike.dds",
         "prerequisite": "NovaHeroicAbilityPrecisionStrike"
       },
       {
         "id": "GenericTalentRewind",
         "name": "Rewind",
         "description": "Activate to reset the cooldowns of your Basic Abilities.",
+        "icon": "storm_btn_d3_wizard_slowtime.dds",
         "cooldown": 60
       },
       {
         "id": "GenericTalentFlashoftheStorms",
         "name": "Bolt of the Storm",
         "description": "Activate to teleport to a nearby location.",
+        "icon": "storm_temp_btn-ability-protoss-blink-color.dds",
         "cooldown": 40
       }
     ]

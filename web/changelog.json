@@ -1,5 +1,14 @@
 [
 	{
+		"version" : "1.2.0",
+		"when" : "2015-06-26",
+		"patchVersion" : "35702",
+		"changes" : [
+			"Fixed multiple errors in abilities and talents that showed NaN instead of the proper value.",
+			"Added 'icon' field to each talent and ability."
+		]
+	},
+	{
 		"version" : "1.1.2",
 		"when" : "2015-06-25",
 		"patchVersion" : "35702",
