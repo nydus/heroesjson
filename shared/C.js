@@ -138,6 +138,23 @@ exports.HERO_MAX_LEVEL = 20;
 
 exports.HERO_TALENT_LEVELS = [1, 4, 7, 10, 13, 16, 20];
 
+exports.MOUNT_JSON_SCHEMA =
+{
+	name : "mount",
+	type : "object",
+	additionalProperties : false,
+	properties           :
+	{
+		id          : { type : "string", minLength : 1 },
+		name        : { type : "string", minLength : 1 },
+		description : { type : "string", minLength : 1 },
+		franchise   : { type : "string", minLength : 1 },
+		releaseDate : { type : "string", pattern : "2[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]" }
+	}
+};
+
+exports.MOUNT_JSON_SCHEMA.required = Object.keys(exports.MOUNT_JSON_SCHEMA.properties);
+
 exports.HERO_JSON_SCHEMA =
 {
 	name                 : "hero",
@@ -253,7 +270,6 @@ exports.HERO_TALENT_LEVELS.forEach(function(HERO_TALENT_LEVEL) { exports.HERO_JS
 exports.HERO_JSON_SCHEMA.properties.talents.required = exports.HERO_TALENT_LEVELS.map(function(HERO_TALENT_LEVEL) { return ""+HERO_TALENT_LEVEL; });
 
 exports.HERO_JSON_SCHEMA.required = Object.keys(exports.HERO_JSON_SCHEMA.properties);
-exports.HERO_JSON_SCHEMA.required.remove("releaseDate");
 
 exports.HERO_JSON_SCHEMA.properties.talents.properties[10].minItems = 2;
 exports.HERO_JSON_SCHEMA.properties.talents.properties[10].maxItems = 2;

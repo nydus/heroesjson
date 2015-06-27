@@ -35,10 +35,11 @@ var OUT_PATH = path.join(__dirname, "out");
 var OUT_MODS_PATH = path.join(OUT_PATH, "mods");
 
 var HEROES_OUT_PATH = path.join(OUT_PATH, "heroes.json");
+var MOUNTS_OUT_PATH = path.join(OUT_PATH, "mounts.json");
 
 var EXTRA_HEROES = ["anubarak", "chen", "crusader", "jaina", "kaelthas", "lostvikings", "murky", "sonyarework", "sylvanas", "thrall"];
 var NODE_MAPS = {};
-var NODE_MAP_TYPES = ["Hero", "Talent", "Behavior", "Effect", "Abil", "Unit", "Validator", "Weapon", "Button" ];
+var NODE_MAP_TYPES = ["Hero", "Talent", "Behavior", "Effect", "Abil", "Unit", "Validator", "Weapon", "Button", "Mount" ];
 
 var HERO_LEVEL_SCALING_MODS = {};
 
@@ -66,8 +67,6 @@ NEEDED_PREFIXES.forEach(function(NEEDED_PREFIX)
 });
 
 NEEDED_FILE_PATHS.push("mods\\heroesdata.stormmod\\base.stormdata\\GameData\\Heroes\\ZagaraData.xml");
-NEEDED_FILE_PATHS.remove("mods\\heromods\\sonyarework.stormmod\\base.stormdata\\GameData\\UnitData.xml");
-NEEDED_FILE_PATHS.remove("mods\\heromods\\sonyarework.stormmod\\base.stormdata\\GameData\\WeaponData.xml");
 
 var FORMULA_PARSER = PEG.buildParser(fs.readFileSync(path.join(__dirname, "heroes.pegjs"), {encoding:"utf8"}));
 
@@ -119,7 +118,7 @@ tiptoe(
 			var diskPath = path.join(OUT_PATH, NEEDED_FILE_PATH.replaceAll("\\\\", "/"));
 			if(!fs.existsSync(diskPath))
 			{
-				base.info("Missing file: %s", NEEDED_FILE_PATH);
+				//base.info("Missing file: %s", NEEDED_FILE_PATH);
 				return;
 			}
 			var fileData = fs.readFileSync(diskPath, {encoding:"utf8"});
@@ -137,23 +136,23 @@ tiptoe(
 
 		loadMergedNodeMap(xmlDocs);
 
+		base.info("\nProcessing heroes...");
 		var heroes = Object.values(NODE_MAPS["Hero"]).map(function(heroNode) { return processHeroNode(heroNode); });
 		heroes.sort(function(a, b) { return (a.name.startsWith("The ") ? a.name.substring(4) : a.name).localeCompare((b.name.startsWith("The ") ? b.name.substring(4) : b.name)); });
 
 		base.info("\nValidating %d heroes...", heroes.length);
 		heroes.forEach(validateHero);
+
+		base.info("\nProcessing mounts...");
+		var mounts = Object.values(NODE_MAPS["Mount"]).map(function(mountNode) { return processMountNode(mountNode); }).filterEmpty();
 		
+		base.info("\nValidating %d mounts...", mounts.length);
+		mounts.forEach(validateMount);
+
 		base.info("\nSaving JSON...");
 
-		fs.writeFile(HEROES_OUT_PATH, JSON.stringify(heroes), {encoding:"utf8"}, this);
-	},
-	function cleanup()
-	{
-		if(process.argv[3]==="dev")
-			return this();
-
-		base.info("\nCleaning up 'out' directory...");
-		rimraf(OUT_MODS_PATH, this);
+		fs.writeFile(HEROES_OUT_PATH, JSON.stringify(heroes), {encoding:"utf8"}, this.parallel());
+		fs.writeFile(MOUNTS_OUT_PATH, JSON.stringify(mounts), {encoding:"utf8"}, this.parallel());
 	},
 	function finish(err)
 	{
@@ -169,49 +168,51 @@ tiptoe(
 	}
 );
 
-function loadMergedNodeMap(xmlDocs)
+function processMountNode(mountNode)
 {
-	xmlDocs.forEach(function(xmlDoc)
-	{
-		xmlDoc.find("/Catalog/*").forEach(function(node)
-		{
-			if(!node.attr("id"))
-				return;
+	var mount = {};
+	mount.id = attributeValue(mountNode, "id");
+	mount.name = S["Mount/Name/" + mount.id];
+	mount.description = S["Mount/Info/" + mount.id];
+	mount.franchise = getValue(mountNode, "Universe", "Starcraft");
 
-			var nodeType = NODE_MAP_TYPES.filter(function(NODE_MAP_TYPE) { return node.name().startsWith("C" + NODE_MAP_TYPE); });
-			if(!nodeType || nodeType.length!==1)
-				return;
+	if(!!(+getValue(mountNode, "Flags[@index='IsVariation']", 0)))
+		return undefined;
 
-			nodeType = nodeType[0];
+	mount.releaseDate = processReleaseDate(mountNode.get("ReleaseDate"));
 
-			var nodeid = attributeValue(node, "id");
-			if(IGNORED_NODE_TYPE_IDS.hasOwnProperty(nodeType) && IGNORED_NODE_TYPE_IDS[nodeType].contains(nodeid))
-				return;
+/*
+<CMount id="DiabloRun">
+        <AttributeId value="Diru"/>
+        <Flags index="FreePlay" value="1"/>
+        <VariationIcon value="Assets\Textures\ui_glues_swatch_red.dds"/>
+        <MountCategory value="Ridenone"/>
+		<PreviewCutsceneFile value="Cutscenes\StoreMount_DiabloRun.StormCutscene"/>
+        <TileCutsceneFile value="Cutscenes\FrameMount_DiabloRun.StormCutscene"/>
+        <MiniPortraitCutsceneFile value="Cutscenes\MiniPortrait_DiabloRun.StormCutscene"/>
+        <HeroSelectCutsceneFile value="Cutscenes\HeroSelect_DiabloRun.StormCutscene"/>
+        <Universe value="Diablo"/>
+        <Model value="DiabloMountFX"/>
+        <ProductName value="99200132782000014568"/>
+    </CMount>
+ 
+<CMount id="MoneyPig">
+        <AttributeId value="Mpig"/>
+        <VOArray index="Mounted" value="Mount_PiggyBank_Summon"/>
+        <VOArray index="Dismounted" value="Mount_PiggyBank_Dismiss"/>
+        <VOArray index="Moving" value="Mount_MoneyPig_Coin_Drop_Loop"/>
+        <VariationIcon value="Assets\Textures\UI_Glues_Swatch_Yellow_Gold.dds"/>
+        <RequiredRewardArray value="PiggyBank"/>
+        <Universe value="Heroes"/>
+        <ProductName value="99100005841000045267"/>
+        <VariationArray value="MoneyPigPink"/>
+        <VariationArray value="MoneyPigGreen"/>
+        <ReleaseDate Month="10" Day="14"/>
+        <MountCategory value="Ride"/>
+    </CMount>
+ */
 
-			if(!NODE_MAPS[nodeType].hasOwnProperty(nodeid))
-			{
-				NODE_MAPS[nodeType][nodeid] = node;
-				return;
-			}
-
-			mergeXML(node, NODE_MAPS[nodeType][nodeid]);
-		});
-	});
-}
-
-function mergeXML(fromNode, toNode)
-{
-	fromNode.childNodes().forEach(function(childNode)
-	{
-		if(childNode.name()==="TalentTreeArray")
-		{
-			var existingChildNode = toNode.get("TalentTreeArray[@Tier='" + attributeValue(childNode, "Tier") + "' and @Column='" + attributeValue(childNode, "Column") + "']");
-			if(existingChildNode)
-				existingChildNode.remove();
-		}
-
-		toNode.addChild(childNode);
-	});
+	return mount;
 }
 
 function processHeroNode(heroNode)
@@ -219,7 +220,7 @@ function processHeroNode(heroNode)
 	var hero = {};
 
 	// Core hero data
-	hero.id = heroNode.attr("id").value();
+	hero.id = attributeValue(heroNode, "id");
 	hero.name = S["Unit/Name/" + getValue(heroNode, "Unit", "Hero" + hero.id)];
 
 	base.info("Processing hero: %s", hero.name);
@@ -251,9 +252,7 @@ function processHeroNode(heroNode)
 		};
 	}
 
-	var releaseDateNode = heroNode.get("ReleaseDate");
-	if(releaseDateNode)
-		hero.releaseDate = moment(attributeValue(releaseDateNode, "Month", 1) + "-" + attributeValue(releaseDateNode, "Day", 1) + "-" + attributeValue(releaseDateNode, "Year", "2014"), "M-D-YYYY").format("YYYY-MM-DD");
+	hero.releaseDate = processReleaseDate(heroNode.get("ReleaseDate"));
 
 	var heroUnitids = [];
 	var alternateUnitArrayNodes = heroNode.find("AlternateUnitArray");
@@ -832,6 +831,16 @@ function performHeroModifications(hero)
 	});
 }
 
+function validateMount(mount)
+{
+	var validator = jsen(C.MOUNT_JSON_SCHEMA);
+	if(!validator(mount))
+	{
+		base.warn("Mount %s (%s) has FAILED VALIDATION", mount.id, mount.name);
+		base.info(validator.errors);
+	}
+}
+
 function validateHero(hero)
 {
 	var validator = jsen(C.HERO_JSON_SCHEMA);
@@ -845,6 +854,56 @@ function validateHero(hero)
 	{
 		if(abilities.length!==abilities.map(function(ability) { return ability.name; }).unique().length)
 			base.warn("Hero %s has multiple abilities with the same name!", hero.name);
+	});
+}
+
+function loadMergedNodeMap(xmlDocs)
+{
+	xmlDocs.forEach(function(xmlDoc)
+	{
+		xmlDoc.find("/Catalog/*").forEach(function(node)
+		{
+			if(!node.attr("id"))
+				return;
+
+			var nodeType = NODE_MAP_TYPES.filter(function(NODE_MAP_TYPE) { return node.name().startsWith("C" + NODE_MAP_TYPE); });
+			if(!nodeType || nodeType.length!==1)
+				return;
+
+			nodeType = nodeType[0];
+
+			var nodeid = attributeValue(node, "id");
+			if(IGNORED_NODE_TYPE_IDS.hasOwnProperty(nodeType) && IGNORED_NODE_TYPE_IDS[nodeType].contains(nodeid))
+				return;
+
+			if(!NODE_MAPS[nodeType].hasOwnProperty(nodeid))
+			{
+				NODE_MAPS[nodeType][nodeid] = node;
+				return;
+			}
+
+			mergeXML(node, NODE_MAPS[nodeType][nodeid]);
+		});
+	});
+}
+
+function processReleaseDate(releaseDateNode)
+{
+	return moment(attributeValue(releaseDateNode, "Month", 1) + "-" + attributeValue(releaseDateNode, "Day", 1) + "-" + attributeValue(releaseDateNode, "Year", "2014"), "M-D-YYYY").format("YYYY-MM-DD");
+}
+
+function mergeXML(fromNode, toNode)
+{
+	fromNode.childNodes().forEach(function(childNode)
+	{
+		if(childNode.name()==="TalentTreeArray")
+		{
+			var existingChildNode = toNode.get("TalentTreeArray[@Tier='" + attributeValue(childNode, "Tier") + "' and @Column='" + attributeValue(childNode, "Column") + "']");
+			if(existingChildNode)
+				existingChildNode.remove();
+		}
+
+		toNode.addChild(childNode);
 	});
 }
 
