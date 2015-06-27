@@ -672,6 +672,13 @@
 		<hr>
 		<h1>Source Code<a href="#top">(back to top)</a></h1>
 		<p>Source code used to generate the JSON is available here: <a href="https://github.com/Sembiance/heroesjson">https://github.com/Sembiance/heroesjson</a><br>
-		<br>		
+		<br>
+		<hr>
+		<a name="otherSites"></a>
+		<h1>My Other JSON Sites<a href="#top">(back to top)</a></h1>
+		<table>
+			<tr><td>Magic the Gathering</td><td><a href="http://mtgjson.com">mtgjson.com</a></td></tr>
+			<tr><td>Hearthstone</td><td><a href="http://hearthstonejson.com">hearthstonejson.com</a></td></tr>
+		</table>
 	</body>
 </html>
