@@ -39,8 +39,6 @@
 	}
 }
 
-//   ((75/50)-1)*100
-
 START
 	= any
  
@@ -55,25 +53,25 @@ primary
 	= float
 	/ integer
 	/ xmlref
-	/ "-" _ any:any { return -1*any; }
-	/ _ "(" _ any:any _ ")" _ { return any; }
+	/ "-" _ any:any { console.log("-%s", any); return -1*any; }
+	/ _ "(" _ any:any _ ")" _ { console.log("(%s)", any); return any; }
 	/ "" { return 0; }
 
 additive
-	= left:primary _ "+" _ right:any { return doNumbers(left, right, "+"); }
- 
+	= left:primary _ "+" _ right:any { console.log("%s + %s", left, right); return doNumbers(left, right, "+"); }
+
 multiplicative
-	= left:primary _ "*" _ right:any { return doNumbers(left, right, "*"); }
- 
+	= left:primary _ "*" _ right:any { console.log("%s * %s", left, right); return doNumbers(left, right, "*"); }
+
 subtractive
-	= left:primary _ "-" _ right:any { return doNumbers(left, right, "-"); }
- 
+	= left:primary _ "-" _ right:any { console.log("%s - %s", left, right); return doNumbers(left, right, "-"); }
+
 divisive
-	= left:primary _ "/" _ right:any { return left/right; }
-   
+	= left:primary _ "/" _ right:any { console.log("%s / %s", left, right); return left/right; }
+
 float "float"
 	= neg:"-"? _? left:[0-9]* "." right:[0-9]+ { return parseFloat((neg ? "-" : "") + left.join("") + "." + right.join("")); }
- 
+
 integer "integer"
 	= neg:"-"? _? digits:[0-9]+ { return parseInt((neg ? "-" : "") + digits.join(""), 10); }
 
@@ -88,3 +86,6 @@ __ "whitespace"
 
 whitespace "whitespace"
 	= [ \t\v\f\r\n\u00A0\uFEFF\u1680\u180E\u2000-\u200A\u202F\u205F\u3000]
+
+
+//1-Behavior,DamageReductionRanged25Controller,DamageResponse.ModifyFraction*100

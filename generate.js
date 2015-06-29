@@ -10,7 +10,6 @@ var base = require("xbase"),
 	jsonselect = require("JSONSelect"),
 	libxmljs = require("libxmljs"),
 	C = require("C"),
-	PEG = require("pegjs"),
 	rimraf = require("rimraf"),
 	tiptoe = require("tiptoe");
 
@@ -32,7 +31,6 @@ if(!fs.existsSync(HOTS_DATA_PATH))
 var CASCEXTRATOR_PATH = path.join(__dirname, "CASCExtractor", "build", "bin", "CASCExtractor");
 
 var OUT_PATH = path.join(__dirname, "out");
-var OUT_MODS_PATH = path.join(OUT_PATH, "mods");
 
 var HEROES_OUT_PATH = path.join(OUT_PATH, "heroes.json");
 var MOUNTS_OUT_PATH = path.join(OUT_PATH, "mounts.json");
@@ -67,8 +65,6 @@ NEEDED_PREFIXES.forEach(function(NEEDED_PREFIX)
 });
 
 NEEDED_FILE_PATHS.push("mods\\heroesdata.stormmod\\base.stormdata\\GameData\\Heroes\\ZagaraData.xml");
-
-var FORMULA_PARSER = PEG.buildParser(fs.readFileSync(path.join(__dirname, "heroes.pegjs"), {encoding:"utf8"}));
 
 var S = {};
 var IGNORED_NODE_TYPE_IDS = {"Hero" : ["Random", "AI", "_Empty"]};
@@ -334,6 +330,7 @@ function processHeroNode(heroNode)
 		}
 
 		talent.name = talentDescription.replace(/<s val="StandardTooltipHeader">([^<]+)<.+/, "$1").replace(/<s\s*val\s*=\s*"StandardTooltip">/gm, "").trim();
+		//if(hero.id==="L90ETC") { base.info("Talent: %s\n", talent.id); }
 		talent.description = getFullDescription(talentDescription, hero.id, 0);
 		talent.icon = getValue(NODE_MAPS["Button"][faceid], "Icon");
 		if(!talent.icon)
@@ -557,7 +554,7 @@ function addAbilityDetails(ability, heroid, heroName, abilityCmdid, abilityName)
 	
 	ability.description = getFullDescription(abilityDescription, heroid, 0);
 
-	ability.description = ability.description.replace("Heroic Ability\n", "").replace("Trait\n", "");
+	ability.description = ability.description.replace("Heroic Ability\n", "").replace("Heroic Passive\n", "").replace("Trait\n", "");
 
 	addCooldownInfo(ability, "description");
 
@@ -649,6 +646,7 @@ function getFullDescription(_fullDescription, heroid, heroLevel)
 		var formula = dynamic.match(/ref\s*=\s*"([^"]+)"/)[1];
 		if(formula.endsWith(")") && !formula.contains("("))
 			formula = formula.substring(0, formula.length-1);
+
 		try
 		{
 			C.FORMULA_PRE_REPLACEMENTS.forEach(function(FORMULA_PRE_REPLACEMENT)
@@ -657,8 +655,27 @@ function getFullDescription(_fullDescription, heroid, heroLevel)
 					formula = formula.replace(FORMULA_PRE_REPLACEMENT.match, FORMULA_PRE_REPLACEMENT.replace);
 			});
 
-			var result = FORMULA_PARSER.parse(formula, {heroid:heroid, heroLevel:heroLevel, lookupXMLRef : lookupXMLRef});
-			//if(heroid==="Anubarak") { base.info("Formula: %s\nResult: %d", formula, result); }
+			//if(heroid==="Chen") { base.info("Before: %s", formula); }
+			if(formula.startsWith("-"))
+				formula = "-1*" + formula.substring(1);
+
+			(formula.match(/((^\-)|(\(\-))?[A-Za-z][A-Za-z0-9,._\[\]]+/g) || []).map(function(match) { return match.indexOf("(")===0 ? match.substring(1) : match; }).forEach(function(match)
+			{
+				var negative = false;
+
+				if(match.startsWith("-"))
+				{
+					match = match.substring(1);
+					negative = true;
+				}
+				formula = formula.replace(match, lookupXMLRef(heroid, heroLevel, match, negative));
+			});
+			//if(heroid==="Chen") { base.info("after: %s", formula); }
+
+			formula = formula.replace(/[+*/-]$/, "");
+			var result = eval(formula.contains("(") ? formula : parenthesize(formula));	// Heroes formulas are evaluated Left to Right instead of normal math operation order
+			
+			//if(heroid==="Chen") { base.info("Formula: %s\nResult: %d", formula, result); }
 		
 			var MAX_PRECISION = 4;
 			if(result.toFixed(MAX_PRECISION).length<(""+result).length)
@@ -732,6 +749,34 @@ function getFullDescription(_fullDescription, heroid, heroLevel)
 	return fullDescription;
 }
 
+function parenthesize(formula)
+{
+	var result = [];
+	var seenOperator = false;
+	var lastOpenParenLoc = 0;
+	var seenOneParenClose = true;
+	formula.replace(/ /g, "").split("").forEach(function(c, i)
+	{
+		if("+-/*".contains(c) && seenOperator && seenOneParenClose && !"+-/*(".contains(result.last()))
+		{
+			result.splice(lastOpenParenLoc, 0, "(");
+			result.push(")");
+		}
+
+		if(c==="(")
+			seenOneParenClose = false;
+
+		if(c===")")
+			seenOneParenClose = true;
+
+		if("+-/*".contains(c) && i!==0 && !"+-/*(".contains(result.last()))
+			seenOperator = true;
+		result.push(c);
+	});
+
+	return result.join("");
+}
+
 function lookupXMLRef(heroid, heroLevel, query, negative)
 {
 	var result = 0;
@@ -742,7 +787,7 @@ function lookupXMLRef(heroid, heroLevel, query, negative)
 			query = XMLREF_REPLACEMENT.to;
 	});
 
-	//if(heroid==="Rehgar") { base.info("QUERY: %s", query); }
+	//if(heroid==="L90ETC") { base.info("QUERY: %s", query); }
 
 	var mainParts = query.split(",");
 
@@ -782,11 +827,11 @@ function lookupXMLRef(heroid, heroLevel, query, negative)
 		additionalAmount = heroLevel*HERO_LEVEL_SCALING_MOD.value;
 	});
 
-	//if(heroid==="Rehgar") { base.info("Start (negative:%s): %s", negative, subparts); }
+	//if(heroid==="L90ETC") { base.info("Start (negative:%s): %s", negative, subparts); }
 	subparts.forEach(function(subpart)
 	{
 		var xpath = !subpart.match(/\[[0-9]+\]/) ? subpart.replace(/([^[]+)\[([^\]]+)]/, "$1[@index = '$2']") : subpart.replace(/\[([0-9]+)\]/, "[" + (+subpart.match(/\[([0-9]+)\]/)[1]+1) + "]");
-		//if(heroid==="Rehgar") { base.info("Next xpath: %s\nCurrent target: %s\n", xpath, target.toString()); }
+		//if(heroid==="L90ETC") { base.info("Next xpath: %s\nCurrent target: %s\n", xpath, target.toString()); }
 		var nextTarget = target.get(xpath);
 		if(!nextTarget)
 			result = +attributeValue(target, xpath.replace(/([^\[]+).*/, "$1"));
@@ -805,7 +850,7 @@ function lookupXMLRef(heroid, heroLevel, query, negative)
 	}
 
 	result += additionalAmount;
-	//if(heroid==="Rehgar") { base.info("%s => %d", query, result); }
+	//if(heroid==="L90ETC") { base.info("%s => %d", query, result); }
 
 	if(negative)
 		result = result*-1;

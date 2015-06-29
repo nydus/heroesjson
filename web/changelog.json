@@ -1,5 +1,13 @@
 [
 	{
+		"version" : "1.2.2",
+		"when" : "2015-06-29",
+		"patchVersion" : "35702",
+		"changes" : [
+			"Fixed several errors with numbers for certain talents."
+		]
+	},
+	{
 		"version" : "1.2.1",
 		"when" : "2015-06-26",
 		"patchVersion" : "35702",

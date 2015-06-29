@@ -124,7 +124,7 @@
 				<tr>
 					<td>releaseDate</td>
 					<td>"2014-07-22"</td>
-					<td>Present if the release date is known for this hero. Date format: YYYY-MM-DD</td>
+					<td>The release date for this hero. Date format: YYYY-MM-DD</td>
 				</tr>
 				<tr>
 					<td>ratings</td>

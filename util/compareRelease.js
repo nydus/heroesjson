@@ -4,7 +4,6 @@
 var base = require("xbase"),
 	fs = require("fs"),
 	glob = require("glob"),
-	color = require("cli-color"),
 	diffUtil = require("xutil").diff,
 	httpUtil = require("xutil").http,
 	path = require("path"),
@@ -53,7 +52,7 @@ function processFile(fileName, cb)
 				return this();
 			}
 
-			var result = diffUtil.diff(JSON.parse(oldJSON[0]), JSON.parse(newJSON), {compareArraysDirectly:true});
+			var result = diffUtil.diff(JSON.parse(oldJSON[0]), JSON.parse(newJSON), {compareArraysDirectly:true, arrayKey : "id"});
 			if(result)
 				console.log(result);
 
