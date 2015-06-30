@@ -74,6 +74,10 @@ function extractHeroImages(hero, cb)
 {
 	base.info("Extracting images for: %s", hero.name);
 	tiptoe(
+		function extractHeroImage()
+		{
+			runUtil.run(CASCEXTRATOR_PATH, [HOTS_DATA_PATH, "-o", IMAGE_OUT_PATH, "-f", IMAGE_ASSETS_PATH + hero.icon], {silent:true}, this);
+		},
 		function extractTalentImages()
 		{
 			Object.values(hero.talents).flatten().concat(Object.values(hero.abilities).flatten()).parallelForEach(function(item, subcb)

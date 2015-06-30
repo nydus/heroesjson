@@ -230,6 +230,8 @@ function processHeroNode(heroNode)
 	hero.title =  S["Hero/Title/" + hero.id];
 	hero.description = S["Hero/Description/" + hero.id];
 
+	hero.icon = "ui_targetportrait_hero_" + hero.id + ".dds";
+
 	hero.role = getValue(heroNode, "Role");
 	if(hero.role==="Damage")
 		hero.role = "Assassin";

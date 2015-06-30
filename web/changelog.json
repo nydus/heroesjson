@@ -1,5 +1,13 @@
 [
 	{
+		"version" : "2.0.1",
+		"when" : "2015-06-30",
+		"patchVersion" : "36144",
+		"changes" : [
+			"Added 'icon' field to each hero."
+		]
+	},
+	{
 		"version" : "2.0.0",
 		"when" : "2015-06-30",
 		"patchVersion" : "36144",

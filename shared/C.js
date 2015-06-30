@@ -179,6 +179,7 @@ exports.HERO_JSON_SCHEMA =
 		name        : { type : "string", minLength : 1 },
 		title       : { type : "string", minLength : 1 },
 		description : { type : "string", minLength : 1 },
+		icon        : { type : "string", minLength : 1 },
 		role        : { type : "string", enum : ["Assassin", "Warrior", "Support", "Specialist"] },
 		type        : { type : "string", enum : ["Melee", "Ranged"] },
 		gender      : { type : "string", enum : ["Female", "Male"] },

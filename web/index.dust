@@ -127,6 +127,11 @@
 					<td>The release date for this hero. Date format: YYYY-MM-DD</td>
 				</tr>
 				<tr>
+					<td>icon</td>
+					<td>"ui_targetportrait_hero_Nova.dds"</td>
+					<td>The internal filename for the icon used for this hero.</td>
+				</tr>
+				<tr>
 					<td>ratings</td>
 					<td colspan="2">
 						<table>
