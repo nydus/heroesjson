@@ -1,5 +1,14 @@
 [
 	{
+		"version" : "2.0.0",
+		"when" : "2015-06-30",
+		"patchVersion" : "36144",
+		"changes" : [
+			"Added Butcher and Leoric!",
+			"Updated to latest patch data."
+		]
+	},
+	{
 		"version" : "1.2.2",
 		"when" : "2015-06-29",
 		"patchVersion" : "35702",

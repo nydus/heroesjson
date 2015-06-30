@@ -2,6 +2,15 @@
 
 var base = require("xbase"); // jshint ignore:line
 
+// Extra heroes in the 'heromods' folder
+exports.EXTRA_HEROES_HEROMODS = ["anubarak", "chen", "crusader", "jaina", "kaelthas", "lostvikings", "murky", "sonyarework", "sylvanas", "thrall", "butcher", "leoric"];
+
+// Extra hero data files GameData/Heroes/<hero>Data.xml
+exports.EXTRA_HEROES_GAMEDATA_FILES = ["Chen", "Zagara"];
+
+// Extra hero subfolder files GameData/Heroes/<hero>Data/<hero>Data.xml
+exports.EXTRA_HEROES_GAMEDATA_FOLDERS = ["Anubarak", "Murky"];
+
 exports.HERO_MODIFICATIONS =
 {
 	"Crusader" :
@@ -85,6 +94,10 @@ exports.XMLREF_REPLACEMENTS =
 	{
 		from : "Abil,MuradinStormBolt,Cost[0].Vital[2]",
 		  to : "Abil,MuradinStormBolt,Cost[0].Vital[0]"
+	},
+	{
+		from : "Behavior,TalentBucketVampiricStrike,Modification.VitalDamageLeechArray[0].KindArray[2]",
+		  to : "Behavior,TalentBucketVampiricStrike,Modification.VitalDamageLeechArray[0].KindArray[0]"
 	}
 ];
 

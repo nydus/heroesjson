@@ -35,7 +35,6 @@ var OUT_PATH = path.join(__dirname, "out");
 var HEROES_OUT_PATH = path.join(OUT_PATH, "heroes.json");
 var MOUNTS_OUT_PATH = path.join(OUT_PATH, "mounts.json");
 
-var EXTRA_HEROES = ["anubarak", "chen", "crusader", "jaina", "kaelthas", "lostvikings", "murky", "sonyarework", "sylvanas", "thrall"];
 var NODE_MAPS = {};
 var NODE_MAP_TYPES = ["Hero", "Talent", "Behavior", "Effect", "Abil", "Unit", "Validator", "Weapon", "Button", "Mount" ];
 
@@ -49,7 +48,7 @@ NODE_MAP_TYPES.forEach(function(NODE_MAP_TYPE)
 });
 
 var NEEDED_PREFIXES = ["heroesdata.stormmod"];
-EXTRA_HEROES.forEach(function(EXTRA_HERO)
+C.EXTRA_HEROES_HEROMODS.forEach(function(EXTRA_HERO)
 {
 	NEEDED_PREFIXES.push("heromods\\" + EXTRA_HERO + ".stormmod");
 });
@@ -64,7 +63,15 @@ NEEDED_PREFIXES.forEach(function(NEEDED_PREFIX)
 	});
 });
 
-NEEDED_FILE_PATHS.push("mods\\heroesdata.stormmod\\base.stormdata\\GameData\\Heroes\\ZagaraData.xml");
+C.EXTRA_HEROES_GAMEDATA_FILES.forEach(function(EXTRA_HERO)
+{
+	NEEDED_FILE_PATHS.push("mods\\heroesdata.stormmod\\base.stormdata\\GameData\\Heroes\\" + EXTRA_HERO + "Data.xml");
+});
+
+C.EXTRA_HEROES_GAMEDATA_FOLDERS.forEach(function(EXTRA_HERO)
+{
+	NEEDED_FILE_PATHS.push("mods\\heroesdata.stormmod\\base.stormdata\\GameData\\Heroes\\" + EXTRA_HERO + "Data\\" + EXTRA_HERO + "Data.xml");
+});
 
 var S = {};
 var IGNORED_NODE_TYPE_IDS = {"Hero" : ["Random", "AI", "_Empty"]};
@@ -654,6 +661,8 @@ function getFullDescription(_fullDescription, heroid, heroLevel)
 				if(formula.contains(FORMULA_PRE_REPLACEMENT.match))
 					formula = formula.replace(FORMULA_PRE_REPLACEMENT.match, FORMULA_PRE_REPLACEMENT.replace);
 			});
+
+			formula = formula.replace(/\[d ref='([^']+)'(?: player='[0-9]')?\/?]/g, "$1");
 
 			//if(heroid==="Chen") { base.info("Before: %s", formula); }
 			if(formula.startsWith("-"))

@@ -46,13 +46,18 @@ function processFile(fileName, cb)
 		},
 		function compare(oldJSON, newJSON)
 		{
+			var oldData = JSON.parse(oldJSON[0]);
+			var newData = JSON.parse(newJSON);
+
 			if(oldJSON[2]===404)
 			{
 				base.info("Skipping %s do to being missing on production.", fileName);
 				return this();
 			}
 
-			var result = diffUtil.diff(JSON.parse(oldJSON[0]), JSON.parse(newJSON), {compareArraysDirectly:true, arrayKey : "id"});
+			base.info(diffUtil.diff(oldData.map(function(hero) { return hero.id; }), newData.map(function(hero) { return hero.id; })));
+
+			var result = diffUtil.diff(oldData, newData, {compareArraysDirectly:true, arrayKey : "id"});
 			if(result)
 				console.log(result);
 
