@@ -86,16 +86,25 @@ tiptoe(
 	},
 	function extractImages()
 	{
+		if(process.argv[3]==="dev")
+			return this();
+		
 		base.info("Extracting images...");
 		extractAllImages(this);
 	},
 	function getImagesToZip()
 	{
+		if(process.argv[3]==="dev")
+			return this();
+		
 		base.info("Finding extracted images...");
 		glob(path.join(IMAGES_FULL_PATH, "*.png"), this);
 	},
 	function zipImages(images)
 	{
+		if(process.argv[3]==="dev")
+			return this();
+		
 		base.info("Zipping images...");
 		runUtil.run("zip", ["-r", ZIP_PATH].concat(images.map(function(image) { return path.basename(image); })), {silent:true, cwd : IMAGES_FULL_PATH}, this);
 	},	

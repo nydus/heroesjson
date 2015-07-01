@@ -408,14 +408,14 @@ function getHeroAbilities(heroid, heroName, heroUnitids)
 		heroAbilityids.push(abilid);
 	});
 
-	abilities[heroid] = getUnitAbilities(heroid, heroName, heroAbilityids, heroHeroicAbilityids, heroTraitAbilityids, "Hero" + (C.HERO_UNIT_ID_REPLACEMENTS[heroid] || heroid));
+	abilities[heroid] = getUnitAbilities(heroid, heroName, heroAbilityids.concat((C.VALID_UNIT_ABILITY_IDS[heroid] || [])), heroHeroicAbilityids, heroTraitAbilityids, "Hero" + (C.HERO_UNIT_ID_REPLACEMENTS[heroid] || heroid));
 
 	heroUnitids.forEach(function(heroUnitid)
 	{
 		if(heroUnitid===heroid)
 			return;
 
-		abilities[heroUnitid] = getUnitAbilities(heroid, heroName, heroAbilityids.concat((C.VALID_SUBUNIT_ABILITY_IDS[heroUnitid] || [])), heroHeroicAbilityids, heroTraitAbilityids, heroUnitid);
+		abilities[heroUnitid] = getUnitAbilities(heroid, heroName, heroAbilityids.concat((C.VALID_UNIT_ABILITY_IDS[heroUnitid] || [])), heroHeroicAbilityids, heroTraitAbilityids, heroUnitid);
 	});
 
 	heroUnitids.concat([heroid]).forEach(function(heroUnitid)
@@ -433,6 +433,14 @@ function getHeroAbilities(heroid, heroName, heroUnitids)
 	{
 		delete abilities[REMOVE_SUBUNIT];
 	});
+
+	if(C.MOUNT_ABILITY_IDS.hasOwnProperty(heroid))
+	{
+		var mountAbility = getUnitAbilities(heroid, heroName, [C.MOUNT_ABILITY_IDS[heroid]], [], [], "Hero" + (C.HERO_MOUNT_UNIT_ID_REPLACEMENTS[heroid] || heroid))[0];
+		mountAbility.shortcut = "Z";
+		mountAbility.mount = true;
+		abilities[heroid].push(mountAbility);
+	}
 
 	return abilities;
 }
@@ -499,6 +507,13 @@ function getUnitAbilities(heroid, heroName, heroAbilityids, heroHeroicAbilityids
 			ability.heroic = true;
 
 		addAbilityDetails(ability, heroid, heroName, abilityCmdid);
+
+		if(abilNode && !ability.hasOwnProperty("cooldown"))
+		{
+			var cooldownAttribute = abilNode.get("Cost/Cooldown[@Location='Unit']/@TimeUse");
+			if(cooldownAttribute)
+				ability.cooldown = +cooldownAttribute.value();
+		}
 
 		ability.tempSortOrder = (buttonRow*5)+buttonColumn;
 
@@ -667,8 +682,7 @@ function getFullDescription(_fullDescription, heroid, heroLevel)
 			formula = formula.replace(/\[d ref='([^']+)'(?: player='[0-9]')?\/?]/g, "$1");
 
 			//if(heroid==="Chen") { base.info("Before: %s", formula); }
-			if(formula.startsWith("-"))
-				formula = "-1*" + formula.substring(1);
+			formula = formula.replace(/^([ (]*)-/, "$1-1*");
 
 			(formula.match(/((^\-)|(\(\-))?[A-Za-z][A-Za-z0-9,._\[\]]+/g) || []).map(function(match) { return match.indexOf("(")===0 ? match.substring(1) : match; }).forEach(function(match)
 			{

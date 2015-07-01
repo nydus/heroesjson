@@ -284,6 +284,11 @@
 									<td>Present and set to true if this ability is a trait.</td>
 								</tr>
 								<tr>
+									<td>mount</td>
+									<td>true</td>
+									<td>Present and set to true if this ability is a mount ability.</td>
+								</tr>
+								<tr>
 									<td>icon</td>
 									<td>"storm_ui_icon_nova_snipe.dds"</td>
 									<td>The internal filename for the icon used for this ability.</td>

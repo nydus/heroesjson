@@ -33,12 +33,26 @@ exports.ADDITIONAL_HERO_SUBUNIT_IDS =
 	"Abathur" : ["AbathurSymbiote"]
 };
 
-exports.VALID_SUBUNIT_ABILITY_IDS =
+exports.VALID_UNIT_ABILITY_IDS =
 {
 	"AbathurSymbiote" : ["AbathurSymbioteCancel", "AbathurSymbioteStab", "AbathurSymbioteSpikeBurst", "AbathurSymbioteCarapace"],
 	"HeroBaleog" : ["LostVikingsPressA", "LostVikingsSpinToWin", "LostVikingsNorseForce"],
 	"HeroErik" : ["LostVikingsPressA", "LostVikingsSpinToWin", "LostVikingsNorseForce"],
 	"HeroOlaf" : ["LostVikingsPressA", "LostVikingsSpinToWin", "LostVikingsNorseForce"]
+};
+
+exports.HERO_MOUNT_UNIT_ID_REPLACEMENTS =
+{
+	"LostVikings" : "Baleog"
+};
+
+exports.MOUNT_ABILITY_IDS =
+{
+	"Abathur" : "AbathurDeepTunnel",
+	"FaerieDragon" : "FaerieDragonPhaseShiftFlight",
+	"Falstad" : "FalstadFlight",
+	"SgtHammer" : "Thrusters",
+	"LostVikings" : "LostVikingsGoGoGo"
 };
 
 exports.FORMULA_PRE_REPLACEMENTS = 

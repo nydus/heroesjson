@@ -1,5 +1,15 @@
 [
 	{
+		"version" : "2.0.2",
+		"when" : "2015-06-30",
+		"patchVersion" : "36144",
+		"changes" : [
+			"Added hero special mount abilities.",
+			"Added 'cooldown' fields to several abilities.",
+			"Removed an extraneous negative sign from Rehgar's Stormcaller talent."
+		]
+	},
+	{
 		"version" : "2.0.1",
 		"when" : "2015-06-30",
 		"patchVersion" : "36144",
