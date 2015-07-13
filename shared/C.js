@@ -30,15 +30,26 @@ exports.HERO_UNIT_ID_REPLACEMENTS =
 
 exports.ADDITIONAL_HERO_SUBUNIT_IDS =
 {
-	"Abathur" : ["AbathurSymbiote"]
+	"Abathur" : ["AbathurSymbiote"],
+	"Tychus"  : ["TychusOdin"],
+	"Uther"   : ["UtherSpirit"]
 };
 
 exports.VALID_UNIT_ABILITY_IDS =
 {
 	"AbathurSymbiote" : ["AbathurSymbioteCancel", "AbathurSymbioteStab", "AbathurSymbioteSpikeBurst", "AbathurSymbioteCarapace"],
-	"HeroBaleog" : ["LostVikingsPressA", "LostVikingsSpinToWin", "LostVikingsNorseForce"],
-	"HeroErik" : ["LostVikingsPressA", "LostVikingsSpinToWin", "LostVikingsNorseForce"],
-	"HeroOlaf" : ["LostVikingsPressA", "LostVikingsSpinToWin", "LostVikingsNorseForce"]
+	"HeroBaleog"      : ["LostVikingsPressA", "LostVikingsSpinToWin", "LostVikingsNorseForce", "LostVikingsNordicAttackSquad", "LostVikingsVikingBribery"],
+	"HeroErik"        : ["LostVikingsPressA", "LostVikingsSpinToWin", "LostVikingsNorseForce", "LostVikingsNordicAttackSquad", "LostVikingsVikingBribery"],
+	"HeroOlaf"        : ["LostVikingsPressA", "LostVikingsSpinToWin", "LostVikingsNorseForce", "LostVikingsNordicAttackSquad", "LostVikingsVikingBribery"],
+	"TychusOdin"      : ["TychusCommandeerOdinAnnihilate", "TychusCommandeerOdinRagnarokMissiles"],
+	"Tychus"          : ["TychusOdinThrusters"],
+	"Uther"           : ["UtherFlashofLight"]
+};
+
+exports.HERO_SUBUNIT_ABILITIES_MOVE =
+{
+	"Tychus" : { "Tychus" : { "TychusOdinThrusters" : "TychusOdin" } },
+	"Uther"  : { "Uther"  : { "UtherFlashofLight"   : "UtherSpirit" } }
 };
 
 exports.HERO_MOUNT_UNIT_ID_REPLACEMENTS =
@@ -48,11 +59,11 @@ exports.HERO_MOUNT_UNIT_ID_REPLACEMENTS =
 
 exports.MOUNT_ABILITY_IDS =
 {
-	"Abathur" : "AbathurDeepTunnel",
+	"Abathur"      : "AbathurDeepTunnel",
 	"FaerieDragon" : "FaerieDragonPhaseShiftFlight",
-	"Falstad" : "FalstadFlight",
-	"SgtHammer" : "Thrusters",
-	"LostVikings" : "LostVikingsGoGoGo"
+	"Falstad"      : "FalstadFlight",
+	"SgtHammer"    : "Thrusters",
+	"LostVikings"  : "LostVikingsGoGoGo"
 };
 
 exports.FORMULA_PRE_REPLACEMENTS = 
@@ -71,6 +82,14 @@ exports.FORMULA_PRE_REPLACEMENTS =
 	},
 	{
 		  match : "Effect,PixieDustApplyBlockController,Count",
+		replace : "1"
+	},
+	{
+		  match : "$BehaviorStackCount:LostVikingsVikingHoard$",
+		replace : "0"
+	},
+	{
+		  match : "Behavior,LostVikingVikingHoardCarryBehavior,Modification.VitalRegenArray[Life]",
 		replace : "1"
 	}
 ];
@@ -129,6 +148,12 @@ exports.IMPORT_ABILITIES =
 {
 	"HeroBaleog" :
 	[
+		{
+			id : "LostVikingsVikingHoardTalent",
+			trait : true,
+			name : "Viking Hoard",
+			icon : "storm_btn_d3_monk_mantraofhealing.dds"
+		},
 		{
 			id : "LostVikingSelectOlaf",
 			shortcut : "1",

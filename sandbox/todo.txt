@@ -3,9 +3,12 @@
 \---------------/
 * Attack damage and attack speed (tied to weapon, down a deep and complex chain of XML)
 
+
 /-----------------\
 | Medium Priority |
 \-----------------/
+* Add Chen's "Storm, Earth, Fire" abilities
+
 
 
 /--------------\

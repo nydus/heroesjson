@@ -452,12 +452,22 @@ function getUnitAbilities(heroid, heroName, heroAbilityids, heroHeroicAbilityids
 
 	var unitNode = NODE_MAPS["Unit"][unitid];
 	if(!unitNode)
-		throw new Error("Could not find unit for: " + unitid);
+	{
+		base.error("Could not find unit for heroeid [%s] and unitid: %s", heroid, unitid);
+		return abilities;
+	}
 
-	(unitNode.find("CardLayouts[@index='0']/LayoutButtons") || []).forEach(function(layoutButtonNode)
+	var attributeButtons = unitNode.find("CardLayouts[@index='0']/LayoutButtons");
+	if(attributeButtons.length===0)
+		attributeButtons = unitNode.find("CardLayouts/LayoutButtons");
+	if(attributeButtons.length===0)
+		attributeButtons = [];
+
+	attributeButtons.forEach(function(layoutButtonNode)
 	{
 		var buttonRow = attributeValue(layoutButtonNode, "Row", getValue(layoutButtonNode, "Row", null));
 		var buttonColumn = attributeValue(layoutButtonNode, "Column", getValue(layoutButtonNode, "Column", null));
+
 		if(buttonRow===null || buttonColumn===null)
 			return;
 
@@ -513,6 +523,8 @@ function getUnitAbilities(heroid, heroName, heroAbilityids, heroHeroicAbilityids
 			var cooldownAttribute = abilNode.get("Cost/Cooldown[@Location='Unit']/@TimeUse");
 			if(cooldownAttribute)
 				ability.cooldown = +cooldownAttribute.value();
+
+			ability.description = ability.description.replace("Cooldown: " + ability.cooldown + " seconds\n", "");
 		}
 
 		ability.tempSortOrder = (buttonRow*5)+buttonColumn;
@@ -544,6 +556,8 @@ function getUnitAbilities(heroid, heroName, heroAbilityids, heroHeroicAbilityids
 
 		if(abilityToAdd.shortcut)
 			ability.shortcut = abilityToAdd.shortcut;
+		if(abilityToAdd.trait)
+			ability.trait = abilityToAdd.trait;
 
 		abilities.push(ability);
 	});
@@ -611,17 +625,17 @@ function getHeroStats(heroUnitid)
 {
 	var heroStats = {};
 
-	var heroUnitNode = NODE_MAPS["Unit"][(!heroUnitid.startsWith("Hero") ? "Hero" : "") + heroUnitid];
+	var heroUnitNode = NODE_MAPS["Unit"][(!heroUnitid.startsWith("Hero") ? "Hero" : "") + heroUnitid] || NODE_MAPS["Unit"][heroUnitid];
 	if(heroUnitNode)
 	{
-		heroStats.hp = +getValue(heroUnitNode, "LifeMax");
+		heroStats.hp = +getValue(heroUnitNode, "LifeMax") || 0;
 		heroStats.hpPerLevel = 0;
-		heroStats.hpRegen = +getValue(heroUnitNode, "LifeRegenRate");
+		heroStats.hpRegen = +getValue(heroUnitNode, "LifeRegenRate") || 0;
 		heroStats.hpRegenPerLevel = 0;
 
-		heroStats.mana = +getValue(heroUnitNode, "EnergyMax", 500);
+		heroStats.mana = +getValue(heroUnitNode, "EnergyMax", 500) || 0;
 		heroStats.manaPerLevel = 0;
-		heroStats.manaRegen = +getValue(heroUnitNode, "EnergyRegenRate", 3);
+		heroStats.manaRegen = +getValue(heroUnitNode, "EnergyRegenRate", 3) || 0;
 		heroStats.manaRegenPerLevel = 0;
 
 		(heroUnitNode.find("BehaviorArray") || []).forEach(function(behaviorArrayNode)
@@ -698,7 +712,9 @@ function getFullDescription(_fullDescription, heroid, heroLevel)
 			//if(heroid==="Chen") { base.info("after: %s", formula); }
 
 			formula = formula.replace(/[+*/-]$/, "");
-			var result = eval(formula.contains("(") ? formula : parenthesize(formula));	// Heroes formulas are evaluated Left to Right instead of normal math operation order
+
+			// Heroes formulas are evaluated Left to Right instead of normal math operation order
+			var result = eval(formula.contains("(") ? formula : parenthesize(formula));	// jshint ignore:line
 			
 			//if(heroid==="Chen") { base.info("Formula: %s\nResult: %d", formula, result); }
 		
@@ -885,20 +901,36 @@ function lookupXMLRef(heroid, heroLevel, query, negative)
 
 function performHeroModifications(hero)
 {
-	if(!C.HERO_MODIFICATIONS.hasOwnProperty(hero.id))
-		return;
-
-	C.HERO_MODIFICATIONS[hero.id].forEach(function(HERO_MODIFICATION)
+	if(C.HERO_MODIFICATIONS.hasOwnProperty(hero.id))
 	{
-		var match = jsonselect.match(HERO_MODIFICATION.path, hero);
-		if(!match || match.length<1)
+		C.HERO_MODIFICATIONS[hero.id].forEach(function(HERO_MODIFICATION)
 		{
-			base.error("Failed to match [%s] to: %s", HERO_MODIFICATION.path, hero);
-			return;
-		}
+			var match = jsonselect.match(HERO_MODIFICATION.path, hero);
+			if(!match || match.length<1)
+			{
+				base.error("Failed to match [%s] to: %s", HERO_MODIFICATION.path, hero);
+				return;
+			}
 
-		match[0][HERO_MODIFICATION.name] = HERO_MODIFICATION.value;
-	});
+			match[0][HERO_MODIFICATION.name] = HERO_MODIFICATION.value;
+		});
+	}
+
+	if(C.HERO_SUBUNIT_ABILITIES_MOVE.hasOwnProperty(hero.id))
+	{
+		Object.forEach(C.HERO_SUBUNIT_ABILITIES_MOVE[hero.id], function(srcSubunitid, abilityMoveInfo)
+		{
+			Object.forEach(abilityMoveInfo, function(abilityId, targetSubunitid)
+			{
+				var match = null;
+				hero.abilities[srcSubunitid] = hero.abilities[srcSubunitid].filter(function(ability) { if(ability.id===abilityId) { match = base.clone(ability); } return ability.id!==abilityId; });
+				if(!match)
+					base.error("Failed to find hero [%s] with srcSubunitid [%s] and abilityId [%s] and targetSubunitid [%s]", hero.id, srcSubunitid, abilityId, targetSubunitid);
+				else
+					hero.abilities[targetSubunitid].push(match);
+			});
+		});
+	}
 }
 
 function validateMount(mount)
