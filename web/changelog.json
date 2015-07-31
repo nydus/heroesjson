@@ -1,5 +1,13 @@
 [
 	{
+		"version" : "2.0.5",
+		"when" : "2015-07-31",
+		"patchVersion" : "36536",
+		"changes" : [
+			"Added missing 'per level' information to 21 abilities and talents."
+		]
+	},
+	{
 		"version" : "2.0.4",
 		"when" : "2015-07-12",
 		"patchVersion" : "36144",

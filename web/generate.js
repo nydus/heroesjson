@@ -55,6 +55,22 @@ tiptoe(
 	{
 		fs.mkdir(path.join(WEB_OUT_PATH), this);
 	},
+	function extractingBuildVersion()
+	{
+		if(process.argv[3]==="dev")
+			return this();
+
+		base.info("Extracting build version...");
+		runUtil.run(CASCEXTRATOR_PATH, [HOTS_DATA_PATH, "-o", WEB_OUT_PATH, "-f", "mods\\core.stormmod\\base.stormdata\\DataBuildId.txt"], {silent:true}, this);
+	},
+	function readAndCleanupBuildVersion()
+	{
+		if(process.argv[3]==="dev")
+			return this();
+		
+		base.info("Data Build Version: %s", fs.readFileSync(path.join(WEB_OUT_PATH, "mods", "core.stormmod", "base.stormdata", "DataBuildId.txt"), {encoding:"utf8"}).trim("B").trim());
+		rimraf(path.join(WEB_OUT_PATH, "mods"), this);
+	},
 	function findJSON()
 	{
 		base.info("Finding JSON files...");

@@ -452,10 +452,7 @@ function getUnitAbilities(heroid, heroName, heroAbilityids, heroHeroicAbilityids
 
 	var unitNode = NODE_MAPS["Unit"][unitid];
 	if(!unitNode)
-	{
-		base.error("Could not find unit for heroeid [%s] and unitid: %s", heroid, unitid);
 		return abilities;
-	}
 
 	var attributeButtons = unitNode.find("CardLayouts[@index='0']/LayoutButtons");
 	if(attributeButtons.length===0)
@@ -853,6 +850,8 @@ function lookupXMLRef(heroid, heroLevel, query, negative)
 
 	var subparts = mainParts[2].split(".");
 
+	//if(heroid==="Tassadar" && query.contains("PlasmaShield")) { base.info(HERO_LEVEL_SCALING_MODS[heroid]); base.info(mainParts); base.info(subparts); }
+
 	var additionalAmount = 0;
 	HERO_LEVEL_SCALING_MODS[heroid].forEach(function(HERO_LEVEL_SCALING_MOD)
 	{
@@ -862,7 +861,7 @@ function lookupXMLRef(heroid, heroLevel, query, negative)
 		if(HERO_LEVEL_SCALING_MOD.key!==mainParts[1])
 			return;
 
-		if(HERO_LEVEL_SCALING_MOD.target!==subparts[0])
+		if(HERO_LEVEL_SCALING_MOD.target!==subparts[0] && HERO_LEVEL_SCALING_MOD.target!==subparts.join("."))
 			return;
 
 		additionalAmount = heroLevel*HERO_LEVEL_SCALING_MOD.value;
