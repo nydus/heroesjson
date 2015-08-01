@@ -1,5 +1,13 @@
 [
 	{
+		"version" : "2.0.6",
+		"when" : "2015-08-01",
+		"patchVersion" : "36536",
+		"changes" : [
+			"Added missing 'per level' information to talents: Envenom, Burning Rage, Fury of the Storm."
+		]
+	},
+	{
 		"version" : "2.0.5",
 		"when" : "2015-07-31",
 		"patchVersion" : "36536",

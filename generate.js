@@ -35,6 +35,7 @@ var OUT_PATH = path.join(__dirname, "out");
 var HEROES_OUT_PATH = path.join(OUT_PATH, "heroes.json");
 var MOUNTS_OUT_PATH = path.join(OUT_PATH, "mounts.json");
 
+var DEFAULT_NODES = {};
 var NODE_MAPS = {};
 var NODE_MAP_TYPES = ["Hero", "Talent", "Behavior", "Effect", "Abil", "Unit", "Validator", "Weapon", "Button", "Mount" ];
 
@@ -278,27 +279,8 @@ function processHeroNode(heroNode)
 
 	// Level Scaling Info
 	HERO_LEVEL_SCALING_MODS[hero.id] = [];
-
-	heroNode.find("LevelScalingArray/Modifications").forEach(function(modNode)
-	{
-		var modType = getValue(modNode, "Catalog", attributeValue(modNode, "Catalog"));
-		if(!NODE_MAP_TYPES.contains(modType))
-			throw new Error("Unsupported LevelScalingArray Modification Catalog modType: " + modType);
-
-		var modKey = getValue(modNode, "Entry", attributeValue(modNode, "Entry"));
-		if(!modKey)
-			throw new Error("No Entry node in LevelScalingArray Modification (" + modKey + ") for hero: " + hero.id);
-
-		var modTarget = getValue(modNode, "Field", attributeValue(modNode, "Field"));
-		if(!modTarget)
-			throw new Error("No Field node in LevelScalingArray Modification (" + modTarget + ") for hero: " + hero.id);
-
-		var modValue = getValue(modNode, "Value", attributeValue(modNode, "Value"));
-		if(!modValue)
-			return;
-
-		HERO_LEVEL_SCALING_MODS[hero.id].push({type:modType,key:modKey,target:modTarget,value:(+modValue)});
-	});
+	addHeroLevelScalingMods(hero.id, DEFAULT_NODES["Hero"]);
+	addHeroLevelScalingMods(hero.id, heroNode);
 
 	// Hero Stats
 	hero.stats = {};
@@ -360,6 +342,30 @@ function processHeroNode(heroNode)
     performHeroModifications(hero);
 	
 	return hero;
+}
+
+function addHeroLevelScalingMods(heroid, heroNode)
+{
+	heroNode.find("LevelScalingArray/Modifications").forEach(function(modNode)
+	{
+		var modType = getValue(modNode, "Catalog", attributeValue(modNode, "Catalog"));
+		if(!NODE_MAP_TYPES.contains(modType))
+			throw new Error("Unsupported LevelScalingArray Modification Catalog modType: " + modType);
+
+		var modKey = getValue(modNode, "Entry", attributeValue(modNode, "Entry"));
+		if(!modKey)
+			throw new Error("No Entry node in LevelScalingArray Modification (" + modKey + ") for hero: " + heroid);
+
+		var modTarget = getValue(modNode, "Field", attributeValue(modNode, "Field"));
+		if(!modTarget)
+			throw new Error("No Field node in LevelScalingArray Modification (" + modTarget + ") for hero: " + heroid);
+
+		var modValue = getValue(modNode, "Value", attributeValue(modNode, "Value"));
+		if(!modValue)
+			return;
+
+		HERO_LEVEL_SCALING_MODS[heroid].push({type:modType,key:modKey,target:modTarget,value:(+modValue)});
+	});
 }
 
 function getHeroAbilities(heroid, heroName, heroUnitids)
@@ -850,7 +856,7 @@ function lookupXMLRef(heroid, heroLevel, query, negative)
 
 	var subparts = mainParts[2].split(".");
 
-	//if(heroid==="Tassadar" && query.contains("PlasmaShield")) { base.info(HERO_LEVEL_SCALING_MODS[heroid]); base.info(mainParts); base.info(subparts); }
+	//if(heroid==="L90ETC" && query.contains("Envenom")) { base.info("Level %d with mainParts [%s] and subparts [%s] and hero mods:", heroLevel, mainParts.join(", "), subparts.join(", ")); base.info(HERO_LEVEL_SCALING_MODS[heroid]); }
 
 	var additionalAmount = 0;
 	HERO_LEVEL_SCALING_MODS[heroid].forEach(function(HERO_LEVEL_SCALING_MOD)
@@ -864,8 +870,11 @@ function lookupXMLRef(heroid, heroLevel, query, negative)
 		if(HERO_LEVEL_SCALING_MOD.target!==subparts[0] && HERO_LEVEL_SCALING_MOD.target!==subparts.join("."))
 			return;
 
+		//if(heroid==="L90ETC" && query.contains("Envenom")) { base.info("Found additional scaling amount of %d", HERO_LEVEL_SCALING_MOD.value); }
 		additionalAmount = heroLevel*HERO_LEVEL_SCALING_MOD.value;
 	});
+
+	//if(heroid==="L90ETC" && query.contains("Envenom") && additionalAmount===0) { base.info("Failed to find an additional amount for: %s", mainParts.join(",")); }
 
 	//if(heroid==="L90ETC") { base.info("Start (negative:%s): %s", negative, subparts); }
 	subparts.forEach(function(subpart)
@@ -960,6 +969,31 @@ function validateHero(hero)
 
 function loadMergedNodeMap(xmlDocs)
 {
+	xmlDocs.forEach(function(xmlDoc)
+	{
+		xmlDoc.find("/Catalog/*").forEach(function(node)
+		{
+			var nodeType = NODE_MAP_TYPES.filter(function(NODE_MAP_TYPE) { return node.name()===("C" + NODE_MAP_TYPE); });
+			if(!nodeType || nodeType.length!==1)
+				return;
+
+			nodeType = nodeType[0];
+
+			if(node.attr("id") || attributeValue(node, "default")!=="1")
+				return;
+
+			if(DEFAULT_NODES.hasOwnProperty(nodeType))
+			{
+				base.info(DEFAULT_NODES[nodeType].toString());
+				base.info(node.toString());
+				base.error("MORE THAN ONE DEFAULT! NOT GOOD!");
+				process.exit(1);
+			}
+
+			DEFAULT_NODES[nodeType] = node;
+		});
+	});
+
 	xmlDocs.forEach(function(xmlDoc)
 	{
 		xmlDoc.find("/Catalog/*").forEach(function(node)
