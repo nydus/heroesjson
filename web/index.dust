@@ -82,6 +82,11 @@
 					<td>The internal ID of this hero.</td>
 				</tr>
 				<tr>
+					<td>attributeid</td>
+					<td>"Nova"</td>
+					<td>The internal AttributeID of this hero.</td>
+				</tr>
+				<tr>
 					<td>name</td>
 					<td>"Nova"</td>
 					<td>The name of this hero.</td>

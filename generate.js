@@ -225,6 +225,7 @@ function processHeroNode(heroNode)
 
 	// Core hero data
 	hero.id = attributeValue(heroNode, "id");
+	hero.attributeid = getValue(heroNode, "AttributeId");
 	hero.name = S["Unit/Name/" + getValue(heroNode, "Unit", "Hero" + hero.id)];
 
 	base.info("Processing hero: %s", hero.name);
@@ -698,7 +699,7 @@ function getFullDescription(_fullDescription, heroid, heroLevel)
 
 			formula = formula.replace(/\[d ref='([^']+)'(?: player='[0-9]')?\/?]/g, "$1");
 
-			//if(heroid==="Chen") { base.info("Before: %s", formula); }
+			//if(heroid==="Tinker") { base.info("Before: %s", formula); }
 			formula = formula.replace(/^([ (]*)-/, "$1-1*");
 
 			(formula.match(/((^\-)|(\(\-))?[A-Za-z][A-Za-z0-9,._\[\]]+/g) || []).map(function(match) { return match.indexOf("(")===0 ? match.substring(1) : match; }).forEach(function(match)
@@ -712,14 +713,14 @@ function getFullDescription(_fullDescription, heroid, heroLevel)
 				}
 				formula = formula.replace(match, lookupXMLRef(heroid, heroLevel, match, negative));
 			});
-			//if(heroid==="Chen") { base.info("after: %s", formula); }
+			//if(heroid==="Tinker") { base.info("after: %s", formula); }
 
 			formula = formula.replace(/[+*/-]$/, "");
 
-			// Heroes formulas are evaluated Left to Right instead of normal math operation order
-			var result = eval(formula.contains("(") ? formula : parenthesize(formula));	// jshint ignore:line
+			// Heroes formulas are evaluated Left to Right instead of normal math operation order, so we parenthesize everything. ugh.
+			var result = eval(parenthesize(formula));	// jshint ignore:line
 			
-			//if(heroid==="Chen") { base.info("Formula: %s\nResult: %d", formula, result); }
+			//if(heroid==="Tinker") { base.info("Formula: %s\nResult: %d", formula, result); }
 		
 			var MAX_PRECISION = 4;
 			if(result.toFixed(MAX_PRECISION).length<(""+result).length)
@@ -742,8 +743,9 @@ function getFullDescription(_fullDescription, heroid, heroLevel)
 	fullDescription = fullDescription.replace(/<\/?n\/?>/g, "\n");
 	fullDescription = fullDescription.replace(/<s\s*val\s*=\s*"StandardTooltipDetails">/gm, "").replace(/<s\s*val\s*=\s*"StandardTooltip">/gm, "").replace(/<\/?[cs]\/?>/g, "");
 	fullDescription = fullDescription.replace(/<c\s*val\s*=\s*"[^"]+">/gm, "").replace(/<\/?if\/?>/g, "").trim();
-	fullDescription = fullDescription.replace(/ [.]/g, ".");
-	while(fullDescription.indexOf("\n\n")!==-1) { fullDescription = fullDescription.replace(/\n\n/gm, "\n"); } 
+	fullDescription = fullDescription.replace(/ [.] /g, ". ");
+	fullDescription = fullDescription.replace(/ [.]([0-9]+)/g, " 0.$1");
+	while(fullDescription.indexOf("\n\n")!==-1) { fullDescription = fullDescription.replace(/\n\n/g, "\n"); } 
 
 	if(heroLevel===0)
 	{
@@ -831,7 +833,7 @@ function lookupXMLRef(heroid, heroLevel, query, negative)
 			query = XMLREF_REPLACEMENT.to;
 	});
 
-	//if(heroid==="L90ETC") { base.info("QUERY: %s", query); }
+	//if(heroid==="Tinker") { base.info("QUERY: %s", query); }
 
 	var mainParts = query.split(",");
 
@@ -856,7 +858,7 @@ function lookupXMLRef(heroid, heroLevel, query, negative)
 
 	var subparts = mainParts[2].split(".");
 
-	//if(heroid==="L90ETC" && query.contains("Envenom")) { base.info("Level %d with mainParts [%s] and subparts [%s] and hero mods:", heroLevel, mainParts.join(", "), subparts.join(", ")); base.info(HERO_LEVEL_SCALING_MODS[heroid]); }
+	//if(heroid==="Tinker" && query.contains("TalentBucketPromote")) { base.info("Level %d with mainParts [%s] and subparts [%s] and hero mods:", heroLevel, mainParts.join(", "), subparts.join(", ")); base.info(HERO_LEVEL_SCALING_MODS[heroid]); }
 
 	var additionalAmount = 0;
 	HERO_LEVEL_SCALING_MODS[heroid].forEach(function(HERO_LEVEL_SCALING_MOD)
@@ -870,17 +872,17 @@ function lookupXMLRef(heroid, heroLevel, query, negative)
 		if(HERO_LEVEL_SCALING_MOD.target!==subparts[0] && HERO_LEVEL_SCALING_MOD.target!==subparts.join("."))
 			return;
 
-		//if(heroid==="L90ETC" && query.contains("Envenom")) { base.info("Found additional scaling amount of %d", HERO_LEVEL_SCALING_MOD.value); }
+		//if(heroid==="Tinker" && query.contains("TalentBucketPromote")) { base.info("Found additional scaling amount of %d", HERO_LEVEL_SCALING_MOD.value); }
 		additionalAmount = heroLevel*HERO_LEVEL_SCALING_MOD.value;
 	});
 
-	//if(heroid==="L90ETC" && query.contains("Envenom") && additionalAmount===0) { base.info("Failed to find an additional amount for: %s", mainParts.join(",")); }
+	//if(heroid==="Tinker" && query.contains("TalentBucketPromote") && additionalAmount===0) { base.info("Failed to find an additional amount for: %s", mainParts.join(",")); }
 
-	//if(heroid==="L90ETC") { base.info("Start (negative:%s): %s", negative, subparts); }
+	//if(heroid==="Tinker") { base.info("Start (negative:%s): %s", negative, subparts); }
 	subparts.forEach(function(subpart)
 	{
 		var xpath = !subpart.match(/\[[0-9]+\]/) ? subpart.replace(/([^[]+)\[([^\]]+)]/, "$1[@index = '$2']") : subpart.replace(/\[([0-9]+)\]/, "[" + (+subpart.match(/\[([0-9]+)\]/)[1]+1) + "]");
-		//if(heroid==="L90ETC") { base.info("Next xpath: %s\nCurrent target: %s\n", xpath, target.toString()); }
+		//if(heroid==="Tinker") { base.info("Next xpath: %s\nCurrent target: %s\n", xpath, target.toString()); }
 		var nextTarget = target.get(xpath);
 		if(!nextTarget)
 			result = +attributeValue(target, xpath.replace(/([^\[]+).*/, "$1"));
@@ -899,7 +901,7 @@ function lookupXMLRef(heroid, heroLevel, query, negative)
 	}
 
 	result += additionalAmount;
-	//if(heroid==="L90ETC") { base.info("%s => %d", query, result); }
+	//if(heroid==="Tinker") { base.info("%s => %d", query, result); }
 
 	if(negative)
 		result = result*-1;
