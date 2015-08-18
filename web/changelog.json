@@ -1,5 +1,14 @@
 [
 	{
+		"version" : "2.1.0",
+		"when" : "2015-08-18",
+		"patchVersion" : "37117",
+		"changes" : [
+			"Added Monk!",
+			"Updated to latest patch data."
+		]
+	},
+	{
 		"version" : "2.0.9",
 		"when" : "2015-08-17",
 		"patchVersion" : "36536",

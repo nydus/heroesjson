@@ -10,16 +10,23 @@ var base = require("xbase"),
 	tiptoe = require("tiptoe");
 
 tiptoe(
-	function findJSON()
+	function getJSON()
 	{
-		glob(path.join(__dirname, "..", "web", "json", "*.json"), this);
+		httpUtil.get("http://heroesjson.com/json/heroes.json", this.parallel());
+		fs.readFile(path.join(__dirname, "..", "web", "json", "heroes.json"), {encoding : "utf8"}, this.parallel());
 	},
-	function processFiles(files)
+	function compare(oldJSON, newJSON)
 	{
-		files.serialForEach(function(file, subcb)
-		{
-			processFile(path.basename(file.substring(0, file.indexOf(".json"))), subcb);
-		}, this);
+		var oldData = JSON.parse(oldJSON[0]).mutate(function(hero, result) { result[hero.id] = hero; return result; }, {});
+		var newData = JSON.parse(newJSON).mutate(function(hero, result) { result[hero.id] = hero; return result; }, {});
+
+		Object.keys(newData).subtract(Object.keys(oldData)).forEach(function(newKey) { base.info("New hero: %s", newKey); delete newData[newKey]; });
+
+		var result = diffUtil.diff(oldData, newData, {compareArraysDirectly:true, arrayKey : "id"});
+		if(result)
+			console.log(result);
+
+		this();
 	},
 	function finish(err)
 	{
@@ -33,39 +40,3 @@ tiptoe(
 		process.exit(0);
 	}
 );
-
-function processFile(fileName, cb)
-{
-	base.info("Comparing: %s", fileName);
-
-	tiptoe(
-		function getJSON()
-		{
-			httpUtil.get("http://heroesjson.com/json/" + fileName + ".json", this.parallel());
-			fs.readFile(path.join(__dirname, "..", "web", "json", fileName + ".json"), {encoding : "utf8"}, this.parallel());
-		},
-		function compare(oldJSON, newJSON)
-		{
-			var oldData = JSON.parse(oldJSON[0]);
-			var newData = JSON.parse(newJSON);
-
-			if(oldJSON[2]===404)
-			{
-				base.info("Skipping %s do to being missing on production.", fileName);
-				return this();
-			}
-
-			base.info(diffUtil.diff(oldData.map(function(hero) { return hero.id; }), newData.map(function(hero) { return hero.id; })));
-
-			var result = diffUtil.diff(oldData, newData, {compareArraysDirectly:true, arrayKey : "id"});
-			if(result)
-				console.log(result);
-
-			this();
-		},
-		function finish(err)
-		{
-			setImmediate(function() { cb(err); });
-		}
-	);
-}

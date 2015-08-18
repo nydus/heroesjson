@@ -321,16 +321,26 @@ function processHeroNode(heroNode)
 			return;
 		}
 
-		talent.name = talentDescription.replace(/<s val="StandardTooltipHeader">([^<]+)<.+/, "$1").replace(/<s\s*val\s*=\s*"StandardTooltip">/gm, "").trim();
+		if(talentDescription.contains("StandardTooltipHeader"))
+			talent.name = talentDescription.replace(/<s val="StandardTooltipHeader">([^<]+)<.+/, "$1").replace(/<s\s*val\s*=\s*"StandardTooltip">/gm, "").trim();
+		else
+			talent.name = S["Button/Name/" + faceid];
+
 		//if(hero.id==="L90ETC") { base.info("Talent: %s\n", talent.id); }
 		talent.description = getFullDescription(talentDescription, hero.id, 0);
 		talent.icon = getValue(NODE_MAPS["Button"][faceid], "Icon");
+		if(!talent.icon)
+			talent.icon = getValue(NODE_MAPS["Button"][attributeValue(NODE_MAPS["Button"][faceid], "parent")], "Icon");
+
 		if(!talent.icon)
 			delete talent.icon;
 		else
 			talent.icon = talent.icon.replace(/Assets\\Textures\\/, "");
 
 		addCooldownInfo(talent, "description");
+
+		if(!talent.cooldown)
+			talent.cooldown = getAbilityCooldown(NODE_MAPS["Abil"][getValue(talentNode, "Abil")]);
 
 		var talentPrerequisiteNode = talentTreeNode.get("PrerequisiteTalentArray");
 		if(talentPrerequisiteNode)
@@ -393,6 +403,8 @@ function getHeroAbilities(heroid, heroName, heroUnitids)
 
 			var descriptionIdsToTry = [];
 			var buttonidShort = ["HeroSelect", "HeroSelectButton"].mutateOnce(function(buttonSuffix) { if(buttonid.endsWith(buttonSuffix)) { return buttonid.substring(0, buttonid.length-buttonSuffix.length); } });
+			if(!buttonidShort)
+				buttonidShort = buttonid;
 			descriptionIdsToTry.push(buttonidShort);
 			descriptionIdsToTry.push(heroid + buttonidShort);
 			if(abilityIsTrait)
@@ -524,9 +536,9 @@ function getUnitAbilities(heroid, heroName, heroAbilityids, heroHeroicAbilityids
 
 		if(abilNode && !ability.hasOwnProperty("cooldown"))
 		{
-			var cooldownAttribute = abilNode.get("Cost/Cooldown[@Location='Unit']/@TimeUse");
-			if(cooldownAttribute)
-				ability.cooldown = +cooldownAttribute.value();
+			ability.cooldown = getAbilityCooldown(abilNode);
+			if(!ability.cooldown)
+				delete ability.cooldown;
 
 			ability.description = ability.description.replace("Cooldown: " + ability.cooldown + " seconds\n", "");
 		}
@@ -573,6 +585,18 @@ function getUnitAbilities(heroid, heroName, heroAbilityids, heroHeroicAbilityids
 	});
 
 	return abilities;
+}
+
+function getAbilityCooldown(abilNode)
+{
+	if(!abilNode)
+		return;
+
+	var cooldownAttribute = abilNode.get("Cost/Cooldown[@Location='Unit']/@TimeUse") || abilNode.get("Cost/Cooldown[@Location='Unit']/../Charge/TimeUse/@value");
+	if(!cooldownAttribute)
+		return;
+
+	return +cooldownAttribute.value();
 }
 
 function addAbilityDetails(ability, heroid, heroName, abilityCmdid, abilityName)
@@ -697,6 +721,7 @@ function getFullDescription(_fullDescription, heroid, heroLevel)
 					formula = formula.replace(FORMULA_PRE_REPLACEMENT.match, FORMULA_PRE_REPLACEMENT.replace);
 			});
 
+			formula = formula.replace(/\$BehaviorStackCount:[^$]+\$/g, "0");
 			formula = formula.replace(/\[d ref='([^']+)'(?: player='[0-9]')?\/?]/g, "$1");
 
 			//if(heroid==="Tinker") { base.info("Before: %s", formula); }

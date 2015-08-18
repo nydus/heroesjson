@@ -3,7 +3,7 @@
 var base = require("xbase"); // jshint ignore:line
 
 // Extra heroes in the 'heromods' folder
-exports.EXTRA_HEROES_HEROMODS = ["anubarak", "chen", "crusader", "jaina", "kaelthas", "lostvikings", "murky", "sonyarework", "sylvanas", "thrall", "butcher", "leoric"];
+exports.EXTRA_HEROES_HEROMODS = ["anubarak", "chen", "crusader", "jaina", "kaelthas", "lostvikings", "murky", "sonyarework", "sylvanas", "thrall", "butcher", "leoric", "monk"];
 
 // Extra hero data files GameData/Heroes/<hero>Data.xml
 exports.EXTRA_HEROES_GAMEDATA_FILES = ["Chen", "Zagara"];
@@ -20,6 +20,14 @@ exports.HERO_MODIFICATIONS =
 	"Chen" :
 	[
 		{ path : ":root", name : "releaseDate", value : "2014-09-10" }
+	],
+	"Abathur" :
+	[
+		{ path : ":root .abilities .AbathurSymbiote *:nth-child(1)", name : "aimType", value : "Skillshot"}
+	],
+	"Azmodan" :
+	[
+		{ path : ":root .abilities .Azmodan *:nth-child(3)", name : "manaCostPerSecond", value : 16}
 	]
 };
 
@@ -73,6 +81,10 @@ exports.FORMULA_PRE_REPLACEMENTS =
 		replace : "0.1"
 	},
 	{
+		  match : "$GalaxyVar:libGDHL_gv_bALHeroKerriganAssimilationBaseModifier$",
+		replace : "0"
+	},
+	{
 		  match : "Behavior,CrusaderPunishStackingSlow,Modification.UnifiedMoveSpeedFactor*(-100)6",
 		replace : "Behavior,CrusaderPunishStackingSlow,Modification.UnifiedMoveSpeedFactor*(-100)*6"
 	},
@@ -83,10 +95,6 @@ exports.FORMULA_PRE_REPLACEMENTS =
 	{
 		  match : "Effect,PixieDustApplyBlockController,Count",
 		replace : "1"
-	},
-	{
-		  match : "$BehaviorStackCount:LostVikingsVikingHoard$",
-		replace : "0"
 	},
 	{
 		  match : "Behavior,LostVikingVikingHoardCarryBehavior,Modification.VitalRegenArray[Life]",
