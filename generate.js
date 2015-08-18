@@ -324,6 +324,9 @@ function processHeroNode(heroNode)
 		if(talentDescription.contains("StandardTooltipHeader"))
 			talent.name = talentDescription.replace(/<s val="StandardTooltipHeader">([^<]+)<.+/, "$1").replace(/<s\s*val\s*=\s*"StandardTooltip">/gm, "").trim();
 		else
+			talent.name = S[getValue(NODE_MAPS["Button"][faceid], "Name")];
+
+		if(!talent.name)
 			talent.name = S["Button/Name/" + faceid];
 
 		//if(hero.id==="L90ETC") { base.info("Talent: %s\n", talent.id); }
@@ -592,7 +595,7 @@ function getAbilityCooldown(abilNode)
 	if(!abilNode)
 		return;
 
-	var cooldownAttribute = abilNode.get("Cost/Cooldown[@Location='Unit']/@TimeUse") || abilNode.get("Cost/Cooldown[@Location='Unit']/../Charge/TimeUse/@value");
+	var cooldownAttribute = abilNode.get("Cost/Cooldown[@Location='Unit']/../Charge/TimeUse/@value") || abilNode.get("Cost/Cooldown[@Location='Unit']/@TimeUse");
 	if(!cooldownAttribute)
 		return;
 

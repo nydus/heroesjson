@@ -1,5 +1,14 @@
 [
 	{
+		"version" : "2.1.1",
+		"when" : "2015-08-18",
+		"patchVersion" : "37117",
+		"changes" : [
+			"Fixed the 'name' field for some talents for both Brightwing and Tassadar.",
+			"Fixed multiple cooldowns across many abilities and talents."
+		]
+	},
+	{
 		"version" : "2.1.0",
 		"when" : "2015-08-18",
 		"patchVersion" : "37117",
