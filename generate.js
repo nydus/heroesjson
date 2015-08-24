@@ -430,14 +430,14 @@ function getHeroAbilities(heroid, heroName, heroUnitids)
 		heroAbilityids.push(abilid);
 	});
 
-	abilities[heroid] = getUnitAbilities(heroid, heroName, heroAbilityids.concat((C.VALID_UNIT_ABILITY_IDS[heroid] || [])), heroHeroicAbilityids, heroTraitAbilityids, "Hero" + (C.HERO_UNIT_ID_REPLACEMENTS[heroid] || heroid));
+	abilities[heroid] = getUnitAbilities(heroid, heroName, heroAbilityids.concat((C.VALID_UNIT_ABILITY_IDS[heroid] || [])).subtract((C.HERO_SKIP_ABILITY_IDS[heroid] || [])), heroHeroicAbilityids, heroTraitAbilityids, "Hero" + (C.HERO_UNIT_ID_REPLACEMENTS[heroid] || heroid));
 
 	heroUnitids.forEach(function(heroUnitid)
 	{
 		if(heroUnitid===heroid)
 			return;
 
-		abilities[heroUnitid] = getUnitAbilities(heroid, heroName, heroAbilityids.concat((C.VALID_UNIT_ABILITY_IDS[heroUnitid] || [])), heroHeroicAbilityids, heroTraitAbilityids, heroUnitid);
+		abilities[heroUnitid] = getUnitAbilities(heroid, heroName, heroAbilityids.concat((C.VALID_UNIT_ABILITY_IDS[heroUnitid] || [])).subtract((C.HERO_SKIP_ABILITY_IDS[heroUnitid] || [])), heroHeroicAbilityids, heroTraitAbilityids, heroUnitid);
 	});
 
 	heroUnitids.concat([heroid]).forEach(function(heroUnitid)
@@ -618,6 +618,8 @@ function addAbilityDetails(ability, heroid, heroName, abilityCmdid, abilityName)
 		ability.name = ability.name.substring(heroName.length+1).trim();
 
 	var abilityDescription = S["Button/Tooltip/" + ability.id] || S["Button/Tooltip/" + abilityCmdid];
+	if(C.ABILITY_ID_DESCRIPTION_IDS[heroid])
+		abilityDescription = S["Button/Tooltip/" + C.ABILITY_ID_DESCRIPTION_IDS[heroid][ability.id]] || abilityDescription;
 	if(!abilityDescription)
 		throw new Error("Failed to get ability description: " + ability.id + " and " + abilityCmdid);
 	

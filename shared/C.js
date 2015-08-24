@@ -65,13 +65,19 @@ exports.HERO_MOUNT_UNIT_ID_REPLACEMENTS =
 	"LostVikings" : "Baleog"
 };
 
+exports.HERO_SKIP_ABILITY_IDS =
+{
+	"Rehgar" : ["RehgarGhostWolfActivate"]	
+};
+
 exports.MOUNT_ABILITY_IDS =
 {
 	"Abathur"      : "AbathurDeepTunnel",
 	"FaerieDragon" : "FaerieDragonPhaseShiftFlight",
 	"Falstad"      : "FalstadFlight",
 	"SgtHammer"    : "Thrusters",
-	"LostVikings"  : "LostVikingsGoGoGo"
+	"LostVikings"  : "LostVikingsGoGoGo",
+	"Rehgar"       : "RehgarGhostWolfActivate"
 };
 
 exports.FORMULA_PRE_REPLACEMENTS = 
@@ -193,6 +199,11 @@ exports.USE_ABILITY_NAME =
 [
 	"FaerieDragon", "Tassadar"
 ];
+
+exports.ABILITY_ID_DESCRIPTION_IDS =
+{
+	"Rehgar" : {"RehgarGhostWolfActivate" : "RehgarGhostWolf"}
+};
 
 exports.HERO_MAX_LEVEL = 20;
 
