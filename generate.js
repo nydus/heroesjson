@@ -899,7 +899,8 @@ function lookupXMLRef(heroid, heroLevel, query, negative)
 		if(HERO_LEVEL_SCALING_MOD.key!==mainParts[1])
 			return;
 
-		if(HERO_LEVEL_SCALING_MOD.target!==subparts[0] && HERO_LEVEL_SCALING_MOD.target!==subparts.join("."))
+		if(HERO_LEVEL_SCALING_MOD.target!==subparts[0] && HERO_LEVEL_SCALING_MOD.target!==subparts[0].replace("[0]", "") &&
+		   HERO_LEVEL_SCALING_MOD.target!==subparts.join(".") && HERO_LEVEL_SCALING_MOD.target!==subparts.map(function(subpart) { return subpart.replace("[0]", ""); }).join("."))
 			return;
 
 		//if(heroid==="Tinker" && query.contains("TalentBucketPromote")) { base.info("Found additional scaling amount of %d", HERO_LEVEL_SCALING_MOD.value); }
