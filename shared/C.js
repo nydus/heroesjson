@@ -88,7 +88,7 @@ exports.FORMULA_PRE_REPLACEMENTS =
 	},
 	{
 		  match : "$GalaxyVar:libGDHL_gv_bALHeroKerriganAssimilationBaseModifier$",
-		replace : "0"
+		replace : "1"
 	},
 	{
 		  match : "Behavior,CrusaderPunishStackingSlow,Modification.UnifiedMoveSpeedFactor*(-100)6",
