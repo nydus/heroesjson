@@ -1,5 +1,13 @@
 [
 	{
+		"version" : "2.1.5",
+		"when" : "2015-09-03",
+		"patchVersion" : "37117",
+		"changes" : [
+			"Fixed the 'description' field for the Kerrigan ability Assimilation... again."
+		]
+	},
+	{
 		"version" : "2.1.4",
 		"when" : "2015-08-27",
 		"patchVersion" : "37117",
