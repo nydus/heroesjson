@@ -237,7 +237,7 @@ function processHeroNode(heroNode)
 	hero.role = getValue(heroNode, "Role");
 	if(hero.role==="Damage")
 		hero.role = "Assassin";
-	if(!hero.role && !!getValue(heroNode, "Melee"))
+	if(!hero.role)
 		hero.role = "Warrior";
 
 	hero.type = !!getValue(heroNode, "Melee") ? "Melee" : "Ranged";
@@ -561,6 +561,9 @@ function getUnitAbilities(heroid, heroName, heroAbilityids, heroHeroicAbilityids
 				ability.id = abilityCmdid;
 		}
 
+		if(C.ABILITY_SHORTCUT_REMAPS.hasOwnProperty(ability.id))
+			ability.shortcut = C.ABILITY_SHORTCUT_REMAPS[ability.id];
+
 		if(abilities.filter(function (existingAbility) { return existingAbility.id===ability.id; }).length===0)
 			abilities.push(ability);
 	});
@@ -764,7 +767,7 @@ function getFullDescription(_fullDescription, heroid, heroLevel)
 		}
 		catch(err)
 		{
-			base.error("Failed to parse: %s", formula);
+			base.error("Failed to parse: %s (%s)", formula, _fullDescription);
 			throw err;
 		}
 
@@ -881,7 +884,7 @@ function lookupXMLRef(heroid, heroLevel, query, negative)
 
 	if(target.childNodes().length===0)
 	{
-		if(attributeValue(target, "id")!=="Artifact_AP_Base")
+		if(!C.ALLOWED_EMPTY_XML_REF_IDS.contains(attributeValue(target, "id")))
 			base.warn("No child nodes for nodeMapType XML parts [%s] with xml:", mainParts, target.toString());
 		return result;
 	}

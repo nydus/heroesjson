@@ -3,7 +3,7 @@
 var base = require("xbase"); // jshint ignore:line
 
 // Extra heroes in the 'heromods' folder
-exports.EXTRA_HEROES_HEROMODS = ["anubarak", "chen", "crusader", "jaina", "kaelthas", "lostvikings", "murky", "sonyarework", "sylvanas", "thrall", "butcher", "leoric", "monk"];
+exports.EXTRA_HEROES_HEROMODS = ["anubarak", "chen", "crusader", "jaina", "kaelthas", "lostvikings", "murky", "sonyarework", "sylvanas", "thrall", "butcher", "leoric", "monk", "rexxar"];
 
 // Extra hero data files GameData/Heroes/<hero>Data.xml
 exports.EXTRA_HEROES_GAMEDATA_FILES = ["Chen", "Zagara"];
@@ -40,7 +40,8 @@ exports.ADDITIONAL_HERO_SUBUNIT_IDS =
 {
 	"Abathur" : ["AbathurSymbiote"],
 	"Tychus"  : ["TychusOdin"],
-	"Uther"   : ["UtherSpirit"]
+	"Uther"   : ["UtherSpirit"],
+	"Rexxar"  : ["RexxarMisha"]
 };
 
 exports.VALID_UNIT_ABILITY_IDS =
@@ -51,8 +52,22 @@ exports.VALID_UNIT_ABILITY_IDS =
 	"HeroOlaf"        : ["LostVikingsPressA", "LostVikingsSpinToWin", "LostVikingsNorseForce", "LostVikingsNordicAttackSquad", "LostVikingsVikingBribery"],
 	"TychusOdin"      : ["TychusCommandeerOdinAnnihilate", "TychusCommandeerOdinRagnarokMissiles"],
 	"Tychus"          : ["TychusOdinThrusters"],
-	"Uther"           : ["UtherFlashofLight"]
+	"Uther"           : ["UtherFlashofLight"],
+	"Rexxar"          : ["RexxarMishaFollow", "RexxarMishaFollowCancel"]
 };
+
+exports.ACTIVATABLE_ABILITY_IDS =
+{
+	"Rexxar" : ["RexxarMishaFollow", "RexxarMishaFollowCancel"]
+};
+
+exports.ABILITY_SHORTCUT_REMAPS =
+{
+	"RexxarMishaFollow"       : "D",
+	"RexxarMishaFollowCancel" : "D"
+};
+
+exports.ALLOWED_EMPTY_XML_REF_IDS = ["Artifact_AP_Base", "TalentGatheringPowerCarry"];
 
 exports.HERO_SUBUNIT_ABILITIES_MOVE =
 {
@@ -105,6 +120,10 @@ exports.FORMULA_PRE_REPLACEMENTS =
 	{
 		  match : "Behavior,LostVikingVikingHoardCarryBehavior,Modification.VitalRegenArray[Life]",
 		replace : "1"
+	},
+	{
+		  match : "1-*Behavior,RexxarBarkskinBuff,DamageResponse.ModifyFraction*100",
+		replace : "1-Behavior,RexxarBarkskinBuff,DamageResponse.ModifyFraction*100"
 	}
 ];
 

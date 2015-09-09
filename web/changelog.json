@@ -1,5 +1,12 @@
 [
 	{
+		"version" : "2.2.0",
+		"when" : "2015-09-08",
+		"patchVersion" : "37569",
+		"changes" : [
+			"Added Rexxar!"
+		]
+	},{
 		"version" : "2.1.5",
 		"when" : "2015-09-03",
 		"patchVersion" : "37117",
