@@ -598,7 +598,8 @@ function getAbilityCooldown(abilNode)
 	if(!abilNode)
 		return;
 
-	var cooldownAttribute = abilNode.get("Cost/Cooldown[@Location='Unit']/../Charge/TimeUse/@value") || abilNode.get("Cost/Cooldown[@Location='Unit']/@TimeUse");
+	var cooldownAttribute = abilNode.get("OffCost/Cooldown[@Location='Unit']/../Charge/TimeUse/@value") || abilNode.get("OffCost/Cooldown[@Location='Unit']/@TimeUse") ||
+							abilNode.get("Cost/Cooldown[@Location='Unit']/../Charge/TimeUse/@value") || abilNode.get("Cost/Cooldown[@Location='Unit']/@TimeUse");
 	if(!cooldownAttribute)
 		return;
 

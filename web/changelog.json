@@ -1,12 +1,21 @@
 [
 	{
+		"version" : "2.2.1",
+		"when" : "2015-09-14",
+		"patchVersion" : "37569",
+		"changes" : [
+			"Fixed the 'cooldown' field for the talents Ice Block, Improved Ice Block and Feign Death."
+		]
+	},
+	{
 		"version" : "2.2.0",
 		"when" : "2015-09-08",
 		"patchVersion" : "37569",
 		"changes" : [
 			"Added Rexxar!"
 		]
-	},{
+	},
+	{
 		"version" : "2.1.5",
 		"when" : "2015-09-03",
 		"patchVersion" : "37117",
