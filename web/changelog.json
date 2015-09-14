@@ -1,5 +1,13 @@
 [
 	{
+		"version" : "2.2.2",
+		"when" : "2015-09-14",
+		"patchVersion" : "37569",
+		"changes" : [
+			"Fixed the 'description' field for the Toxic Gas talent."
+		]
+	},
+	{
 		"version" : "2.2.1",
 		"when" : "2015-09-14",
 		"patchVersion" : "37569",

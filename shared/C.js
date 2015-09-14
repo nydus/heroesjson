@@ -31,6 +31,8 @@ exports.HERO_MODIFICATIONS =
 	]
 };
 
+exports.FULLY_PARENTHESIZE = ["StitchesCombatStyleToxicGas"];
+
 exports.HERO_UNIT_ID_REPLACEMENTS =
 {
 	"LostVikings" : "LostVikingsController"

@@ -330,7 +330,7 @@ function processHeroNode(heroNode)
 			talent.name = S["Button/Name/" + faceid];
 
 		//if(hero.id==="L90ETC") { base.info("Talent: %s\n", talent.id); }
-		talent.description = getFullDescription(talentDescription, hero.id, 0);
+		talent.description = getFullDescription(talent.id, talentDescription, hero.id, 0);
 		talent.icon = getValue(NODE_MAPS["Button"][faceid], "Icon");
 		if(!talent.icon)
 			talent.icon = getValue(NODE_MAPS["Button"][attributeValue(NODE_MAPS["Button"][faceid], "parent")], "Icon");
@@ -627,7 +627,7 @@ function addAbilityDetails(ability, heroid, heroName, abilityCmdid, abilityName)
 	if(!abilityDescription)
 		throw new Error("Failed to get ability description: " + ability.id + " and " + abilityCmdid);
 	
-	ability.description = getFullDescription(abilityDescription, heroid, 0);
+	ability.description = getFullDescription(ability.id, abilityDescription, heroid, 0);
 
 	ability.description = ability.description.replace("Heroic Ability\n", "").replace("Heroic Passive\n", "").replace("Trait\n", "");
 
@@ -709,7 +709,7 @@ function getHeroStats(heroUnitid)
 	return heroStats;
 }
 
-function getFullDescription(_fullDescription, heroid, heroLevel)
+function getFullDescription(id, _fullDescription, heroid, heroLevel)
 {
 	var fullDescription = _fullDescription;
 
@@ -751,8 +751,10 @@ function getFullDescription(_fullDescription, heroid, heroLevel)
 
 			formula = formula.replace(/[+*/-]$/, "");
 
+			//if(heroid==="Tinker") { base.info("after prenthesiszed and regex: %s", parenthesize(formula)); base.info("after prenthesiszed x2: %s", parenthesize(parenthesize(formula))); }
+
 			// Heroes formulas are evaluated Left to Right instead of normal math operation order, so we parenthesize everything. ugh.
-			var result = eval(parenthesize(formula));	// jshint ignore:line
+			var result = C.FULLY_PARENTHESIZE.contains(id) ? eval(fullyParenthesize(formula)) : eval(parenthesize(formula));	// jshint ignore:line
 			
 			//if(heroid==="Tinker") { base.info("Formula: %s\nResult: %d", formula, result); }
 		
@@ -783,7 +785,7 @@ function getFullDescription(_fullDescription, heroid, heroLevel)
 
 	if(heroLevel===0)
 	{
-		var fullDescriptionLevel1 = getFullDescription(_fullDescription, heroid, 1);
+		var fullDescriptionLevel1 = getFullDescription(id, _fullDescription, heroid, 1);
 		if(fullDescription!==fullDescriptionLevel1)
 		{
 			var beforeWords = fullDescription.split(" ");
@@ -851,8 +853,29 @@ function parenthesize(formula)
 
 		if("+-/*".contains(c) && i!==0 && !"+-/*(".contains(result.last()))
 			seenOperator = true;
+
 		result.push(c);
 	});
+
+	return result.join("");
+}
+
+function fullyParenthesize(formula)
+{
+	var result = [].pushMany("(", formula.replace(/[^+/*-]/g, "").length+1);
+
+	formula.replace(/ /g, "").split("").forEach(function(c, i)
+	{
+		if(c==="(" || c===")")
+			return;
+
+		if("+-/*".contains(c))
+			result.push(")");
+
+		result.push(c);
+	});
+
+	result.push(")");
 
 	return result.join("");
 }
