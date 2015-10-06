@@ -75,7 +75,7 @@ C.EXTRA_HEROES_GAMEDATA_FOLDERS.forEach(function(EXTRA_HERO)
 });
 
 var S = {};
-var IGNORED_NODE_TYPE_IDS = {"Hero" : ["Random", "AI", "_Empty"]};
+var IGNORED_NODE_TYPE_IDS = {"Hero" : ["Random", "AI", "_Empty", "LegacyVOHero", "TestHero"]};
 
 tiptoe(
 	function clearOut()
@@ -177,6 +177,10 @@ function processMountNode(mountNode)
 	var mount = {};
 	mount.id = attributeValue(mountNode, "id");
 	mount.name = S["Mount/Name/" + mount.id];
+
+	if(!mount.name)
+		return undefined;
+	
 	mount.description = S["Mount/Info/" + mount.id];
 	mount.franchise = getValue(mountNode, "Universe", "Starcraft");
 
@@ -228,7 +232,13 @@ function processHeroNode(heroNode)
 	hero.attributeid = getValue(heroNode, "AttributeId");
 	hero.name = S["Unit/Name/" + getValue(heroNode, "Unit", "Hero" + hero.id)];
 
-	base.info("Processing hero: %s", hero.name);
+	if(!hero.name)
+	{
+		base.info(heroNode.toString());
+		throw new Error("Failed to get name for hero");
+	}
+
+	base.info("Processing hero: %s (%s)", hero.name, hero.id);
 	hero.title =  S["Hero/Title/" + hero.id];
 	hero.description = S["Hero/Description/" + hero.id];
 
@@ -750,9 +760,12 @@ function getFullDescription(id, _fullDescription, heroid, heroLevel)
 			//if(heroid==="Tinker") { base.info("after: %s", formula); }
 
 			formula = formula.replace(/[+*/-]$/, "");
+			formula = "(".repeat((formula.match(/[)]/g) || []).length-(formula.match(/[(]/g) || []).length) + formula;
 
 			//if(heroid==="Tinker") { base.info("after prenthesiszed and regex: %s", parenthesize(formula)); base.info("after prenthesiszed x2: %s", parenthesize(parenthesize(formula))); }
 
+			//Talent,ArtanisBladeDashSolariteReaper,AbilityModificationArray[0].Modifications[0].Value)*(100)
+			
 			// Heroes formulas are evaluated Left to Right instead of normal math operation order, so we parenthesize everything. ugh.
 			var result = C.FULLY_PARENTHESIZE.contains(id) ? eval(fullyParenthesize(formula)) : eval(parenthesize(formula));	// jshint ignore:line
 			
@@ -773,7 +786,6 @@ function getFullDescription(id, _fullDescription, heroid, heroLevel)
 			base.error("Failed to parse: %s (%s)", formula, _fullDescription);
 			throw err;
 		}
-
 	});
 
 	fullDescription = fullDescription.replace(/<\/?n\/?>/g, "\n");
@@ -900,7 +912,7 @@ function lookupXMLRef(heroid, heroLevel, query, negative)
 	var nodeMap = NODE_MAPS[mainParts[0]];
 	if(!nodeMap.hasOwnProperty(mainParts[1]))
 	{
-		base.warn("No valid id for nodeMapType XML parts: %s", mainParts);
+		base.warn("No valid id for nodeMapType XML parts %s", mainParts);
 		return result;
 	}
 

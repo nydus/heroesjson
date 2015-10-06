@@ -6,15 +6,15 @@
 	"private"				: true,
 	"dependencies"			:
 	{
-		"xutil"				: "git://github.com/Sembiance/xutil.git",
-		"tiptoe"			: ">= 1.0.0",
 		"xbase"				: "git://github.com/Sembiance/xbase.git",
-		"rimraf"			: ">= 2.2.6",
-		"libxmljs"          : ">= 0.14.1",
-		"moment"            : ">= 2.10.3",
-		"JSONSelect"        : ">= 0.4.0",
-		"jsen"              : ">= 0.4.1",
-		"glob"              : ">= 5.0.10",
-		"cli-color"         : ">= 1.0.0"
+		"xutil"				: "git://github.com/Sembiance/xutil.git",
+		"tiptoe"			: "~1.0.0",
+		"rimraf"			: "~2.4.3",
+		"libxmljs"          : "~0.14.3",
+		"moment"            : "~2.10.6",
+		"JSONSelect"        : "~0.4.0",
+		"jsen"              : "~0.6.0",
+		"glob"              : "~5.0.15",
+		"cli-color"         : "~1.0.0"
 	}
 }

@@ -1,5 +1,14 @@
 [
 	{
+		"version" : "2.3.0",
+		"when" : "2015-10-06",
+		"patchVersion" : "38236",
+		"changes" : [
+			"Added Lt. Morales!",
+			"Added Artanis!"
+		]
+	},
+	{
 		"version" : "2.2.2",
 		"when" : "2015-09-14",
 		"patchVersion" : "37569",

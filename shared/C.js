@@ -3,13 +3,13 @@
 var base = require("xbase"); // jshint ignore:line
 
 // Extra heroes in the 'heromods' folder
-exports.EXTRA_HEROES_HEROMODS = ["anubarak", "chen", "crusader", "jaina", "kaelthas", "lostvikings", "murky", "sonyarework", "sylvanas", "thrall", "butcher", "leoric", "monk", "rexxar"];
+exports.EXTRA_HEROES_HEROMODS = [];
 
 // Extra hero data files GameData/Heroes/<hero>Data.xml
 exports.EXTRA_HEROES_GAMEDATA_FILES = ["Chen", "Zagara"];
 
 // Extra hero subfolder files GameData/Heroes/<hero>Data/<hero>Data.xml
-exports.EXTRA_HEROES_GAMEDATA_FOLDERS = ["Anubarak", "Murky"];
+exports.EXTRA_HEROES_GAMEDATA_FOLDERS = ["Anubarak", "Artanis", "Butcher", "Crusader", "Jaina", "Kaelthas", "Leoric", "LostVikings", "Medic", "Monk", "Murky", "Rexxar", "SgtHammer", "Sylvanas", "Thrall"];
 
 exports.HERO_MODIFICATIONS =
 {
@@ -126,6 +126,10 @@ exports.FORMULA_PRE_REPLACEMENTS =
 	{
 		  match : "1-*Behavior,RexxarBarkskinBuff,DamageResponse.ModifyFraction*100",
 		replace : "1-Behavior,RexxarBarkskinBuff,DamageResponse.ModifyFraction*100"
+	},
+	{
+		  match : "Effect,ClairvoyanceRevealedPersistent,ExpireDelay",
+		replace : "4"
 	}
 ];
 
@@ -166,6 +170,10 @@ exports.XMLREF_REPLACEMENTS =
 	{
 		from : "Behavior,TalentBucketVampiricStrike,Modification.VitalDamageLeechArray[0].KindArray[2]",
 		  to : "Behavior,TalentBucketVampiricStrike,Modification.VitalDamageLeechArray[0].KindArray[0]"
+	},
+	{
+		from : "Effect,OdinRagnarokMissilesDamage,Amount",
+		  to : "Effect,TychusOdinRagnarokMissilesDamage,Amount"
 	}
 ];
 
@@ -183,12 +191,6 @@ exports.IMPORT_ABILITIES =
 {
 	"HeroBaleog" :
 	[
-		{
-			id : "LostVikingsVikingHoardTalent",
-			trait : true,
-			name : "Viking Hoard",
-			icon : "storm_btn_d3_monk_mantraofhealing.dds"
-		},
 		{
 			id : "LostVikingSelectOlaf",
 			shortcut : "1",
