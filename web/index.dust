@@ -35,7 +35,7 @@
 		<h2>&nbsp;&nbsp;&nbsp;Last Updated: <span class="value">{lastUpdated}</span><a href="#changeLog">(change log)</a></h2>
 		<br>
 		<br>
-		<h2 style="display: none;"><span style="color: red; text-decoration: underline;">ALERT:</span> alert message goes here</h2>
+		<h2 style="display: block;"><span style="color: red; text-decoration: underline;">NOTE:</span> Looking for someone interested in taking over the running and updating of this site and it's code. E-mail me.</h2>
 		<br>
 		<table class="downloads downloadsAll">
 			<thead>
@@ -657,11 +657,9 @@
 		<hr>
 		<a name="license"></a>
 		<h1>License and Copyright<a href="#top">(back to top)</a></h1>
-		<p>Data and text are all copyright Blizzard Entertainment.<br>
+		<p>The JSON files contain data that is Copyright (c) Blizzard Entertainment - All Rights Reserved<br>
 		<br>
 		This website is not affiliated with Blizzard Entertainment in any way.<br>
-		<br>
-		I am providing the JSON files under the public domain license.<br>
 		<br></p>
 		<hr>
 		<a name="thanks"></a>
