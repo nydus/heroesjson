@@ -1,5 +1,13 @@
 [
 	{
+		"version" : "2.3.1",
+		"when" : "2015-10-07",
+		"patchVersion" : "38236",
+		"changes" : [
+			"Fixed the 'shortcut' field for the Artanis ability Twin Blades."
+		]
+	},
+	{
 		"version" : "2.3.0",
 		"when" : "2015-10-06",
 		"patchVersion" : "38236",

@@ -574,7 +574,21 @@ function getUnitAbilities(heroid, heroName, heroAbilityids, heroHeroicAbilityids
 		if(C.ABILITY_SHORTCUT_REMAPS.hasOwnProperty(ability.id))
 			ability.shortcut = C.ABILITY_SHORTCUT_REMAPS[ability.id];
 
-		if(abilities.filter(function (existingAbility) { return existingAbility.id===ability.id; }).length===0)
+		var addAbility = true;
+		abilities = abilities.filter(function(existingAbility)
+		{
+			if(!addAbility || existingAbility.id!==ability.id)
+				return true;
+
+			if(!existingAbility.shortcut && ability.shortcut)
+				return false;
+
+			addAbility = false;
+
+			return true;
+		});
+
+		if(addAbility)
 			abilities.push(ability);
 	});
 
