@@ -1,5 +1,6 @@
-Whenever a new patch hits Heroes of the Storm:
+Whenever a new patch hits Heroes of the Storm, you basically run two nodejs scripts against the install directory. This generates static JSON and web files which you then deploy using rsync to a server running nginx to server them up.
 
+Full details:
 1. Update Heroes of the Storm under windows and run it at least once
 2. Copy/make available the entire 'Heroes of the Storm' directory over to where you have heroesjson
 3. The shared/C.js file contains many constants, you will likely need to add any new heroes in the new patch to C.EXTRA_HEROES_GAMEDATA_FOLDERS (Use CascView (http://www.zezula.net/en/casc/main.html) under windows to 'browse' the game files to determine what the correct directory name is for the new heroes)
