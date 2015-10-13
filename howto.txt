@@ -1,0 +1,14 @@
+Whenever a new patch hits Heroes of the Storm:
+
+1. Update Heroes of the Storm under windows and run it at least once
+2. Copy/make available the entire 'Heroes of the Storm' directory over to where you have heroesjson
+3. The shared/C.js file contains many constants, you will likely need to add any new heroes in the new patch to C.EXTRA_HEROES_GAMEDATA_FOLDERS (Use CascView (http://www.zezula.net/en/casc/main.html) under windows to 'browse' the game files to determine what the correct directory name is for the new heroes)
+4. Run: node generate.js "/path/to/Heroes of the Storm"
+5. Fix any issues that are shown, usually this involves changing one or more constants in C.js or in some cases fixing something in generate.js
+6. Update web/changelog.json with a new entry
+7. Run: node web/generate.js "/path/to/Heroes of the Storm"
+8. Run: node util/compareRelease.js
+9. If everything in the above compare looks ok, finally manually look at the new heroes.json file and check out any new heroes and make sure things look ok (I use Chrome with the JSONView extension (https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc) and simply open up the heroes.json file with my web browser from disk)
+10. Check 'dev.heroesjson.com' and make sure the website looks ok
+11. Run: cd deploy && ./deploy.sh
+12. Check 'heroesjson.com' and make sure it looks ok

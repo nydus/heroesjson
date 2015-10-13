@@ -21,6 +21,7 @@ Run
 ---
     node generate.js /path/to/heroes/install/dir
 
+SEE howto.txt FOR MORE DETAILS ON HOW TO RUN
 
 Results
 -------
