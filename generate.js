@@ -106,10 +106,10 @@ tiptoe(
 		if(process.argv[3]==="dev")
 			return this();
 
-		base.info("Extracting needed files...");
+		base.info("Extracting %d needed files...", NEEDED_FILE_PATHS.length);
 		NEEDED_FILE_PATHS.parallelForEach(function(NEEDED_FILE_PATH, subcb)
 		{
-			runUtil.run(CASCEXTRATOR_PATH, [HOTS_DATA_PATH, "-o", OUT_PATH, "-f", NEEDED_FILE_PATH], {silent:true}, subcb);
+			runUtil.run(CASCEXTRATOR_PATH, [HOTS_DATA_PATH, "-o", OUT_PATH, "-f", NEEDED_FILE_PATH], {silent:false}, subcb);
 		}, this, 10);
 	},
 	function loadDataAndSaveJSON()
