@@ -1006,7 +1006,10 @@ function performHeroModifications(hero)
 				return;
 			}
 
-			match[0][HERO_MODIFICATION.name] = HERO_MODIFICATION.value;
+			(HERO_MODIFICATION.remove || []).forEach(function(keyToRemove) { delete match[0][keyToRemove]; });
+
+			if(HERO_MODIFICATION.name)
+				match[0][HERO_MODIFICATION.name] = HERO_MODIFICATION.value;
 		});
 	}
 

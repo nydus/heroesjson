@@ -27,7 +27,15 @@ exports.HERO_MODIFICATIONS =
 	],
 	"Azmodan" :
 	[
-		{ path : ":root .abilities .Azmodan *:nth-child(3)", name : "manaCostPerSecond", value : 16}
+		{ path : ":root .abilities .Azmodan *:nth-child(3)", name : "manaCostPerSecond", value : 16}	// Unknown where this can be found
+	],
+	"Arthas" :
+	[
+		{ path : ":root .abilities .Arthas *:nth-child(2)", name : "manaCostPerSecond", value : 15}		// Somehow 'ArthasDeathAndDecayTog' leads to CBehaviorBuff 'DeathAndDecay' which has a <VitalRegenArray index="Energy" value="-15"/>
+	],
+	"Medic" :
+	[
+		{ path : ":root .abilities .Medic *:nth-child(6)", remove : ["cooldown"]}
 	]
 };
 

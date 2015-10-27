@@ -1,5 +1,15 @@
 [
 	{
+		"version" : "2.3.2",
+		"when" : "2015-10-27",
+		"patchVersion" : "38793",
+		"changes" : [
+			"Updated to latest patch version.",
+			"Fixed the 'manaCostPerSecond' field for Arthas ability Frozen Tempest",
+			"Fixed the 'cooldown' field for Medic trait Caduceus Reactor."
+		]
+	},
+	{
 		"version" : "2.3.1",
 		"when" : "2015-10-07",
 		"patchVersion" : "38236",

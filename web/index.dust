@@ -274,6 +274,11 @@
 									<td>How much mana the ability costs to use.</td>
 								</tr>
 								<tr>
+									<td>manaCostPerSecond</td>
+									<td>15</td>
+									<td>How much mana the ability costs to maintain per second.</td>
+								</tr>
+								<tr>
 									<td>aimType</td>
 									<td>"Skillshot"</td>
 									<td>The type of aiming used for the ability.</td>
