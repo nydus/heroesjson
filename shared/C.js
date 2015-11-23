@@ -3,7 +3,9 @@
 var base = require("xbase"); // jshint ignore:line
 
 // Extra heroes in the 'heromods' folder
-exports.EXTRA_HEROES_HEROMODS = [];
+exports.EXTRA_HEROES_HEROMODS = ["chogall"];
+
+exports.EXTRA_XML_FILE_PATHS = ["mods\\heromods\\chogall.stormmod\\base.stormdata\\GameData\\ChoGallData.xml"];
 
 // Extra hero data files GameData/Heroes/<hero>Data.xml
 exports.EXTRA_HEROES_GAMEDATA_FILES = ["Chen", "Zagara"];
@@ -102,7 +104,8 @@ exports.MOUNT_ABILITY_IDS =
 	"Falstad"      : "FalstadFlight",
 	"SgtHammer"    : "Thrusters",
 	"LostVikings"  : "LostVikingsGoGoGo",
-	"Rehgar"       : "RehgarGhostWolfActivate"
+	"Rehgar"       : "RehgarGhostWolfActivate",
+	"Gall"         : "GallHurryUpOaf"
 };
 
 exports.FORMULA_PRE_REPLACEMENTS = 
@@ -138,6 +141,10 @@ exports.FORMULA_PRE_REPLACEMENTS =
 	{
 		  match : "Effect,ClairvoyanceRevealedPersistent,ExpireDelay",
 		replace : "4"
+	},
+	{
+		  match : "Effect,ChoConsumingBlazeTalentBlazingBulwarkApplyBlockStack,Count",
+		replace : "1"
 	}
 ];
 

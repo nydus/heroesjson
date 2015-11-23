@@ -1,5 +1,14 @@
 [
 	{
+		"version" : "2.4.0",
+		"when" : "2015-11-22",
+		"patchVersion" : "39153",
+		"changes" : [
+			"Added Cho!",
+			"Added Gall!"
+		]
+	},
+	{
 		"version" : "2.3.2",
 		"when" : "2015-10-27",
 		"patchVersion" : "38793",

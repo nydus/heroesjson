@@ -74,6 +74,8 @@ C.EXTRA_HEROES_GAMEDATA_FOLDERS.forEach(function(EXTRA_HERO)
 	NEEDED_FILE_PATHS.push("mods\\heroesdata.stormmod\\base.stormdata\\GameData\\Heroes\\" + EXTRA_HERO + "Data\\" + EXTRA_HERO + "Data.xml");
 });
 
+NEEDED_FILE_PATHS = NEEDED_FILE_PATHS.concat(C.EXTRA_XML_FILE_PATHS);
+
 var S = {};
 var IGNORED_NODE_TYPE_IDS = {"Hero" : ["Random", "AI", "_Empty", "LegacyVOHero", "TestHero"]};
 
