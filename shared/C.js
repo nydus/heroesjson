@@ -5,7 +5,19 @@ var base = require("xbase"); // jshint ignore:line
 // Extra heroes in the 'heromods' folder
 exports.EXTRA_HEROES_HEROMODS = ["chogall"];
 
-exports.EXTRA_XML_FILE_PATHS = ["mods\\heromods\\chogall.stormmod\\base.stormdata\\GameData\\ChoGallData.xml"];
+// Extra hero files in "mods/heromods/" + heroName + ".stormmod/base.stormdata/GameData/" + gameDataName + "Data.xml"
+exports.EXTRA_HEROES_HEROMODS_NAMED =
+{
+	"chogall" : "ChoGall",
+	"dryad"   : "Dryad",
+	"genn"    : "Genn"
+};
+
+exports.SKIP_HERO_IDS = ["GreymaneWorgen"];
+
+exports.HERO_ID_TEXTURE_RENAMES = {"Dryad" : "lunara", "Greymane" : "genngreymane"};
+
+exports.EXTRA_XML_FILE_PATHS = [];
 
 // Extra hero data files GameData/Heroes/<hero>Data.xml
 exports.EXTRA_HEROES_GAMEDATA_FILES = ["Chen", "Zagara"];
@@ -65,7 +77,8 @@ exports.VALID_UNIT_ABILITY_IDS =
 	"TychusOdin"      : ["TychusCommandeerOdinAnnihilate", "TychusCommandeerOdinRagnarokMissiles"],
 	"Tychus"          : ["TychusOdinThrusters"],
 	"Uther"           : ["UtherFlashofLight"],
-	"Rexxar"          : ["RexxarMishaFollow", "RexxarMishaFollowCancel"]
+	"Rexxar"          : ["RexxarMishaFollow", "RexxarMishaFollowCancel"],
+	"Greymane"        : ["GreymaneDisengage", "GreymaneRazorSwipe"]
 };
 
 exports.ACTIVATABLE_ABILITY_IDS =
@@ -144,6 +157,14 @@ exports.FORMULA_PRE_REPLACEMENTS =
 	},
 	{
 		  match : "Effect,ChoConsumingBlazeTalentBlazingBulwarkApplyBlockStack,Count",
+		replace : "1"
+	},
+	{
+		  match : "Behavior,GreymaneHuntersBlunderbussCarryBehavior,DamageResponse.ModifyFraction",
+		replace : "1"
+	},
+	{
+		  match : "Behavior,ToothAndClawCarryBehavior,DamageResponse.ModifyFraction",
 		replace : "1"
 	}
 ];

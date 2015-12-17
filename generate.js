@@ -37,7 +37,8 @@ var MOUNTS_OUT_PATH = path.join(OUT_PATH, "mounts.json");
 
 var DEFAULT_NODES = {};
 var NODE_MAPS = {};
-var NODE_MAP_TYPES = ["Hero", "Talent", "Behavior", "Effect", "Abil", "Unit", "Validator", "Weapon", "Button", "Mount" ];
+var NODE_MAP_TYPES = ["Hero", "Talent", "Behavior", "Effect", "Abil", "Unit", "Validator", "Weapon", "Button", "Mount", "Actor" ];
+var NODE_MAP_PREFIX_TYPES = ["Actor"];
 
 var HERO_LEVEL_SCALING_MODS = {};
 
@@ -72,6 +73,12 @@ C.EXTRA_HEROES_GAMEDATA_FILES.forEach(function(EXTRA_HERO)
 C.EXTRA_HEROES_GAMEDATA_FOLDERS.forEach(function(EXTRA_HERO)
 {
 	NEEDED_FILE_PATHS.push("mods\\heroesdata.stormmod\\base.stormdata\\GameData\\Heroes\\" + EXTRA_HERO + "Data\\" + EXTRA_HERO + "Data.xml");
+});
+
+Object.forEach(C.EXTRA_HEROES_HEROMODS_NAMED, function(heroName, gameDataName)
+{
+	NEEDED_FILE_PATHS.push("mods\\heromods\\" + heroName + ".stormmod\\base.stormdata\\GameData\\" + gameDataName + "Data.xml");
+	NEEDED_FILE_PATHS.push("mods\\heromods\\" + heroName + ".stormmod\\enus.stormdata\\LocalizedData\\GameStrings.txt");
 });
 
 NEEDED_FILE_PATHS = NEEDED_FILE_PATHS.concat(C.EXTRA_XML_FILE_PATHS);
@@ -111,7 +118,7 @@ tiptoe(
 		base.info("Extracting %d needed files...", NEEDED_FILE_PATHS.length);
 		NEEDED_FILE_PATHS.parallelForEach(function(NEEDED_FILE_PATH, subcb)
 		{
-			runUtil.run(CASCEXTRATOR_PATH, [HOTS_DATA_PATH, "-o", OUT_PATH, "-f", NEEDED_FILE_PATH], {silent:false}, subcb);
+			runUtil.run(CASCEXTRATOR_PATH, [HOTS_DATA_PATH, "-o", OUT_PATH, "-f", NEEDED_FILE_PATH], {silent:true}, subcb);
 		}, this, 10);
 	},
 	function loadDataAndSaveJSON()
@@ -143,7 +150,7 @@ tiptoe(
 		loadMergedNodeMap(xmlDocs);
 
 		base.info("\nProcessing heroes...");
-		var heroes = Object.values(NODE_MAPS["Hero"]).map(function(heroNode) { return processHeroNode(heroNode); });
+		var heroes = Object.values(NODE_MAPS["Hero"]).map(function(heroNode) { return processHeroNode(heroNode); }).filterEmpty();
 		heroes.sort(function(a, b) { return (a.name.startsWith("The ") ? a.name.substring(4) : a.name).localeCompare((b.name.startsWith("The ") ? b.name.substring(4) : b.name)); });
 
 		base.info("\nValidating %d heroes...", heroes.length);
@@ -231,20 +238,24 @@ function processHeroNode(heroNode)
 
 	// Core hero data
 	hero.id = attributeValue(heroNode, "id");
-	hero.attributeid = getValue(heroNode, "AttributeId");
-	hero.name = S["Unit/Name/" + getValue(heroNode, "Unit", "Hero" + hero.id)];
 
+	if(C.SKIP_HERO_IDS.contains(hero.id))
+		return;
+	
+	hero.attributeid = getValue(heroNode, "AttributeId");
+	hero.name = S["Unit/Name/" + getValue(heroNode, "Unit", "Hero" + hero.id)] || S[getValue(heroNode, "Name")];
+	
 	if(!hero.name)
 	{
 		base.info(heroNode.toString());
-		throw new Error("Failed to get name for hero");
+		throw new Error("Failed to get name for hero: " + hero.id);
 	}
 
 	base.info("Processing hero: %s (%s)", hero.name, hero.id);
 	hero.title =  S["Hero/Title/" + hero.id];
 	hero.description = S["Hero/Description/" + hero.id];
 
-	hero.icon = "ui_targetportrait_hero_" + hero.id + ".dds";
+	hero.icon = "ui_targetportrait_hero_" + (C.HERO_ID_TEXTURE_RENAMES.hasOwnProperty(hero.id) ? C.HERO_ID_TEXTURE_RENAMES[hero.id] : hero.id) + ".dds";
 
 	hero.role = getValue(heroNode, "Role");
 	if(hero.role==="Damage")
@@ -1064,7 +1075,7 @@ function loadMergedNodeMap(xmlDocs)
 	{
 		xmlDoc.find("/Catalog/*").forEach(function(node)
 		{
-			var nodeType = NODE_MAP_TYPES.filter(function(NODE_MAP_TYPE) { return node.name()===("C" + NODE_MAP_TYPE); });
+			var nodeType = NODE_MAP_TYPES.filter(function(NODE_MAP_TYPE) { return node.name()===("C" + NODE_MAP_TYPE); }).concat(NODE_MAP_PREFIX_TYPES.filter(function(NODE_MAP_PREFIX_TYPE) { return node.name().startsWith(NODE_MAP_PREFIX_TYPES); })).unique();
 			if(!nodeType || nodeType.length!==1)
 				return;
 

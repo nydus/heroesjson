@@ -1,5 +1,21 @@
 [
 	{
+		"version" : "2.6.0",
+		"when" : "2015-12-15",
+		"patchVersion" : "39595",
+		"changes" : [
+			"Added Greymane!"
+		]
+	},
+	{
+		"version" : "2.5.0",
+		"when" : "2015-12-15",
+		"patchVersion" : "39595",
+		"changes" : [
+			"Added Lunara!"
+		]
+	},
+	{
 		"version" : "2.4.0",
 		"when" : "2015-11-22",
 		"patchVersion" : "39153",

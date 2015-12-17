@@ -35,8 +35,6 @@
 		<h2>&nbsp;&nbsp;&nbsp;Last Updated: <span class="value">{lastUpdated}</span><a href="#changeLog">(change log)</a></h2>
 		<br>
 		<br>
-		<h2 style="display: block;"><span style="color: red; text-decoration: underline;">NOTE:</span> Looking for someone interested in taking over the running and updating of this site and it's code. E-mail me.</h2>
-		<br>
 		<table class="downloads downloadsAll">
 			<thead>
 				<tr>
