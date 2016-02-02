@@ -10,7 +10,8 @@ exports.EXTRA_HEROES_HEROMODS_NAMED =
 {
 	"chogall" : "ChoGall",
 	"dryad"   : "Dryad",
-	"genn"    : "Genn"
+	"genn"    : "Genn",
+	"wizard"  : "Wizard"
 };
 
 exports.SKIP_HERO_IDS = ["GreymaneWorgen"];
@@ -50,6 +51,10 @@ exports.HERO_MODIFICATIONS =
 	"Medic" :
 	[
 		{ path : ":root .abilities .Medic *:nth-child(6)", remove : ["cooldown"]}
+	],
+	"Wizard" :
+	[
+		{ path : ":root", name : "releaseDate", value : "2016-02-02" }
 	]
 };
 
@@ -92,7 +97,7 @@ exports.ABILITY_SHORTCUT_REMAPS =
 	"RexxarMishaFollowCancel" : "D"
 };
 
-exports.ALLOWED_EMPTY_XML_REF_IDS = ["Artifact_AP_Base", "TalentGatheringPowerCarry"];
+exports.ALLOWED_EMPTY_XML_REF_IDS = ["Artifact_AP_Base", "TalentGatheringPowerCarry", "GreymaneWizenedDuelistCarry"];
 
 exports.HERO_SUBUNIT_ABILITIES_MOVE =
 {
@@ -166,6 +171,10 @@ exports.FORMULA_PRE_REPLACEMENTS =
 	{
 		  match : "Behavior,ToothAndClawCarryBehavior,DamageResponse.ModifyFraction",
 		replace : "1"
+	},
+	{
+		  match : "Upgrade,NovaSnipeMasterDamageUpgrade,MaxLevel",
+		replace : "10"
 	}
 ];
 
@@ -210,6 +219,14 @@ exports.XMLREF_REPLACEMENTS =
 	{
 		from : "Effect,OdinRagnarokMissilesDamage,Amount",
 		  to : "Effect,TychusOdinRagnarokMissilesDamage,Amount"
+	},
+	{
+		from : "Effect,JainaArcaneIntellectBasicAttackManaRestore,VitalArray[2].Change",
+		  to : "Effect,JainaArcaneIntellectBasicAttackManaRestore,VitalArray[0].Change"
+	},
+	{
+		from : "Effect,JainaArcaneIntellectAbilityDamageManaRestore,VitalArray[2].Change",
+		  to : "Effect,JainaArcaneIntellectAbilityDamageManaRestore,VitalArray[0].Change"
 	}
 ];
 
@@ -261,7 +278,8 @@ exports.USE_ABILITY_NAME =
 
 exports.ABILITY_ID_DESCRIPTION_IDS =
 {
-	"Rehgar" : {"RehgarGhostWolfActivate" : "RehgarGhostWolf"}
+	"Rehgar" : {"RehgarGhostWolfActivate" : "RehgarGhostWolf"},
+	"Jaina" : {"JainaConeOfCold" : "JainaConeofCold"}
 };
 
 exports.HERO_MAX_LEVEL = 20;

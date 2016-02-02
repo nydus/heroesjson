@@ -1,5 +1,22 @@
 [
 	{
+		"version" : "2.7.0",
+		"when" : "2016-02-02",
+		"patchVersion" : "40431",
+		"changes" : [
+			"Added Li-Ming!"
+		]
+	},
+	{
+		"version" : "2.6.1",
+		"when" : "2016-02-01",
+		"patchVersion" : "40322",
+		"changes" : [
+			"Updated to latest patch version.",
+			"Fixed the missing hpPerLevel and hpRegenPerLevel stats. These are percentages now."
+		]
+	},
+	{
 		"version" : "2.6.0",
 		"when" : "2015-12-15",
 		"patchVersion" : "39595",

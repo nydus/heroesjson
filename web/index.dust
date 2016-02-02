@@ -191,8 +191,8 @@
 								</tr>
 								<tr>
 									<td>hpPerLevel</td>
-									<td>110</td>
-									<td>How much additional 'hp' this hero gains per level.</td>
+									<td>4.5</td>
+									<td>How much additional 'hp' this hero gains per level. This is a PERCENTAGE.</td>
 								</tr>
 								<tr>
 									<td>hpRegen</td>
@@ -201,8 +201,8 @@
 								</tr>
 								<tr>
 									<td>hpRegenPerLevel</td>
-									<td>0.2265</td>
-									<td>How much additional 'hpRegen' this hero gains per level.</td>
+									<td>4.5</td>
+									<td>How much additional 'hpRegen' this hero gains per level. This is a PERCENTAGE.</td>
 								</tr>
 								<tr>
 									<td>mana</td>

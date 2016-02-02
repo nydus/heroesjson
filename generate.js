@@ -741,6 +741,21 @@ function getHeroStats(heroUnitid)
 			if(manaRegenPerLevelAttribute)
 				heroStats.manaRegenPerLevel = (heroStats.manaRegenPerLevel || 0) + (+manaRegenPerLevelAttribute.value());
 		});
+
+		if(HERO_LEVEL_SCALING_MODS.hasOwnProperty(heroUnitid))
+		{
+			HERO_LEVEL_SCALING_MODS[heroUnitid].forEach(function(scalingMod)
+			{
+				if(scalingMod.type!=="Unit" || scalingMod.value===0)
+					return;
+
+				if(heroStats.hpPerLevel===0 && scalingMod.target==="LifeMax")
+					heroStats.hpPerLevel = scalingMod.value*100;
+
+				if(heroStats.hpRegenPerLevel===0 && scalingMod.target==="LifeRegenRate")
+					heroStats.hpRegenPerLevel = scalingMod.value*100;
+			});
+		}
 	}
 
 	return heroStats;
