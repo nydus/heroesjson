@@ -389,6 +389,11 @@
 					<td>The internal ID of this mount.</td>
 				</tr>
 				<tr>
+					<td>attributeid</td>
+					<td>"Mpig"</td>
+					<td>The internal AttributeID of this mount.</td>
+				</tr>
+				<tr>
 					<td>name</td>
 					<td>"Piggy Bank"</td>
 					<td>The name of this mount.</td>
@@ -412,6 +417,11 @@
 					<td>productid</td>
 					<td>10072</td>
 					<td>The internal product id for this mount. Not present for all mounts.</td>
+				</tr>
+				<tr>
+					<td>category</td>
+					<td>"Ride"</td>
+					<td>The category for this mount.</td>
 				</tr>
 			</tbody>
 		</table>

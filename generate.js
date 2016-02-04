@@ -40,6 +40,8 @@ var NODE_MAPS = {};
 var NODE_MAP_TYPES = ["Hero", "Talent", "Behavior", "Effect", "Abil", "Unit", "Validator", "Weapon", "Button", "Mount", "Actor" ];
 var NODE_MAP_PREFIX_TYPES = ["Actor"];
 
+var NODE_MERGE_PARENT_TYPES = ["Mount"];
+
 var HERO_LEVEL_SCALING_MODS = {};
 
 var NEEDED_SUBFIXES = [ "enus.stormdata\\LocalizedData\\GameStrings.txt" ];
@@ -157,6 +159,8 @@ tiptoe(
 
 		loadMergedNodeMap(xmlDocs);
 
+		mergeNodeParents();
+
 		base.info("\nProcessing heroes...");
 		var heroes = Object.values(NODE_MAPS["Hero"]).map(function(heroNode) { return processHeroNode(heroNode); }).filterEmpty();
 		heroes.sort(function(a, b) { return (a.name.startsWith("The ") ? a.name.substring(4) : a.name).localeCompare((b.name.startsWith("The ") ? b.name.substring(4) : b.name)); });
@@ -194,6 +198,7 @@ function processMountNode(mountNode)
 {
 	var mount = {};
 	mount.id = attributeValue(mountNode, "id");
+	mount.attributeid = getValue(mountNode, "AttributeId");
 	mount.name = S["Mount/Name/" + mount.id];
 
 	if(!mount.name || !!(+getValue(mountNode, "Flags[@index='IsVariation']", 0)))
@@ -203,41 +208,11 @@ function processMountNode(mountNode)
 	mount.franchise = getValue(mountNode, "Universe", "Starcraft");
 	mount.releaseDate = processReleaseDate(mountNode.get("ReleaseDate"));
 	mount.productid = getValue(mountNode, "ProductId");
+	mount.category = getValue(mountNode, "MountCategory");
 	if(mount.productid)
 		mount.productid = +mount.productid;
-	else
-		delete mount.productid;
 
-/*
-<CMount id="DiabloRun">
-        <AttributeId value="Diru"/>
-        <Flags index="FreePlay" value="1"/>
-        <VariationIcon value="Assets\Textures\ui_glues_swatch_red.dds"/>
-        <MountCategory value="Ridenone"/>
-		<PreviewCutsceneFile value="Cutscenes\StoreMount_DiabloRun.StormCutscene"/>
-        <TileCutsceneFile value="Cutscenes\FrameMount_DiabloRun.StormCutscene"/>
-        <MiniPortraitCutsceneFile value="Cutscenes\MiniPortrait_DiabloRun.StormCutscene"/>
-        <HeroSelectCutsceneFile value="Cutscenes\HeroSelect_DiabloRun.StormCutscene"/>
-        <Universe value="Diablo"/>
-        <Model value="DiabloMountFX"/>
-        <ProductName value="99200132782000014568"/>
-    </CMount>
- 
-<CMount id="MoneyPig">
-        <AttributeId value="Mpig"/>
-        <VOArray index="Mounted" value="Mount_PiggyBank_Summon"/>
-        <VOArray index="Dismounted" value="Mount_PiggyBank_Dismiss"/>
-        <VOArray index="Moving" value="Mount_MoneyPig_Coin_Drop_Loop"/>
-        <VariationIcon value="Assets\Textures\UI_Glues_Swatch_Yellow_Gold.dds"/>
-        <RequiredRewardArray value="PiggyBank"/>
-        <Universe value="Heroes"/>
-        <ProductName value="99100005841000045267"/>
-        <VariationArray value="MoneyPigPink"/>
-        <VariationArray value="MoneyPigGreen"/>
-        <ReleaseDate Month="10" Day="14"/>
-        <MountCategory value="Ride"/>
-    </CMount>
- */
+    performMountModifications(mount);
 
 	return mount;
 }
@@ -387,7 +362,7 @@ function processHeroNode(heroNode)
 	
 	// Final modifications
     performHeroModifications(hero);
-	
+
 	return hero;
 }
 
@@ -1068,6 +1043,27 @@ function performHeroModifications(hero)
 	}
 }
 
+function performMountModifications(mount)
+{
+	if(C.MOUNT_MODIFICATIONS.hasOwnProperty(mount.id))
+	{
+		C.MOUNT_MODIFICATIONS[mount.id].forEach(function(MOUNT_MODIFICATION)
+		{
+			var match = jsonselect.match(MOUNT_MODIFICATION.path, mount);
+			if(!match || match.length<1)
+			{
+				base.error("Failed to match [%s] to: %s", MOUNT_MODIFICATION.path, mount);
+				return;
+			}
+
+			(MOUNT_MODIFICATION.remove || []).forEach(function(keyToRemove) { delete match[0][keyToRemove]; });
+
+			if(MOUNT_MODIFICATION.name)
+				match[0][MOUNT_MODIFICATION.name] = MOUNT_MODIFICATION.value;
+		});
+	}
+}
+
 function validateMount(mount)
 {
 	var validator = jsen(C.MOUNT_JSON_SCHEMA);
@@ -1149,12 +1145,25 @@ function loadMergedNodeMap(xmlDocs)
 	});
 }
 
+function mergeNodeParents()
+{
+	NODE_MERGE_PARENT_TYPES.forEach(function(NODE_MERGE_PARENT_TYPE)
+	{
+		Object.forEach(NODE_MAPS[NODE_MERGE_PARENT_TYPE], function(nodeid, node)
+		{
+			var parentid = attributeValue(node, "parent");
+			if(parentid && NODE_MAPS[NODE_MERGE_PARENT_TYPE].hasOwnProperty(parentid))
+				mergeXML(NODE_MAPS[NODE_MERGE_PARENT_TYPE][parentid], node, true);
+		});
+	});
+}
+
 function processReleaseDate(releaseDateNode)
 {
 	return moment(attributeValue(releaseDateNode, "Month", 1) + "-" + attributeValue(releaseDateNode, "Day", 1) + "-" + attributeValue(releaseDateNode, "Year", "2014"), "M-D-YYYY").format("YYYY-MM-DD");
 }
 
-function mergeXML(fromNode, toNode)
+function mergeXML(fromNode, toNode, dontAddIfPresent)
 {
 	fromNode.childNodes().forEach(function(childNode)
 	{
@@ -1165,7 +1174,8 @@ function mergeXML(fromNode, toNode)
 				existingChildNode.remove();
 		}
 
-		toNode.addChild(childNode);
+		if(!toNode.childNodes().map(function(a) { return a.name(); }).contains(childNode.name()) || !dontAddIfPresent)
+			toNode.addChild(childNode.clone());
 	});
 }
 

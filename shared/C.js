@@ -80,6 +80,14 @@ exports.HERO_MODIFICATIONS =
 	]
 };
 
+exports.MOUNT_MODIFICATIONS =
+{
+	"Mechanospider" :
+	[
+		{ path : ":root", name : "franchise", value : "Warcraft"}
+	]
+};
+
 exports.FULLY_PARENTHESIZE = ["StitchesCombatStyleToxicGas"];
 
 exports.HERO_UNIT_ID_REPLACEMENTS =
@@ -316,11 +324,13 @@ exports.MOUNT_JSON_SCHEMA =
 	properties           :
 	{
 		id          : { type : "string", minLength : 1 },
+		attributeid : { type : "string", minLength : 1 },
 		name        : { type : "string", minLength : 1 },
 		description : { type : "string", minLength : 1 },
 		franchise   : { type : "string", minLength : 1 },
 		releaseDate : { type : "string", pattern : "2[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]" },
-		productid   : { type : "integer" }
+		productid   : { type : "integer" },
+		category    : { type : "string", minLength : 1 },
 	}
 };
 

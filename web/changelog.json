@@ -1,5 +1,13 @@
 [
 	{
+		"version" : "2.7.2",
+		"when" : "2016-02-04",
+		"patchVersion" : "40431",
+		"changes" : [
+			"Fixed some mount info and added more mount info."
+		]
+	},
+	{
 		"version" : "2.7.1",
 		"when" : "2016-02-04",
 		"patchVersion" : "40431",
