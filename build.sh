@@ -4,14 +4,13 @@ echo "Geting CASCExtractor..."
 git submodule update --init --recursive
 
 echo "Building CASCExtractor..."
-cd CASCExtractor
 mkdir build
 cd build
-cmake ..
+cmake ../CASCExtractor
 make
 
 echo "Installing NPM modules..."
-cd ../..
+cd ../
 npm install
 
 echo "Linking shared JS..."
