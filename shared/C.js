@@ -20,6 +20,28 @@ exports.HERO_ID_TEXTURE_RENAMES = {"Dryad" : "lunara", "Greymane" : "genngreyman
 
 exports.EXTRA_XML_FILE_PATHS = [];
 
+// Extra mount data files in GameData/Mounts/<key>Data/Mount_<array value>Data.xml
+exports.EXTRA_MOUNT_DATA_FILES = {
+	"Cloud9Nexagon"        : ["Ridesurf_Cloud9Nexagon"],
+	"Felstalker"           : ["Ride_Felstalker"],
+	"Horse"                : ["Horse_ArmoredWarSteed",
+				   			  "Horse_Common",
+				   			  "Horse_HeadlessHorseman",
+				   			  "Horse_IllidansNightmare",
+				   			  "Horse_JudgementCharger", 
+				   			  "Horse_MalthaelsPhantom",
+				   			  "Horse_MarshalsOutrider",
+				   			  "Horse_Nazeebra",
+				   			  "Horse_NexusCharger",
+				   			  "Horse_RainbowUnicorn",
+				   			  "Horse_TyraelsCharger" ],
+	"LionGreymane"         : ["Ride_LionGreymane"],
+	"LunarDragon"          : ["Ride_LunarDragon"],
+	"StarChariot"     	   : ["Ridesurf_StarChariot"],
+	"Starbreaker"          : ["Ridebike_Starbreaker"],
+	"TreasureGoblinWinter" : ["Ride_TreasureGoblinWinter"]
+};
+
 // Extra hero data files GameData/Heroes/<hero>Data.xml
 exports.EXTRA_HEROES_GAMEDATA_FILES = ["Chen", "Zagara"];
 
@@ -297,11 +319,13 @@ exports.MOUNT_JSON_SCHEMA =
 		name        : { type : "string", minLength : 1 },
 		description : { type : "string", minLength : 1 },
 		franchise   : { type : "string", minLength : 1 },
-		releaseDate : { type : "string", pattern : "2[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]" }
+		releaseDate : { type : "string", pattern : "2[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]" },
+		productid   : { type : "integer" }
 	}
 };
 
 exports.MOUNT_JSON_SCHEMA.required = Object.keys(exports.MOUNT_JSON_SCHEMA.properties);
+exports.MOUNT_JSON_SCHEMA.required.remove("productid");
 
 exports.HERO_JSON_SCHEMA =
 {

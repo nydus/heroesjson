@@ -50,6 +50,14 @@
 						<span class="size">{heroesSize}</span>
 					</td>
 				</tr>
+				<tr>
+					<td class="sizeColLeft">
+						<a href="json/mounts.json">mounts.json</a>
+					</td>
+					<td class="sizeColRight">
+						<span class="size">{mountsSize}</span>
+					</td>
+				</tr>
 			</tbody>
 		</table>
 		<br>
@@ -60,7 +68,7 @@
 		<br>The 'heroes.json' file is an array where each entry is a hero object with key/value pairs.<br>
 		<br>Below you will find a table detailing each key.<br>
 		<br>
-		The heros are sorted by 'name'.<br>
+		The heroes are sorted by 'name'.<br>
 		<br>
 		All data is extracted directly from the Heros of the Storm game files.<br>
 		<br>
@@ -90,7 +98,7 @@
 					<td>The name of this hero.</td>
 				</tr>
 				<tr>
-					<td>title</td>
+					<td>title</td>7
 					<td>"Dominion Ghost"</td>
 					<td>The title of this hero.</td>
 				</tr>
@@ -351,6 +359,59 @@
 							</tbody>
 						</table>
 					</td>
+				</tr>
+			</tbody>
+		</table>
+		<br>
+		<hr>
+		<h1>mounts.json Documentation<a href="#top">(back to top)</a></h1>
+		<p>All JSON files are UTF8 encoded and may contain UTF8 characters.<br>
+		<br>The 'mounts.json' file is an array where each entry is a mount object with key/value pairs.<br>
+		<br>Below you will find a table detailing each key.<br>
+		<br>
+		The mounts are sorted by 'name'.<br>
+		<br>
+		All data is extracted directly from the Heros of the Storm game files.<br>
+		<br>
+		</p>
+		<table>
+			<thead>
+				<tr>
+					<th>Key</th>
+					<th>Example</th>
+					<th>Description</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>id</td>
+					<td>"MoneyPig"</td>
+					<td>The internal ID of this mount.</td>
+				</tr>
+				<tr>
+					<td>name</td>
+					<td>"Piggy Bank"</td>
+					<td>The name of this mount.</td>
+				</tr>
+				<tr>
+					<td>description</td>
+					<td>"This little piggy went, "Whee whee whee!" all the way to the bank!"</td>
+					<td>The description of this mount.</td>
+				</tr>
+				<tr>
+					<td>franchise</td>
+					<td>"Heroes"</td>
+					<td>Which universe/franchise this mount comes from.</td>
+				</tr>
+				<tr>
+					<td>releaseDate</td>
+					<td>"2014-10-14"</td>
+					<td>The release date for this mount. Date format: YYYY-MM-DD</td>
+				</tr>
+				<tr>
+					<td>productid</td>
+					<td>10072</td>
+					<td>The internal product id for this mount. Not present for all mounts.</td>
 				</tr>
 			</tbody>
 		</table>

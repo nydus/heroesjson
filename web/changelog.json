@@ -1,5 +1,14 @@
 [
 	{
+		"version" : "2.7.1",
+		"when" : "2016-02-04",
+		"patchVersion" : "40431",
+		"changes" : [
+			"Added documentation for mounts.json file.",
+			"Added some missing mounts."
+		]
+	},
+	{
 		"version" : "2.7.0",
 		"when" : "2016-02-02",
 		"patchVersion" : "40431",

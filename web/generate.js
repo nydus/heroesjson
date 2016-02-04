@@ -89,6 +89,7 @@ tiptoe(
 		base.info("Rendering index...");
 
 		dustData.heroesSize = printUtil.toSize(fs.statSync(path.join(WEB_OUT_PATH, "heroes.json")).size, 1);
+		dustData.mountsSize = printUtil.toSize(fs.statSync(path.join(WEB_OUT_PATH, "mounts.json")).size, 1);
 		dustData.changeLog = JSON.parse(fs.readFileSync(path.join(__dirname, "changelog.json"), {encoding : "utf8"})).map(function(o) { o.when = moment(o.when, "YYYY-MM-DD").format("MMM D, YYYY"); return o; });
 		dustData.lastUpdated = dustData.changeLog[0].when;
 		dustData.version = dustData.changeLog[0].version;

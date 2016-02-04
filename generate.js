@@ -75,6 +75,14 @@ C.EXTRA_HEROES_GAMEDATA_FOLDERS.forEach(function(EXTRA_HERO)
 	NEEDED_FILE_PATHS.push("mods\\heroesdata.stormmod\\base.stormdata\\GameData\\Heroes\\" + EXTRA_HERO + "Data\\" + EXTRA_HERO + "Data.xml");
 });
 
+Object.forEach(C.EXTRA_MOUNT_DATA_FILES, function(EXTRA_MOUNT_DIR, EXTRA_MOUNT_FILES)
+{
+	EXTRA_MOUNT_FILES.forEach(function(EXTRA_MOUNT_FILE)
+	{
+		NEEDED_FILE_PATHS.push("mods\\heroesdata.stormmod\\base.stormdata\\GameData\\Mounts\\" + EXTRA_MOUNT_DIR + "Data\\Mount_" + EXTRA_MOUNT_FILE + "Data.xml");
+	});
+});
+
 Object.forEach(C.EXTRA_HEROES_HEROMODS_NAMED, function(heroName, gameDataName)
 {
 	NEEDED_FILE_PATHS.push("mods\\heromods\\" + heroName + ".stormmod\\base.stormdata\\GameData\\" + gameDataName + "Data.xml");
@@ -161,6 +169,7 @@ tiptoe(
 		
 		base.info("\nValidating %d mounts...", mounts.length);
 		mounts.forEach(validateMount);
+		mounts.sort(function(a, b) { return (a.name.startsWith("The ") ? a.name.substring(4) : a.name).localeCompare((b.name.startsWith("The ") ? b.name.substring(4) : b.name)); });
 
 		base.info("\nSaving JSON...");
 
@@ -187,16 +196,17 @@ function processMountNode(mountNode)
 	mount.id = attributeValue(mountNode, "id");
 	mount.name = S["Mount/Name/" + mount.id];
 
-	if(!mount.name)
+	if(!mount.name || !!(+getValue(mountNode, "Flags[@index='IsVariation']", 0)))
 		return undefined;
-	
+
 	mount.description = S["Mount/Info/" + mount.id];
 	mount.franchise = getValue(mountNode, "Universe", "Starcraft");
-
-	if(!!(+getValue(mountNode, "Flags[@index='IsVariation']", 0)))
-		return undefined;
-
 	mount.releaseDate = processReleaseDate(mountNode.get("ReleaseDate"));
+	mount.productid = getValue(mountNode, "ProductId");
+	if(mount.productid)
+		mount.productid = +mount.productid;
+	else
+		delete mount.productid;
 
 /*
 <CMount id="DiabloRun">
