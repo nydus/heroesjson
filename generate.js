@@ -205,7 +205,7 @@ function processMountNode(mountNode)
 		return undefined;
 
 	mount.description = S["Mount/Info/" + mount.id];
-	mount.franchise = getValue(mountNode, "Universe", "Starcraft");
+	mount.franchise = getValue(mountNode, "Universe");
 	mount.releaseDate = processReleaseDate(mountNode.get("ReleaseDate"));
 	mount.productid = getValue(mountNode, "ProductId");
 	mount.category = getValue(mountNode, "MountCategory");

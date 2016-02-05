@@ -50,18 +50,9 @@ exports.EXTRA_HEROES_GAMEDATA_FOLDERS = ["Anubarak", "Artanis", "Butcher", "Crus
 
 exports.HERO_MODIFICATIONS =
 {
-	"Crusader" :
-	[
-		{ path : ":root", name : "ratings", value : { damage : 3, utility : 6, survivability : 10, complexity : 4 } }
-	],
-	"Chen" :
-	[
-		{ path : ":root", name : "releaseDate", value : "2014-09-10" }
-	],
-	"Abathur" :
-	[
-		{ path : ":root .abilities .AbathurSymbiote *:nth-child(1)", name : "aimType", value : "Skillshot"}
-	],
+	"Crusader" : [ { path : ":root", name : "ratings", value : { damage : 3, utility : 6, survivability : 10, complexity : 4 } } ],
+	"Chen" : [ { path : ":root", name : "releaseDate", value : "2014-09-10" } ],
+	"Abathur" : [ { path : ":root .abilities .AbathurSymbiote *:nth-child(1)", name : "aimType", value : "Skillshot"} ],
 	"Azmodan" :
 	[
 		{ path : ":root .abilities .Azmodan *:nth-child(3)", name : "manaCostPerSecond", value : 16}	// Unknown where this can be found
@@ -70,22 +61,22 @@ exports.HERO_MODIFICATIONS =
 	[
 		{ path : ":root .abilities .Arthas *:nth-child(2)", name : "manaCostPerSecond", value : 15}		// Somehow 'ArthasDeathAndDecayTog' leads to CBehaviorBuff 'DeathAndDecay' which has a <VitalRegenArray index="Energy" value="-15"/>
 	],
-	"Medic" :
-	[
-		{ path : ":root .abilities .Medic *:nth-child(6)", remove : ["cooldown"]}
-	],
-	"Wizard" :
-	[
-		{ path : ":root", name : "releaseDate", value : "2016-02-02" }
-	]
+	"Medic" : [ { path : ":root .abilities .Medic *:nth-child(6)", remove : ["cooldown"]} ],
+	"Wizard" : [ { path : ":root", name : "releaseDate", value : "2016-02-02" } ]
 };
 
 exports.MOUNT_MODIFICATIONS =
 {
-	"Mechanospider" :
-	[
-		{ path : ":root", name : "franchise", value : "Warcraft"}
-	]
+	"Mechanospider" : [ { path : ":root", name : "franchise", value : "Warcraft"} ],
+	"CountessKerriganBatForm" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
+	"ZagaraWings" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
+	"CyberWolf" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
+	"Felstalker" : [ { path : ":root", name : "franchise", value : "Warcraft"} ],
+	"CyberWolfGold" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
+	"MarshallRaynorHorse" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
+	"MechaTassadarMorphForm" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
+	"VoidSpeeder" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
+	"Vulture" : [ { path : ":root", name : "franchise", value : "Starcraft"} ]
 };
 
 exports.FULLY_PARENTHESIZE = ["StitchesCombatStyleToxicGas"];

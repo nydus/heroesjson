@@ -1,5 +1,13 @@
 [
 	{
+		"version" : "2.7.3",
+		"when" : "2016-02-05",
+		"patchVersion" : "40431",
+		"changes" : [
+			"Fixed the 'Felstalker' mount to have the correct 'franchise'."
+		]
+	},
+	{
 		"version" : "2.7.2",
 		"when" : "2016-02-04",
 		"patchVersion" : "40431",
