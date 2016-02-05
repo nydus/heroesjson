@@ -28,7 +28,7 @@ if(!fs.existsSync(HOTS_DATA_PATH))
 	process.exit(1);
 }
 
-var CASCEXTRATOR_PATH = path.join(__dirname, "CASCExtractor", "build", "bin", "CASCExtractor");
+var CASCEXTRATOR_PATH = path.join(__dirname, "build", "bin", "CASCExtractor");
 
 var OUT_PATH = path.join(__dirname, "out");
 
