@@ -311,15 +311,15 @@ exports.MOUNT_JSON_SCHEMA =
 {
 	name : "mount",
 	type : "object",
-	additionalProperties : false,
+	additionalProperties : true,
 	properties           :
 	{
 		id          : { type : "string", minLength : 1 },
 		attributeid : { type : "string", minLength : 1 },
 		name        : { type : "string", minLength : 1 },
-		description : { type : "string", minLength : 1 },
 		franchise   : { type : "string", minLength : 1 },
 		releaseDate : { type : "string", pattern : "2[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]" },
+		variation   : { type : "boolean" },
 		productid   : { type : "integer" },
 		category    : { type : "string", minLength : 1 },
 	}

@@ -170,7 +170,7 @@ tiptoe(
 
 		base.info("\nProcessing mounts...");
 		var mounts = Object.values(NODE_MAPS["Mount"]).map(function(mountNode) { return processMountNode(mountNode); }).filterEmpty();
-		
+
 		base.info("\nValidating %d mounts...", mounts.length);
 		mounts.forEach(validateMount);
 		mounts.sort(function(a, b) { return (a.name.startsWith("The ") ? a.name.substring(4) : a.name).localeCompare((b.name.startsWith("The ") ? b.name.substring(4) : b.name)); });
@@ -201,10 +201,18 @@ function processMountNode(mountNode)
 	mount.attributeid = getValue(mountNode, "AttributeId");
 	mount.name = S["Mount/Name/" + mount.id];
 
-	if(!mount.name || !!(+getValue(mountNode, "Flags[@index='IsVariation']", 0)))
+	if(!mount.name) {
 		return undefined;
+	}
+
+	mount.variation = (+getValue(mountNode, "Flags[@index='IsVariation']", 0) === 1) ? true : false;
 
 	mount.description = S["Mount/Info/" + mount.id];
+	// Some mounts share info with their model parent
+	if(!mount.description && S["Mount/Info/" + getValue(mountNode, "Model")]) {
+		mount.description = S["Mount/Info/" + getValue(mountNode, "Model")];
+	}
+
 	mount.franchise = getValue(mountNode, "Universe");
 	mount.releaseDate = processReleaseDate(mountNode.get("ReleaseDate"));
 	mount.productid = getValue(mountNode, "ProductId");
