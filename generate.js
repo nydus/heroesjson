@@ -1072,13 +1072,35 @@ function performMountModifications(mount)
 	}
 }
 
-function validateMount(mount)
+function findParentMount(source, field, value) {
+  for (var i = 0; i < source.length; i++) {
+    if (source[i][field] === value && source[i].variation === false) {
+      return source[i];
+    }
+  }
+  throw "Could not find object where field '" + field + " === " + value + "'" ;
+}
+
+function validateMount(mount, index, mounts)
 {
 	var validator = jsen(C.MOUNT_JSON_SCHEMA);
 	if(!validator(mount))
 	{
-		base.warn("Mount %s (%s) has FAILED VALIDATION", mount.id, mount.name);
-		base.info(validator.errors);
+		// For every fail (usually a variation), copy it from the parent)
+		validator.errors.forEach(function(elem) {
+			var parent = findParentMount(mounts, "productid", mount.productid);
+			for (var item in parent) {
+				if (mount[item] === undefined) {
+					mount[item] = parent[item];
+				}
+			};
+		});
+    // WARNING: I may have a race condition here...
+		// Revalidate
+		if (!validator(mount)) {
+			base.warn("Mount %s (%s) has FAILED VALIDATION", mount.id, mount.name);
+			base.info(validator.errors);
+		}
 	}
 }
 
