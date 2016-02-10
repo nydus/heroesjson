@@ -36,13 +36,13 @@ var IMAGES_FULL_PATH = path.join(__dirname, "..", "images", "mods", "heroes.stor
 
 var ZIP_PATH = path.join(__dirname, "images.zip");
 
-var CASCEXTRATOR_PATH = path.join(__dirname, "..", "CASCExtractor", "build", "bin", "CASCExtractor");
+var CASCEXTRATOR_PATH = path.join(__dirname, "..", "build", "bin", "CASCExtractor");
 
 var IMAGE_OUT_PATH = path.join(__dirname, "..", "images");
 
 var HEROES_JSON_PATH = path.join(__dirname, "..", "out", "heroes.json");
 
-var IMAGE_ASSETS_PATH = "mods\\heroes.stormmod\\base.stormassets\\Assets\\Textures\\";
+var IMAGE_ASSETS_PATH = "mods/heroes.stormmod/base.stormassets/Assets/Textures/";
 
 
 tiptoe(
@@ -164,7 +164,7 @@ function extractAllImages(cb)
 		{
 			var imageFiles = JSON.parse(heroesRaw).map(function(hero) { return Object.values(hero.talents).flatten().concat(Object.values(hero.abilities).flatten()).concat([hero]).map(function(item) { return item.icon; }); }).flatten().unique();
 			base.info("\tExtracting %d image files...", imageFiles.length);
-			imageFiles.parallelForEach(extractImage, this, 10);
+			imageFiles.parallelForEach(extractImage, this, 1);
 		},
 		cb
 	);
