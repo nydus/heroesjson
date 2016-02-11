@@ -30,7 +30,7 @@ var dustData =
 {
 };
 
-var WEB_OUT_PATH = path.join(__dirname, "json");
+var WEB_OUT_PATH = path.join(__dirname, "dist");
 
 var IMAGES_FULL_PATH = path.join(__dirname, "..", "images", "mods", "heroes.stormmod", "base.stormassets", "Assets", "Textures");
 
@@ -71,6 +71,19 @@ tiptoe(
 		base.info("Data Build Version: %s", fs.readFileSync(path.join(WEB_OUT_PATH, "mods", "core.stormmod", "base.stormdata", "DataBuildId.txt"), {encoding:"utf8"}).trim("B").trim());
 		rimraf(path.join(WEB_OUT_PATH, "mods"), this);
 	},
+	function findStaticContent()
+	{
+		base.info("Finding static content...");
+		glob(path.join(__dirname, "static", "*"), this);
+	},
+	function processStaticContent(content)
+	{
+		base.info("Copying static content...");
+		content.serialForEach(function(staticFile, subcb)
+		{
+			fileUtil.copy(staticFile, path.join(WEB_OUT_PATH, path.basename(staticFile)), subcb);
+		}, this);
+	},
 	function findJSON()
 	{
 		base.info("Finding JSON files...");
@@ -99,7 +112,7 @@ tiptoe(
 	},
 	function save(html)
 	{
-		fs.writeFile(path.join(__dirname, "index.html"), html, {encoding:"utf8"}, this);
+		fs.writeFile(path.join(WEB_OUT_PATH, "index.html"), html, {encoding:"utf8"}, this);
 	},
 	function extractImages()
 	{

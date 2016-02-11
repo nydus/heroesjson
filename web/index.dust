@@ -44,7 +44,7 @@
 			<tbody>
 				<tr>
 					<td class="sizeColLeft">
-						<a href="json/heroes.json">heroes.json</a>
+						<a href="heroes.json">heroes.json</a>
 					</td>
 					<td class="sizeColRight">
 						<span class="size">{heroesSize}</span>
@@ -52,7 +52,7 @@
 				</tr>
 				<tr>
 					<td class="sizeColLeft">
-						<a href="json/mounts.json">mounts.json</a>
+						<a href="mounts.json">mounts.json</a>
 					</td>
 					<td class="sizeColRight">
 						<span class="size">{mountsSize}</span>
