@@ -188,6 +188,7 @@ function extractImage(imageFile, cb)
 	tiptoe(
 		function extractImage()
 		{
+      console.log('.');
 			runUtil.run(CASCEXTRATOR_PATH, [HOTS_DATA_PATH, "-o", IMAGE_OUT_PATH, "-f", IMAGE_ASSETS_PATH + imageFile], {silent:true}, this);
 		},
 		function convertImage()
