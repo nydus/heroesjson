@@ -194,8 +194,12 @@ exports.FORMULA_PRE_REPLACEMENTS =
 		replace : "1"
 	},
 	{
+		  match : "Upgrade,NovaSnipeMasterDamageUpgrade,EffectArray[2].Value*100",
+		replace : "12"
+	},
+	{
 		  match : "Upgrade,NovaSnipeMasterDamageUpgrade,MaxLevel",
-		replace : "10"
+		replace : "5"
 	}
 ];
 
