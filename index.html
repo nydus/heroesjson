@@ -1,0 +1,1262 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!--[if IE]><![endif]-->
+<html>
+	<head>
+		<title>Heroes of the Storm data in JSON format</title>
+		<script>
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+			ga('create', 'UA-2540999-10', 'auto');
+			ga('send', 'pageview');
+		</script>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon"> 
+		<link type="text/css" rel="stylesheet" href="index.css">
+		<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+		<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+		<link type="text/css" rel="stylesheet" href="solarized-dark.css">
+	</head>
+	<body><a name="top"></a>
+		<script type="text/javascript" src="rainbow-custom.min.js"></script>
+		<center><h1 style="font-size: 240%;">Heroes of the Storm JSON</h1></center>
+		<p style="margin-top: 1.0em;">This project provides up to date <a href="http://heroesofthestorm.com">Heroes of the Storm</a> data in <a href="http://www.json.org/">JSON</a> format for developers to easily use in their projects.<br>
+		<br>
+		For more details see: <a href="#exampleHero">Example Hero</a> and <a href="#documentation">Documentation</a><br>
+		<br>
+		Any bugs or feedback, please address them on the <a href="https://www.github.com/nydus/heroesjson/issues">heroesjson issue tracker</a>.<br>
+		</p>
+		<br>
+		<br>
+		<h2>Current Version: <span class="value">2.7.3</span></h2>
+		<h2>&nbsp;&nbsp;Patch Version: <span class="value">40431</span></h2>
+		<h2>&nbsp;&nbsp;&nbsp;Last Updated: <span class="value">Feb 5, 2016</span><a href="#changeLog">(change log)</a></h2>
+		<br>
+		<br>
+		<table class="downloads downloadsAll">
+			<thead>
+				<tr>
+					<th colspan="2">Download JSON Data</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="sizeColLeft">
+						<a href="heroes.json">heroes.json</a>
+					</td>
+					<td class="sizeColRight">
+						<span class="size">394.2KB</span>
+					</td>
+				</tr>
+				<tr>
+					<td class="sizeColLeft">
+						<a href="mounts.json">mounts.json</a>
+					</td>
+					<td class="sizeColRight">
+						<span class="size">34.2KB</span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<br>
+		<hr>
+		<a name="documentation"></a>
+		<h1>heroes.json Documentation<a href="#top">(back to top)</a></h1>
+		<p>All JSON files are UTF8 encoded and may contain UTF8 characters.<br>
+		<br>The 'heroes.json' file is an array where each entry is a hero object with key/value pairs.<br>
+		<br>Below you will find a table detailing each key.<br>
+		<br>
+		The heroes are sorted by 'name'.<br>
+		<br>
+		All data is extracted directly from the Heros of the Storm game files.<br>
+		<br>
+		</p>
+		<table>
+			<thead>
+				<tr>
+					<th>Key</th>
+					<th>Example</th>
+					<th>Description</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>id</td>
+					<td>"Nova"</td>
+					<td>The internal ID of this hero.</td>
+				</tr>
+				<tr>
+					<td>attributeid</td>
+					<td>"Nova"</td>
+					<td>The internal AttributeID of this hero.</td>
+				</tr>
+				<tr>
+					<td>name</td>
+					<td>"Nova"</td>
+					<td>The name of this hero.</td>
+				</tr>
+				<tr>
+					<td>title</td>7
+					<td>"Dominion Ghost"</td>
+					<td>The title of this hero.</td>
+				</tr>
+				<tr>
+					<td>description</td>
+					<td>"Automatically cloaks while out of combat. Snipes enemies from afar, and creates Decoys of herself to fool enemies."</td>
+					<td>The description of this hero.</td>
+				</tr>
+				<tr>
+					<td>role</td>
+					<td>"Assassin"</td>
+					<td>The role of this hero.</td>
+				</tr>
+				<tr>
+					<td>type</td>
+					<td>"Ranged"</td>
+					<td>The type of this hero.</td>
+				</tr>
+				<tr>
+					<td>gender</td>
+					<td>"Female"</td>
+					<td>The gender of this hero.</td>
+				</tr>
+				<tr>
+					<td>franchise</td>
+					<td>"Starcraft"</td>
+					<td>Which universe/franchise this hero comes from.</td>
+				</tr>
+				<tr>
+					<td>difficulty</td>
+					<td>"Medium"</td>
+					<td>The level of difficulty to play this hero.</td>
+				</tr>
+				<tr>
+					<td>releaseDate</td>
+					<td>"2014-07-22"</td>
+					<td>The release date for this hero. Date format: YYYY-MM-DD</td>
+				</tr>
+				<tr>
+					<td>icon</td>
+					<td>"ui_targetportrait_hero_Nova.dds"</td>
+					<td>The internal filename for the icon used for this hero.</td>
+				</tr>
+				<tr>
+					<td>ratings</td>
+					<td colspan="2">
+						<table>
+							<thead>
+								<tr><th colspan="3">Type: object</th></tr>
+								<tr>
+									<th>Key</th>
+									<th>Example</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>damage</td>
+									<td>10</td>
+									<td>A rating between 1 and 10 for this hero's damage.</td>
+								</tr>
+								<tr>
+									<td>utility</td>
+									<td>4</td>
+									<td>A rating between 1 and 10 for this hero's utility.</td>
+								</tr>
+								<tr>
+									<td>survivability</td>
+									<td>2</td>
+									<td>A rating between 1 and 10 for this hero's survivability.</td>
+								</tr>
+								<tr>
+									<td>complexity</td>
+									<td>5</td>
+									<td>A rating between 1 and 10 for this hero's complexity.</td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td>stats</td>
+					<td colspan="2">
+						<table>
+							<thead>
+								<tr><th colspan="3">Type: object<br>Keys are hero/unit id's, values are objects:</th></tr>
+								<tr>
+									<th>Key</th>
+									<th>Example</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>hp</td>
+									<td>700</td>
+									<td>The base HP for this hero.</td>
+								</tr>
+								<tr>
+									<td>hpPerLevel</td>
+									<td>4.5</td>
+									<td>How much additional 'hp' this hero gains per level. This is a PERCENTAGE.</td>
+								</tr>
+								<tr>
+									<td>hpRegen</td>
+									<td>1.457</td>
+									<td>How much 'hp' this hero regenerates per second in game.</td>
+								</tr>
+								<tr>
+									<td>hpRegenPerLevel</td>
+									<td>4.5</td>
+									<td>How much additional 'hpRegen' this hero gains per level. This is a PERCENTAGE.</td>
+								</tr>
+								<tr>
+									<td>mana</td>
+									<td>500</td>
+									<td>The base mana for this hero.</td>
+								</tr>
+								<tr>
+									<td>manaPerLevel</td>
+									<td>10</td>
+									<td>How much additional 'mana' this hero gains per level.</td>
+								</tr>
+								<tr>
+									<td>manaRegen</td>
+									<td>3</td>
+									<td>How much 'mana' this hero regenerates per second in game.</td>
+								</tr>
+								<tr>
+									<td>manaRegenPerLevel</td>
+									<td>0.0976</td>
+									<td>How much additional 'manaRegen' this hero gains per level.</td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td>abilities</td>
+					<td colspan="2">
+						<table>
+							<thead>
+								<tr><th colspan="3">Type: object<br>Keys are hero/unit id's, values are arrays of ability objects:</th></tr>
+								<tr>
+									<th>Key</th>
+									<th>Example</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>id</td>
+									<td>"NovaSnipeStorm"</td>
+									<td>The internal ID of this ability.</td>
+								</tr>
+								<tr>
+									<td>name</td>
+									<td>"Snipe"</td>
+									<td>The name of the ability.</td>
+								</tr>
+								<tr>
+									<td>description</td>
+									<td>"Deals 115 (+31 per level) damage to the first enemy hit."</td>
+									<td>The description of the ability.</td>
+								</tr>
+								<tr>
+									<td>shortcut</td>
+									<td>"Q"</td>
+									<td>The default in-game shortcut key for this ability.</td>
+								</tr>
+								<tr>
+									<td>cooldown</td>
+									<td>10</td>
+									<td>The cooldown, in seconds, of the ability.</td>
+								</tr>
+								<tr>
+									<td>manaCost</td>
+									<td>65</td>
+									<td>How much mana the ability costs to use.</td>
+								</tr>
+								<tr>
+									<td>manaCostPerSecond</td>
+									<td>15</td>
+									<td>How much mana the ability costs to maintain per second.</td>
+								</tr>
+								<tr>
+									<td>aimType</td>
+									<td>"Skillshot"</td>
+									<td>The type of aiming used for the ability.</td>
+								</tr>
+								<tr>
+									<td>heroic</td>
+									<td>true</td>
+									<td>Present and set to true if this ability is a heroic ability.</td>
+								</tr>
+								<tr>
+									<td>trait</td>
+									<td>true</td>
+									<td>Present and set to true if this ability is a trait.</td>
+								</tr>
+								<tr>
+									<td>mount</td>
+									<td>true</td>
+									<td>Present and set to true if this ability is a mount ability.</td>
+								</tr>
+								<tr>
+									<td>icon</td>
+									<td>"storm_ui_icon_nova_snipe.dds"</td>
+									<td>The internal filename for the icon used for this ability.</td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td>talents</td>
+					<td colspan="2">
+						<table>
+							<thead>
+								<tr><th colspan="3">Type: object<br>Keys are the level of the talents.<br>Values are arrays of talent objects.<br>The talents are sorted in the order they appear in game.</th></tr>
+								<tr>
+									<th>Key</th>
+									<th>Example</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>id</td>
+									<td>"NovaHeroicAbilityTripleTap"</td>
+									<td>The internal ID of this talent.</td>
+								</tr>
+								<tr>
+									<td>name</td>
+									<td>"Triple Tap"</td>
+									<td>The name of this talent.</td>
+								</tr>
+								<tr>
+									<td>description</td>
+									<td>"Locks in on the target Hero, then fires 3 shots that strike the first Hero or Structure they come in contact with for 80 (+33 per level) damage each."</td>
+									<td>The description of this talent.</td>
+								</tr>
+								<tr>
+									<td>cooldown</td>
+									<td>100</td>
+									<td>The cooldown of this talent.</td>
+								</tr>
+								<tr>
+									<td>prerequisite</td>
+									<td>"NovaHeroicAbilityTripleTap"</td>
+									<td>The prerequisite talent id needed in order to take this talent.</td>
+								</tr>
+								<tr>
+									<td>icon</td>
+									<td>"storm_ui_icon_nova_tripletap.dds"</td>
+									<td>The internal filename for the icon used for this talent.</td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<br>
+		<hr>
+		<h1>mounts.json Documentation<a href="#top">(back to top)</a></h1>
+		<p>All JSON files are UTF8 encoded and may contain UTF8 characters.<br>
+		<br>The 'mounts.json' file is an array where each entry is a mount object with key/value pairs.<br>
+		<br>Below you will find a table detailing each key.<br>
+		<br>
+		The mounts are sorted by 'name'.<br>
+		<br>
+		All data is extracted directly from the Heros of the Storm game files.<br>
+		<br>
+		</p>
+		<table>
+			<thead>
+				<tr>
+					<th>Key</th>
+					<th>Example</th>
+					<th>Description</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>id</td>
+					<td>"MoneyPig"</td>
+					<td>The internal ID of this mount.</td>
+				</tr>
+				<tr>
+					<td>attributeid</td>
+					<td>"Mpig"</td>
+					<td>The internal AttributeID of this mount.</td>
+				</tr>
+				<tr>
+					<td>name</td>
+					<td>"Piggy Bank"</td>
+					<td>The name of this mount.</td>
+				</tr>
+				<tr>
+					<td>description</td>
+					<td>"This little piggy went, "Whee whee whee!" all the way to the bank!"</td>
+					<td>The description of this mount.</td>
+				</tr>
+				<tr>
+					<td>franchise</td>
+					<td>"Heroes"</td>
+					<td>Which universe/franchise this mount comes from.</td>
+				</tr>
+				<tr>
+					<td>releaseDate</td>
+					<td>"2014-10-14"</td>
+					<td>The release date for this mount. Date format: YYYY-MM-DD</td>
+				</tr>
+				<tr>
+					<td>productid</td>
+					<td>10072</td>
+					<td>The internal product id for this mount. Not present for all mounts.</td>
+				</tr>
+				<tr>
+					<td>category</td>
+					<td>"Ride"</td>
+					<td>The category for this mount.</td>
+				</tr>
+			</tbody>
+		</table>
+		<br>
+		<hr>
+		<a name="exampleHero"></a>
+		<h1>Example Hero<a href="#top">(back to top)</a></h1>
+		<pre id="heroExampleCode"><code data-language="javascript">
+{
+  "id": "Nova",
+  "name": "Nova",
+  "title": "Dominion Ghost",
+  "description": "Automatically cloaks while out of combat. Snipes enemies from afar, and creates Decoys of herself to fool enemies.",
+  "role": "Assassin",
+  "type": "Ranged",
+  "gender": "Female",
+  "franchise": "Starcraft",
+  "difficulty": "Medium",
+  "ratings": {
+    "damage": 10,
+    "utility": 4,
+    "survivability": 2,
+    "complexity": 5
+  },
+  "stats": {
+    "Nova": {
+      "hp": 700,
+      "hpPerLevel": 110,
+      "hpRegen": 1.457,
+      "hpRegenPerLevel": 0.2265,
+      "mana": 500,
+      "manaPerLevel": 10,
+      "manaRegen": 3,
+      "manaRegenPerLevel": 0.0976
+    }
+  },
+  "abilities": {
+    "Nova": [
+      {
+        "id": "NovaSnipeStorm",
+        "icon": "storm_ui_icon_nova_snipe.dds",
+        "manaCost": 65,
+        "name": "Snipe",
+        "description": "Deals 115 (+31 per level) damage to the first enemy hit.",
+        "cooldown": 10,
+        "aimType": "Skillshot",
+        "shortcut": "Q"
+      },
+      {
+        "id": "NovaPinningShot",
+        "icon": "storm_ui_icon_Nova_PinningShot.dds",
+        "manaCost": 65,
+        "name": "Pinning Shot",
+        "description": "Deal 40 (+10 per level) damage to an enemy and slow it by 30% for 2.25 seconds.",
+        "cooldown": 12,
+        "shortcut": "W"
+      },
+      {
+        "id": "NovaHoloDecoy",
+        "icon": "storm_ui_icon_nova_holodecoy.dds",
+        "manaCost": 50,
+        "name": "Holo Decoy",
+        "description": "Create a Decoy for 5 seconds that appears to attack enemies. \nUsing this Ability does not break Cloak.",
+        "cooldown": 15,
+        "shortcut": "E"
+      },
+      {
+        "id": "NovaTripleTap",
+        "icon": "storm_ui_icon_nova_tripletap.dds",
+        "manaCost": 100,
+        "heroic": true,
+        "name": "Triple Tap",
+        "description": "Locks in on the target Hero, then fires 3 shots that hit the first Hero or Structure they come in contact with for 80 (+33 per level) damage each.",
+        "cooldown": 100,
+        "shortcut": "R"
+      },
+      {
+        "id": "NovaPrecisionStrike",
+        "icon": "storm_ui_icon_nova_orbitalstrike.dds",
+        "manaCost": 100,
+        "heroic": true,
+        "name": "Precision Strike",
+        "description": "After a 1.5 second delay, deals 300 (+35 per level) damage to enemies within an area. Unlimited range.",
+        "cooldown": 60,
+        "shortcut": "R"
+      },
+      {
+        "id": "NovaPermanentCloakSniper",
+        "trait": true,
+        "icon": "storm_ui_icon_nova_personalcloaking.dds",
+        "name": "Permanent Cloak, Sniper",
+        "description": "Gain Stealth when out of combat for 3 seconds. Taking damage, attacking, or channeling reveals you.\nBasic Attack range is 20% further than other ranged Heroes, and you see 10% further than other Heroes."
+      }
+    ]
+  },
+  "talents": {
+    "1": [
+      {
+        "id": "GenericTalentConjurersPursuit",
+        "name": "Conjurer's Pursuit",
+        "description": "Increases Mana Regeneration by 0.5 per second. Every 3 Regeneration Globes gathered increases this bonus by 0.25.",
+        "icon": "storm_btn_d3_monk_mantraofevasion.dds"
+      },
+      {
+        "id": "NovaMasteryPsiOpRangefinder",
+        "name": "Psi-Op Rangefinder",
+        "description": "Increases Snipe's range by 20% and reduces the Cooldown by 2 seconds.",
+        "icon": "storm_ui_icon_nova_snipe.dds"
+      },
+      {
+        "id": "NovaMasteryAmbushSnipe",
+        "name": "Ambush Snipe",
+        "description": "Increases Snipe's damage by 20% when used from Cloak or within one second of being Cloaked.",
+        "icon": "storm_ui_icon_nova_snipe.dds"
+      },
+      {
+        "id": "NovaMasteryTazerRounds",
+        "name": "Tazer Rounds",
+        "description": "Increases the duration of Pinning Shot's slow to 4 seconds.",
+        "icon": "storm_ui_icon_Nova_PinningShot.dds"
+      }
+    ],
+    "4": [
+      {
+        "id": "NovaMasteryPerfectShotSnipe",
+        "name": "Perfect Shot",
+        "description": "Hitting an enemy Hero with Snipe refunds 50% of the Mana cost. Killing an enemy Hero with Snipe refunds 100% of the Mana cost.",
+        "icon": "storm_ui_icon_nova_snipe.dds"
+      },
+      {
+        "id": "NovaExtendedProjection",
+        "name": "Remote Delivery",
+        "description": "Reduces the cooldown of Holo Decoy by 3 seconds, and increases the range by 100%.",
+        "icon": "storm_ui_icon_nova_holodecoy.dds"
+      },
+      {
+        "id": "GenericTalentGatheringPower",
+        "name": "Gathering Power",
+        "description": "Passively grants 5% Ability Power. Each Hero takedown increases this bonus by 2% to a maximum of 15%. This bonus Ability Power is reset to 5% on death.",
+        "icon": "storm_temp_war3_btncontrolmagic.dds"
+      },
+      {
+        "id": "GenericTalentEnvenom",
+        "name": "Envenom",
+        "description": "Activate to poison an enemy Hero, dealing 180 damage over 5 seconds.",
+        "icon": "storm_temp_war3_btnpoisonarrow.dds",
+        "cooldown": 60
+      }
+    ],
+    "7": [
+      {
+        "id": "NovaMasteryExplosiveShot",
+        "name": "Explosive Round",
+        "description": "Snipe also deals 50% damage to enemies near the impact.",
+        "icon": "storm_ui_icon_nova_snipe.dds"
+      },
+      {
+        "id": "NovaCombatStyleOneintheChamber",
+        "name": "One in the Chamber",
+        "description": "After using an ability, your next Basic Attack deals 80% additional damage.",
+        "icon": "storm_btn-extra_int_0.dds"
+      },
+      {
+        "id": "NovaCombatStyleAntiArmorShells",
+        "name": "Anti-Armor Shells",
+        "description": "Your Basic Attacks deal 250% damage, but your Attack Speed is proportionally slower.",
+        "icon": "storm_temp_btn-upgrade-terran-u238shells.dds"
+      },
+      {
+        "id": "NovaMasteryCovertOpsPinningShot",
+        "name": "Covert Ops",
+        "description": "Increases the Movement Speed slow of Pinning Shot by 1% for every second that Nova is Cloaked, to a maximum of a 50% slow. Bonus fades when Nova is un-Cloaked for one second.",
+        "icon": "storm_ui_icon_Nova_PinningShot.dds"
+      }
+    ],
+    "10": [
+      {
+        "id": "NovaHeroicAbilityTripleTap",
+        "name": "Triple Tap",
+        "description": "Locks in on the target Hero, then fires 3 shots that strike the first Hero or Structure they come in contact with for 80 (+33 per level) damage each.",
+        "icon": "storm_ui_icon_nova_tripletap.dds",
+        "cooldown": 100
+      },
+      {
+        "id": "NovaHeroicAbilityPrecisionStrike",
+        "name": "Precision Strike",
+        "description": "After a 1.5 second delay, deals 300 (+35 per level) damage in an area. Unlimited range.",
+        "icon": "storm_ui_icon_nova_orbitalstrike.dds",
+        "cooldown": 60
+      }
+    ],
+    "13": [
+      {
+        "id": "NovaMasteryHoloDrone",
+        "name": "Lethal Decoy",
+        "description": "Holo Decoy now deals 25% of Nova's damage.",
+        "icon": "storm_ui_icon_nova_holodecoy.dds"
+      },
+      {
+        "id": "NovaCombatStyleAdvancedCloaking",
+        "name": "Advanced Cloaking",
+        "description": "While Stealthed from Permanent Cloak, your Movement Speed is increased by 25% and you heal for 1.95% of your maximum Health per second.",
+        "icon": "storm_ui_icon_nova_personalcloaking.dds"
+      },
+      {
+        "id": "NovaCombatStyleMyKill",
+        "name": "Headshot",
+        "description": "Reduces your Ability cooldowns by 4 seconds when you kill an enemy Hero.",
+        "icon": "storm_temp_btn-upgrade-terran-infantryweaponslevel2.dds"
+      },
+      {
+        "id": "GenericTalentSpellShield",
+        "name": "Spell Shield",
+        "description": "Upon taking Ability Damage, reduce that damage and further Ability Damage by 50% for 2 seconds.  Can only trigger once every 30 seconds.",
+        "icon": "storm_temp_btn-ability-protoss-hardenedshields.dds"
+      }
+    ],
+    "16": [
+      {
+        "id": "NovaRailgun",
+        "name": "Railgun",
+        "description": "Snipe penetrates through the first enemy hit and deals 50% damage to subsequent targets. Snipe cooldown is reduced by 1 second for each target hit.",
+        "icon": "storm_ui_icon_nova_snipe.dds"
+      },
+      {
+        "id": "NovaMasteryCripplingShot",
+        "name": "Crippling Shot",
+        "description": "Enemies hit by Pinning shot become Vulnerable, taking 25% increased damage for the duration of the slow.",
+        "icon": "storm_ui_icon_Nova_PinningShot.dds"
+      },
+      {
+        "id": "NovaMasteryDoubleFakeHoloDecoy",
+        "name": "Double Fake",
+        "description": "Casting Holo Decoy creates an additional Decoy at your current location.",
+        "icon": "storm_ui_icon_nova_holodecoy.dds"
+      },
+      {
+        "id": "GenericTalentOverdrive",
+        "name": "Overdrive",
+        "description": "Activate to increase Ability Power by 25% and Mana costs by 40% for 5 seconds.",
+        "icon": "storm_btn_d3_wizard_archon.dds",
+        "cooldown": 25
+      }
+    ],
+    "20": [
+      {
+        "id": "NovaMasteryFastReload",
+        "name": "Fast Reload",
+        "description": "Triple Tap's cooldown is reset if it kills an enemy Hero.",
+        "icon": "storm_ui_icon_nova_tripletap.dds",
+        "prerequisite": "NovaHeroicAbilityTripleTap"
+      },
+      {
+        "id": "NovaMasteryPrecisionBarrage",
+        "name": "Precision Barrage",
+        "description": "Precision Strike now holds two charges with a short cooldown.",
+        "icon": "storm_ui_icon_nova_orbitalstrike.dds",
+        "prerequisite": "NovaHeroicAbilityPrecisionStrike"
+      },
+      {
+        "id": "GenericTalentRewind",
+        "name": "Rewind",
+        "description": "Activate to reset the cooldowns of your Basic Abilities.",
+        "icon": "storm_btn_d3_wizard_slowtime.dds",
+        "cooldown": 60
+      },
+      {
+        "id": "GenericTalentFlashoftheStorms",
+        "name": "Bolt of the Storm",
+        "description": "Activate to teleport to a nearby location.",
+        "icon": "storm_temp_btn-ability-protoss-blink-color.dds",
+        "cooldown": 40
+      }
+    ]
+  }
+}
+		</code></pre>
+		<hr>
+		<a name="changeLog"></a>
+		<h1>Change Log<a href="#top">(back to top)</a></h1>
+		<table class="changeLog">
+			<thead>
+				<tr>
+					<th>Version</th>
+					<th>Date</th>
+					<th>Patch Version</th>
+					<th>Changes</th>
+				</tr>
+			</thead>
+			<tbody>
+				
+<tr>
+						<td>2.7.3</td>
+						<td>Feb 5, 2016</td>
+						<td>40431</td>
+						<td>
+							<ul>
+								
+<li>Fixed the 'Felstalker' mount to have the correct 'franchise'.</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+<tr>
+						<td>2.7.2</td>
+						<td>Feb 4, 2016</td>
+						<td>40431</td>
+						<td>
+							<ul>
+								
+<li>Fixed some mount info and added more mount info.</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+<tr>
+						<td>2.7.1</td>
+						<td>Feb 4, 2016</td>
+						<td>40431</td>
+						<td>
+							<ul>
+								
+<li>Added documentation for mounts.json file.</li>
+								
+<li>Added some missing mounts.</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+<tr>
+						<td>2.7.0</td>
+						<td>Feb 2, 2016</td>
+						<td>40431</td>
+						<td>
+							<ul>
+								
+<li>Added Li-Ming!</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+<tr>
+						<td>2.6.1</td>
+						<td>Feb 1, 2016</td>
+						<td>40322</td>
+						<td>
+							<ul>
+								
+<li>Updated to latest patch version.</li>
+								
+<li>Fixed the missing hpPerLevel and hpRegenPerLevel stats. These are percentages now.</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+<tr>
+						<td>2.6.0</td>
+						<td>Dec 15, 2015</td>
+						<td>39595</td>
+						<td>
+							<ul>
+								
+<li>Added Greymane!</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+<tr>
+						<td>2.5.0</td>
+						<td>Dec 15, 2015</td>
+						<td>39595</td>
+						<td>
+							<ul>
+								
+<li>Added Lunara!</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+<tr>
+						<td>2.4.0</td>
+						<td>Nov 22, 2015</td>
+						<td>39153</td>
+						<td>
+							<ul>
+								
+<li>Added Cho!</li>
+								
+<li>Added Gall!</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+<tr>
+						<td>2.3.2</td>
+						<td>Oct 27, 2015</td>
+						<td>38793</td>
+						<td>
+							<ul>
+								
+<li>Updated to latest patch version.</li>
+								
+<li>Fixed the 'manaCostPerSecond' field for Arthas ability Frozen Tempest</li>
+								
+<li>Fixed the 'cooldown' field for Medic trait Caduceus Reactor.</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+<tr>
+						<td>2.3.1</td>
+						<td>Oct 7, 2015</td>
+						<td>38236</td>
+						<td>
+							<ul>
+								
+<li>Fixed the 'shortcut' field for the Artanis ability Twin Blades.</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+<tr>
+						<td>2.3.0</td>
+						<td>Oct 6, 2015</td>
+						<td>38236</td>
+						<td>
+							<ul>
+								
+<li>Added Lt. Morales!</li>
+								
+<li>Added Artanis!</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+<tr>
+						<td>2.2.2</td>
+						<td>Sep 14, 2015</td>
+						<td>37569</td>
+						<td>
+							<ul>
+								
+<li>Fixed the 'description' field for the Toxic Gas talent.</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+<tr>
+						<td>2.2.1</td>
+						<td>Sep 14, 2015</td>
+						<td>37569</td>
+						<td>
+							<ul>
+								
+<li>Fixed the 'cooldown' field for the talents Ice Block, Improved Ice Block and Feign Death.</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+<tr>
+						<td>2.2.0</td>
+						<td>Sep 8, 2015</td>
+						<td>37569</td>
+						<td>
+							<ul>
+								
+<li>Added Rexxar!</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+<tr>
+						<td>2.1.5</td>
+						<td>Sep 3, 2015</td>
+						<td>37117</td>
+						<td>
+							<ul>
+								
+<li>Fixed the 'description' field for the Kerrigan ability Assimilation... again.</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+<tr>
+						<td>2.1.4</td>
+						<td>Aug 27, 2015</td>
+						<td>37117</td>
+						<td>
+							<ul>
+								
+<li>Fixed the 'description' field for the Kerrigan ability Assimilation.</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+<tr>
+						<td>2.1.3</td>
+						<td>Aug 24, 2015</td>
+						<td>37117</td>
+						<td>
+							<ul>
+								
+<li>Added missing 'per level' information to 17 abilities and talents.</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+<tr>
+						<td>2.1.2</td>
+						<td>Aug 24, 2015</td>
+						<td>37117</td>
+						<td>
+							<ul>
+								
+<li>Fixed the 'description' field for Rehgar's Ghost Wolf ability and labeled it correctly as a mount.</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+<tr>
+						<td>2.1.1</td>
+						<td>Aug 18, 2015</td>
+						<td>37117</td>
+						<td>
+							<ul>
+								
+<li>Fixed the 'name' field for some talents for both Brightwing and Tassadar.</li>
+								
+<li>Fixed multiple cooldowns across many abilities and talents.</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+<tr>
+						<td>2.1.0</td>
+						<td>Aug 18, 2015</td>
+						<td>37117</td>
+						<td>
+							<ul>
+								
+<li>Added Monk!</li>
+								
+<li>Updated to latest patch data.</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+<tr>
+						<td>2.0.9</td>
+						<td>Aug 17, 2015</td>
+						<td>36536</td>
+						<td>
+							<ul>
+								
+<li>Fixed the 'description' field for the Diablo ability Black Soulstone.</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+<tr>
+						<td>2.0.8</td>
+						<td>Aug 17, 2015</td>
+						<td>36536</td>
+						<td>
+							<ul>
+								
+<li>Added an 'attributeid' field for each hero.</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+<tr>
+						<td>2.0.7</td>
+						<td>Aug 9, 2015</td>
+						<td>36536</td>
+						<td>
+							<ul>
+								
+<li>Fixed values for talents First Aid, Promote and Bound Minion.</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+<tr>
+						<td>2.0.6</td>
+						<td>Aug 1, 2015</td>
+						<td>36536</td>
+						<td>
+							<ul>
+								
+<li>Added missing 'per level' information to talents: Envenom, Burning Rage, Fury of the Storm.</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+<tr>
+						<td>2.0.5</td>
+						<td>Jul 31, 2015</td>
+						<td>36536</td>
+						<td>
+							<ul>
+								
+<li>Added missing 'per level' information to 21 abilities and talents.</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+<tr>
+						<td>2.0.4</td>
+						<td>Jul 12, 2015</td>
+						<td>36144</td>
+						<td>
+							<ul>
+								
+<li>Added a missing trait for the Lost Vikings.</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+<tr>
+						<td>2.0.3</td>
+						<td>Jul 12, 2015</td>
+						<td>36144</td>
+						<td>
+							<ul>
+								
+<li>Added two missing abilities for the Lost Vikings.</li>
+								
+<li>Added subunit TychusOdin to Tychus including abilities and stats.</li>
+								
+<li>Added a missing ability to Uther.</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+<tr>
+						<td>2.0.2</td>
+						<td>Jun 30, 2015</td>
+						<td>36144</td>
+						<td>
+							<ul>
+								
+<li>Added hero special mount abilities.</li>
+								
+<li>Added 'cooldown' fields to several abilities.</li>
+								
+<li>Removed an extraneous negative sign from Rehgar's Stormcaller talent.</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+<tr>
+						<td>2.0.1</td>
+						<td>Jun 30, 2015</td>
+						<td>36144</td>
+						<td>
+							<ul>
+								
+<li>Added 'icon' field to each hero.</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+<tr>
+						<td>2.0.0</td>
+						<td>Jun 30, 2015</td>
+						<td>36144</td>
+						<td>
+							<ul>
+								
+<li>Added Butcher and Leoric!</li>
+								
+<li>Updated to latest patch data.</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+<tr>
+						<td>1.2.2</td>
+						<td>Jun 29, 2015</td>
+						<td>35702</td>
+						<td>
+							<ul>
+								
+<li>Fixed several errors with numbers for certain talents.</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+<tr>
+						<td>1.2.1</td>
+						<td>Jun 26, 2015</td>
+						<td>35702</td>
+						<td>
+							<ul>
+								
+<li>Fixed some incorrectly named abilities.</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+<tr>
+						<td>1.2.0</td>
+						<td>Jun 26, 2015</td>
+						<td>35702</td>
+						<td>
+							<ul>
+								
+<li>Fixed multiple errors in abilities and talents that showed NaN instead of the proper value.</li>
+								
+<li>Added 'icon' field to each talent and ability.</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+<tr>
+						<td>1.1.2</td>
+						<td>Jun 25, 2015</td>
+						<td>35702</td>
+						<td>
+							<ul>
+								
+<li>Added 'description' field to each hero.</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+<tr>
+						<td>1.1.1</td>
+						<td>Jun 22, 2015</td>
+						<td>35702</td>
+						<td>
+							<ul>
+								
+<li>Joined Lost Vikings abilities into one entry for LostVikings and added the switch viking abilities.</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+<tr>
+						<td>1.1.0</td>
+						<td>Jun 22, 2015</td>
+						<td>35702</td>
+						<td>
+							<ul>
+								
+<li>Added secondary unit abilities (Abathur, Lost Vikings).</li>
+								
+<li>Added a 'shortcut' field to abilities to see how they map in game.</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+<tr>
+						<td>1.0.0</td>
+						<td>Jun 21, 2015</td>
+						<td>35702</td>
+						<td>
+							<ul>
+								
+<li>First release!</li>
+								
+</ul>
+						</td>
+					</tr>
+				
+</tbody>
+		</table>
+		<hr>
+		<a name="license"></a>
+		<h1>License and Copyright<a href="#top">(back to top)</a></h1>
+		<p>The JSON files contain data that is Copyright (c) Blizzard Entertainment - All Rights Reserved<br>
+		<br>
+		This website is not affiliated with Blizzard Entertainment in any way.<br>
+		<br></p>
+		<hr>
+		<a name="thanks"></a>
+		<h1>Thanks<a href="#top">(back to top)</a></h1>
+		<ul>
+			<li>Thank you <strong>VERY MUCH</strong> to these folks who reported bugs and helped in other ways:
+				<ul>
+					<li>kenavr, ry__ry, Gnejs Development, Obiyer</li>
+				</ul>
+			</li>
+			<li><a href="http://ethanschoonover.com/solarized">Solarized</a> is a great color scheme, I used a bunch of those colors here on this page</li>
+			<li><a href="http://blizzard.com/">Blizzard Entertainment</a> for creating quality games that I have been playing since 1994!</li>
+		</ul>
+		<br>
+		<br>
+		<hr>
+		<a name="todo"></a>
+		<h1>To-Do List<a href="#top">(back to top)</a></h1>
+		<ul>
+			<li>Other Languages</li>
+			<li>Hero/Unit default attack damage/speed</li>
+		</ul>
+		<hr>
+		<h1>Source Code<a href="#top">(back to top)</a></h1>
+		<p>Source code used to generate the JSON is available here: <a href="https://github.com/nydus/heroesjson">https://github.com/nydus/heroesjson</a><br>
+		<br>
+	</body>
+</html>
