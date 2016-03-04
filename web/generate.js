@@ -26,11 +26,11 @@ if(!fs.existsSync(HOTS_DATA_PATH))
 	base.error("HeroesData dir not found: %s", HOTS_DATA_PATH);
 	process.exit(1);
 }
-var dustData = 
+var dustData =
 {
 };
 
-var WEB_OUT_PATH = path.join(__dirname, "json");
+var WEB_OUT_PATH = path.join(__dirname, "dist");
 
 var IMAGES_FULL_PATH = path.join(__dirname, "..", "images", "mods", "heroes.stormmod", "base.stormassets", "Assets", "Textures");
 
@@ -67,9 +67,22 @@ tiptoe(
 	{
 		if(process.argv[3]==="dev")
 			return this();
-		
+
 		base.info("Data Build Version: %s", fs.readFileSync(path.join(WEB_OUT_PATH, "mods", "core.stormmod", "base.stormdata", "DataBuildId.txt"), {encoding:"utf8"}).trim("B").trim());
 		rimraf(path.join(WEB_OUT_PATH, "mods"), this);
+	},
+	function findStaticContent()
+	{
+		base.info("Finding static content...");
+		glob(path.join(__dirname, "static", "*"), this);
+	},
+	function processStaticContent(content)
+	{
+		base.info("Copying static content...");
+		content.serialForEach(function(staticFile, subcb)
+		{
+			fileUtil.copy(staticFile, path.join(WEB_OUT_PATH, path.basename(staticFile)), subcb);
+		}, this);
 	},
 	function findJSON()
 	{
@@ -99,13 +112,13 @@ tiptoe(
 	},
 	function save(html)
 	{
-		fs.writeFile(path.join(__dirname, "index.html"), html, {encoding:"utf8"}, this);
+		fs.writeFile(path.join(WEB_OUT_PATH, "index.html"), html, {encoding:"utf8"}, this);
 	},
 	function extractImages()
 	{
 		if(process.argv[3]==="dev")
 			return this();
-		
+
 		base.info("Extracting images...");
 		extractAllImages(this);
 	},
@@ -113,7 +126,7 @@ tiptoe(
 	{
 		if(process.argv[3]==="dev")
 			return this();
-		
+
 		base.info("Finding extracted images...");
 		glob(path.join(IMAGES_FULL_PATH, "*.png"), this);
 	},
@@ -121,10 +134,10 @@ tiptoe(
 	{
 		if(process.argv[3]==="dev")
 			return this();
-		
+
 		base.info("Zipping images...");
 		runUtil.run("zip", ["-r", ZIP_PATH].concat(images.map(function(image) { return path.basename(image); })), {silent:true, cwd : IMAGES_FULL_PATH}, this);
-	},	
+	},
 	function finish(err)
 	{
 		if(err)
@@ -169,12 +182,13 @@ function extractAllImages(cb)
 		cb
 	);
 }
-		
+
 function extractImage(imageFile, cb)
 {
 	tiptoe(
 		function extractImage()
 		{
+      console.log('.');
 			runUtil.run(CASCEXTRATOR_PATH, [HOTS_DATA_PATH, "-o", IMAGE_OUT_PATH, "-f", IMAGE_ASSETS_PATH + imageFile], {silent:true}, this);
 		},
 		function convertImage()
