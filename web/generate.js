@@ -26,7 +26,7 @@ if(!fs.existsSync(HOTS_DATA_PATH))
 	base.error("HeroesData dir not found: %s", HOTS_DATA_PATH);
 	process.exit(1);
 }
-var dustData = 
+var dustData =
 {
 };
 
@@ -67,7 +67,7 @@ tiptoe(
 	{
 		if(process.argv[3]==="dev")
 			return this();
-		
+
 		base.info("Data Build Version: %s", fs.readFileSync(path.join(WEB_OUT_PATH, "mods", "core.stormmod", "base.stormdata", "DataBuildId.txt"), {encoding:"utf8"}).trim("B").trim());
 		rimraf(path.join(WEB_OUT_PATH, "mods"), this);
 	},
@@ -118,7 +118,7 @@ tiptoe(
 	{
 		if(process.argv[3]==="dev")
 			return this();
-		
+
 		base.info("Extracting images...");
 		extractAllImages(this);
 	},
@@ -126,7 +126,7 @@ tiptoe(
 	{
 		if(process.argv[3]==="dev")
 			return this();
-		
+
 		base.info("Finding extracted images...");
 		glob(path.join(IMAGES_FULL_PATH, "*.png"), this);
 	},
@@ -134,10 +134,10 @@ tiptoe(
 	{
 		if(process.argv[3]==="dev")
 			return this();
-		
+
 		base.info("Zipping images...");
 		runUtil.run("zip", ["-r", ZIP_PATH].concat(images.map(function(image) { return path.basename(image); })), {silent:true, cwd : IMAGES_FULL_PATH}, this);
-	},	
+	},
 	function finish(err)
 	{
 		if(err)
@@ -182,7 +182,7 @@ function extractAllImages(cb)
 		cb
 	);
 }
-		
+
 function extractImage(imageFile, cb)
 {
 	tiptoe(

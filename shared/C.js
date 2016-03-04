@@ -28,7 +28,7 @@ exports.EXTRA_MOUNT_DATA_FILES = {
 				   			  "Horse_Common",
 				   			  "Horse_HeadlessHorseman",
 				   			  "Horse_IllidansNightmare",
-				   			  "Horse_JudgementCharger", 
+				   			  "Horse_JudgementCharger",
 				   			  "Horse_MalthaelsPhantom",
 				   			  "Horse_MarshalsOutrider",
 				   			  "Horse_Nazeebra",
@@ -133,7 +133,7 @@ exports.HERO_MOUNT_UNIT_ID_REPLACEMENTS =
 
 exports.HERO_SKIP_ABILITY_IDS =
 {
-	"Rehgar" : ["RehgarGhostWolfActivate"]	
+	"Rehgar" : ["RehgarGhostWolfActivate"]
 };
 
 exports.MOUNT_ABILITY_IDS =
@@ -147,7 +147,7 @@ exports.MOUNT_ABILITY_IDS =
 	"Gall"         : "GallHurryUpOaf"
 };
 
-exports.FORMULA_PRE_REPLACEMENTS = 
+exports.FORMULA_PRE_REPLACEMENTS =
 [
 	{
 		  match : "$GalaxyVar:libGDHL_gv_bALHeroKerriganAssimilationRangedDamageModifier$",
@@ -160,14 +160,6 @@ exports.FORMULA_PRE_REPLACEMENTS =
 	{
 		  match : "Behavior,CrusaderPunishStackingSlow,Modification.UnifiedMoveSpeedFactor*(-100)6",
 		replace : "Behavior,CrusaderPunishStackingSlow,Modification.UnifiedMoveSpeedFactor*(-100)*6"
-	},
-	{
-		  match : "Effect,PixieDustApplyBlockStacks,Count",
-		replace : "1"
-	},
-	{
-		  match : "Effect,PixieDustApplyBlockController,Count",
-		replace : "1"
 	},
 	{
 		  match : "Behavior,LostVikingVikingHoardCarryBehavior,Modification.VitalRegenArray[Life]",
@@ -194,8 +186,12 @@ exports.FORMULA_PRE_REPLACEMENTS =
 		replace : "1"
 	},
 	{
+		  match : "Upgrade,NovaSnipeMasterDamageUpgrade,EffectArray[2].Value*100",
+		replace : "12"
+	},
+	{
 		  match : "Upgrade,NovaSnipeMasterDamageUpgrade,MaxLevel",
-		replace : "10"
+		replace : "5"
 	}
 ];
 
