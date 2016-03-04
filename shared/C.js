@@ -11,7 +11,8 @@ exports.EXTRA_HEROES_HEROMODS_NAMED =
 	"chogall" : "ChoGall",
 	"dryad"   : "Dryad",
 	"genn"    : "Genn",
-	"wizard"  : "Wizard"
+	"wizard"  : "Wizard",
+	"necromancer" : "Necromancer"
 };
 
 exports.SKIP_HERO_IDS = ["GreymaneWorgen"];

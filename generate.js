@@ -88,6 +88,7 @@ Object.forEach(C.EXTRA_MOUNT_DATA_FILES, function(EXTRA_MOUNT_DIR, EXTRA_MOUNT_F
 Object.forEach(C.EXTRA_HEROES_HEROMODS_NAMED, function(heroName, gameDataName)
 {
 	NEEDED_FILE_PATHS.push("mods\\heromods\\" + heroName + ".stormmod\\base.stormdata\\GameData\\" + gameDataName + "Data.xml");
+	NEEDED_FILE_PATHS.push("mods\\heromods\\" + heroName + ".stormmod\\base.stormdata\\GameData\\HeroData.xml");
 	NEEDED_FILE_PATHS.push("mods\\heromods\\" + heroName + ".stormmod\\enus.stormdata\\LocalizedData\\GameStrings.txt");
 });
 

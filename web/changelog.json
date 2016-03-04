@@ -1,4 +1,13 @@
 [
+  {
+    "version" : "2.7.6",
+    "when": "2016-03-02",
+    "patchVersion": "41150",
+    "changes" : [
+      "Added Xul",
+      "http://us.battle.net/heroes/en/blog/20049139"
+    ]
+  },
 	{
 		"version" : "2.7.5",
 		"when" : "2016-02-19",
