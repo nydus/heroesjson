@@ -13,13 +13,14 @@ var base = require("xbase"),
 	rimraf = require("rimraf"),
 	tiptoe = require("tiptoe");
 
-if(process.argv.length<3 || !fs.existsSync(process.argv[2]))
+var HOTS_PATH = process.argv[2] || "/Applications/Heroes\ of\ the\ Storm";
+
+if(!fs.existsSync(HOTS_PATH))
 {
 	base.error("Usage: node generate.js /path/to/hots");
 	process.exit(1);
 }
 
-var HOTS_PATH = process.argv[2];
 var HOTS_DATA_PATH = path.join(HOTS_PATH, "HeroesData");
 
 if(!fs.existsSync(HOTS_DATA_PATH))
