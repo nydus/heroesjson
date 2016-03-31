@@ -58,7 +58,9 @@ C.EXTRA_HEROES_HEROMODS.forEach(function(EXTRA_HERO)
 	NEEDED_PREFIXES.push("heromods\\" + EXTRA_HERO + ".stormmod");
 });
 
-var NEEDED_FILE_PATHS = [];
+var NEEDED_FILE_PATHS = [
+  "mods/core.stormmod/base.stormdata/DataBuildId.txt"
+];
 
 NEEDED_PREFIXES.forEach(function(NEEDED_PREFIX)
 {
