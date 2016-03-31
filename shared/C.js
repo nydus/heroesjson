@@ -233,8 +233,8 @@ exports.XMLREF_REPLACEMENTS =
 		  to : "Behavior,FeralHeartCarryBehavior,Modification.VitalRegenMultiplier[1]"
 	},
 	{
-		from : "Behavior,TalentBucketVampiricAssault,Modification.VitalDamageLeechArray[0].KindArray[2]",
-		  to : "Behavior,TalentBucketVampiricAssault,Modification.VitalDamageLeechArray[0].KindArray[0]"
+		from : "Behavior,TalentBucketVigorousAssault,Modification.VitalDamageLeechArray[0].KindArray[2]",
+			to : "Behavior,TalentBucketVigorousAssault,Modification.VitalDamageLeechArray[0].KindArray[0]"
 	},
 	{
 		from : "Behavior,TalentBucketVampiricAssaultTychus,Modification.VitalDamageLeechArray[0].KindArray[2]",
@@ -249,8 +249,8 @@ exports.XMLREF_REPLACEMENTS =
 		  to : "Abil,MuradinStormBolt,Cost[0].Vital[0]"
 	},
 	{
-		from : "Behavior,TalentBucketVampiricStrike,Modification.VitalDamageLeechArray[0].KindArray[2]",
-		  to : "Behavior,TalentBucketVampiricStrike,Modification.VitalDamageLeechArray[0].KindArray[0]"
+		from : "Behavior,TalentBucketVigorousStrike,Modification.VitalDamageLeechArray[0].KindArray[2]",
+			to : "Behavior,TalentBucketVigorousStrike,Modification.VitalDamageLeechArray[0].KindArray[0]"
 	},
 	{
 		from : "Effect,OdinRagnarokMissilesDamage,Amount",
