@@ -268,7 +268,9 @@ exports.XMLREF_REPLACEMENTS =
 
 exports.REMOVE_SUBUNITS =
 {
-	"LostVikings" : ["HeroBaleog", "HeroErik", "HeroOlaf"]
+	"LostVikings" : ["HeroBaleog", "HeroErik", "HeroOlaf"],
+	"Chen"        : ["HeroChenEarth", "HeroChenFire", "HeroChenStorm"],
+	"Medic"       : ["MedicMedivacDropship"]
 };
 
 exports.IMPORT_ABILITIES_FROM_SUBUNIT =
