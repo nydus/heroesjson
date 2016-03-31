@@ -9,15 +9,14 @@ exports.EXTRA_HEROES_HEROMODS = ["chogall"];
 exports.EXTRA_HEROES_HEROMODS_NAMED =
 {
 	"chogall" : "ChoGall",
-	"dryad"   : "Dryad",
-	"genn"    : "Genn",
 	"wizard"  : "Wizard",
 	"necromancer" : "Necromancer"
 };
 
 exports.SKIP_HERO_IDS = ["GreymaneWorgen"];
 
-exports.HERO_ID_TEXTURE_RENAMES = {"Dryad" : "lunara", "Greymane" : "genngreymane"};
+exports.HERO_ID_TEXTURE_RENAMES = { };
+// { "Dryad" : "lunara"};
 
 exports.EXTRA_XML_FILE_PATHS = [];
 
@@ -47,7 +46,26 @@ exports.EXTRA_MOUNT_DATA_FILES = {
 exports.EXTRA_HEROES_GAMEDATA_FILES = ["Chen", "Zagara"];
 
 // Extra hero subfolder files GameData/Heroes/<hero>Data/<hero>Data.xml
-exports.EXTRA_HEROES_GAMEDATA_FOLDERS = ["Anubarak", "Artanis", "Butcher", "Crusader", "Jaina", "Kaelthas", "Leoric", "LostVikings", "Medic", "Monk", "Murky", "Rexxar", "SgtHammer", "Sylvanas", "Thrall"];
+// "Expansion" heroes that have moved into "main" modules.
+exports.EXTRA_HEROES_GAMEDATA_FOLDERS = [
+	"Anubarak",
+	"Artanis",
+	"Butcher",
+	"Crusader",
+	"Jaina",
+	"Dryad",
+	"Genn",
+	"Kaelthas",
+	"Leoric",
+	"LostVikings",
+	"Medic",
+	"Monk",
+	"Murky",
+	"Rexxar",
+	"SgtHammer",
+	"Sylvanas",
+	"Thrall"
+];
 
 exports.HERO_MODIFICATIONS =
 {
