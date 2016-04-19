@@ -780,7 +780,7 @@ function getFullDescription(id, _fullDescription, heroid, heroLevel)
 			formula = formula.replace(/\$BehaviorStackCount:[^$]+\$/g, "0");
 			formula = formula.replace(/\[d ref='([^']+)'(?: player='[0-9]')?\/?]/g, "$1");
 
-			//if(heroid==="Tinker") { base.info("Before: %s", formula); }
+			//if(heroid==="Tracer") { base.info("Before: %s", formula); }
 			formula = formula.replace(/^([ (]*)-/, "$1-1*");
 
 			(formula.match(/((^\-)|(\(\-))?[A-Za-z][A-Za-z0-9,._\[\]]+/g) || []).map(function(match) { return match.indexOf("(")===0 ? match.substring(1) : match; }).forEach(function(match)
@@ -794,19 +794,21 @@ function getFullDescription(id, _fullDescription, heroid, heroLevel)
 				}
 				formula = formula.replace(match, lookupXMLRef(heroid, heroLevel, match, negative));
 			});
-			//if(heroid==="Tinker") { base.info("after: %s", formula); }
+			//if(heroid==="Tracer") { base.info("after: %s", formula); }
 
 			formula = formula.replace(/[+*/-]$/, "");
 			formula = "(".repeat((formula.match(/[)]/g) || []).length-(formula.match(/[(]/g) || []).length) + formula;
 
-			//if(heroid==="Tinker") { base.info("after prenthesiszed and regex: %s", parenthesize(formula)); base.info("after prenthesiszed x2: %s", parenthesize(parenthesize(formula))); }
+      formula = formula.replace(/--/, "+");
+
+			//if(heroid==="Tracer") { base.info("after prenthesiszed and regex: %s", parenthesize(formula)); base.info("after prenthesiszed x2: %s", parenthesize(parenthesize(formula))); }
 
 			//Talent,ArtanisBladeDashSolariteReaper,AbilityModificationArray[0].Modifications[0].Value)*(100)
 			
 			// Heroes formulas are evaluated Left to Right instead of normal math operation order, so we parenthesize everything. ugh.
 			var result = C.FULLY_PARENTHESIZE.contains(id) ? eval(fullyParenthesize(formula)) : eval(parenthesize(formula));	// jshint ignore:line
 			
-			//if(heroid==="Tinker") { base.info("Formula: %s\nResult: %d", formula, result); }
+			//if(heroid==="Tracer") { base.info("Formula: %s\nResult: %d", formula, result); }
 		
 			var MAX_PRECISION = 4;
 			if(result.toFixed(MAX_PRECISION).length<(""+result).length)
@@ -820,7 +822,7 @@ function getFullDescription(id, _fullDescription, heroid, heroLevel)
 		}
 		catch(err)
 		{
-			base.error("Failed to parse: %s (%s)", formula, _fullDescription);
+			base.error("Failed to parse: %s\n(%s)", formula, _fullDescription);
 			throw err;
 		}
 	});

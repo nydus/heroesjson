@@ -464,4 +464,4 @@ exports.HERO_JSON_SCHEMA.properties.talents.required = exports.HERO_TALENT_LEVEL
 exports.HERO_JSON_SCHEMA.required = Object.keys(exports.HERO_JSON_SCHEMA.properties);
 
 exports.HERO_JSON_SCHEMA.properties.talents.properties[10].minItems = 2;
-exports.HERO_JSON_SCHEMA.properties.talents.properties[10].maxItems = 2;
+exports.HERO_JSON_SCHEMA.properties.talents.properties[10].maxItems = 3;
