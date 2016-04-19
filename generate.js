@@ -281,22 +281,20 @@ function processHeroNode(heroNode)
 
 	hero.releaseDate = processReleaseDate(heroNode.get("ReleaseDate"));
 
-	var heroUnitids = [];
+	var heroUnitids = [ hero.id ];
 	var alternateUnitArrayNodes = heroNode.find("AlternateUnitArray");
 	if(alternateUnitArrayNodes && alternateUnitArrayNodes.length>0)
 	{
 		alternateUnitArrayNodes.forEach(function(alternateUnitArrayNode)
 		{
 			var alternateHeroid = attributeValue(alternateUnitArrayNode, "value");
+      base.info("Alternate: ", alternateHeroid);
 			heroUnitids.push(alternateHeroid);
 		});
 	}
-	else
-	{
-		heroUnitids.push(hero.id);
-	}
 
 	heroUnitids = heroUnitids.concat(C.ADDITIONAL_HERO_SUBUNIT_IDS[hero.id] || []);
+  base.info("Sub-units:", hero.id, heroUnitids);
 
 	// Level Scaling Info
 	HERO_LEVEL_SCALING_MODS[hero.id] = [];

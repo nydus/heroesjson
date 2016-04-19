@@ -108,8 +108,6 @@ exports.HERO_UNIT_ID_REPLACEMENTS =
 
 exports.ADDITIONAL_HERO_SUBUNIT_IDS =
 {
-	"Abathur" : ["AbathurSymbiote"],
-	"Tychus"  : ["TychusOdin"],
 	"Uther"   : ["UtherSpirit"],
 	"Rexxar"  : ["RexxarMisha"]
 };
