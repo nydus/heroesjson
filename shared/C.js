@@ -9,15 +9,16 @@ exports.EXTRA_HEROES_HEROMODS = ["chogall"];
 exports.EXTRA_HEROES_HEROMODS_NAMED =
 {
 	"chogall" : "ChoGall",
-	"dryad"   : "Dryad",
-	"genn"    : "Genn",
 	"wizard"  : "Wizard",
-	"necromancer" : "Necromancer"
+	"necromancer" : "Necromancer",
+	"dehaka"  : "Dehaka",
+	"tracer"  : "Tracer"
 };
 
 exports.SKIP_HERO_IDS = ["GreymaneWorgen"];
 
-exports.HERO_ID_TEXTURE_RENAMES = {"Dryad" : "lunara", "Greymane" : "genngreymane"};
+exports.HERO_ID_TEXTURE_RENAMES = { };
+// { "Dryad" : "lunara"};
 
 exports.EXTRA_XML_FILE_PATHS = [];
 
@@ -47,7 +48,26 @@ exports.EXTRA_MOUNT_DATA_FILES = {
 exports.EXTRA_HEROES_GAMEDATA_FILES = ["Chen", "Zagara"];
 
 // Extra hero subfolder files GameData/Heroes/<hero>Data/<hero>Data.xml
-exports.EXTRA_HEROES_GAMEDATA_FOLDERS = ["Anubarak", "Artanis", "Butcher", "Crusader", "Jaina", "Kaelthas", "Leoric", "LostVikings", "Medic", "Monk", "Murky", "Rexxar", "SgtHammer", "Sylvanas", "Thrall"];
+// "Expansion" heroes that have moved into "main" modules.
+exports.EXTRA_HEROES_GAMEDATA_FOLDERS = [
+	"Anubarak",
+	"Artanis",
+	"Butcher",
+	"Crusader",
+	"Jaina",
+	"Dryad",
+	"Genn",
+	"Kaelthas",
+	"Leoric",
+	"LostVikings",
+	"Medic",
+	"Monk",
+	"Murky",
+	"Rexxar",
+	"SgtHammer",
+	"Sylvanas",
+	"Thrall"
+];
 
 exports.HERO_MODIFICATIONS =
 {
@@ -89,8 +109,6 @@ exports.HERO_UNIT_ID_REPLACEMENTS =
 
 exports.ADDITIONAL_HERO_SUBUNIT_IDS =
 {
-	"Abathur" : ["AbathurSymbiote"],
-	"Tychus"  : ["TychusOdin"],
 	"Uther"   : ["UtherSpirit"],
 	"Rexxar"  : ["RexxarMisha"]
 };
@@ -215,8 +233,8 @@ exports.XMLREF_REPLACEMENTS =
 		  to : "Behavior,FeralHeartCarryBehavior,Modification.VitalRegenMultiplier[1]"
 	},
 	{
-		from : "Behavior,TalentBucketVampiricAssault,Modification.VitalDamageLeechArray[0].KindArray[2]",
-		  to : "Behavior,TalentBucketVampiricAssault,Modification.VitalDamageLeechArray[0].KindArray[0]"
+		from : "Behavior,TalentBucketVigorousAssault,Modification.VitalDamageLeechArray[0].KindArray[2]",
+			to : "Behavior,TalentBucketVigorousAssault,Modification.VitalDamageLeechArray[0].KindArray[0]"
 	},
 	{
 		from : "Behavior,TalentBucketVampiricAssaultTychus,Modification.VitalDamageLeechArray[0].KindArray[2]",
@@ -231,8 +249,8 @@ exports.XMLREF_REPLACEMENTS =
 		  to : "Abil,MuradinStormBolt,Cost[0].Vital[0]"
 	},
 	{
-		from : "Behavior,TalentBucketVampiricStrike,Modification.VitalDamageLeechArray[0].KindArray[2]",
-		  to : "Behavior,TalentBucketVampiricStrike,Modification.VitalDamageLeechArray[0].KindArray[0]"
+		from : "Behavior,TalentBucketVigorousStrike,Modification.VitalDamageLeechArray[0].KindArray[2]",
+			to : "Behavior,TalentBucketVigorousStrike,Modification.VitalDamageLeechArray[0].KindArray[0]"
 	},
 	{
 		from : "Effect,OdinRagnarokMissilesDamage,Amount",
@@ -250,7 +268,9 @@ exports.XMLREF_REPLACEMENTS =
 
 exports.REMOVE_SUBUNITS =
 {
-	"LostVikings" : ["HeroBaleog", "HeroErik", "HeroOlaf"]
+	"LostVikings" : ["HeroBaleog", "HeroErik", "HeroOlaf"],
+	"Chen"        : ["HeroChenEarth", "HeroChenFire", "HeroChenStorm"],
+	"Medic"       : ["MedicMedivacDropship"]
 };
 
 exports.IMPORT_ABILITIES_FROM_SUBUNIT =
@@ -445,4 +465,4 @@ exports.HERO_JSON_SCHEMA.properties.talents.required = exports.HERO_TALENT_LEVEL
 exports.HERO_JSON_SCHEMA.required = Object.keys(exports.HERO_JSON_SCHEMA.properties);
 
 exports.HERO_JSON_SCHEMA.properties.talents.properties[10].minItems = 2;
-exports.HERO_JSON_SCHEMA.properties.talents.properties[10].maxItems = 2;
+exports.HERO_JSON_SCHEMA.properties.talents.properties[10].maxItems = 3;
