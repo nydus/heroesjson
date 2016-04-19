@@ -31,7 +31,7 @@
 		<br>
 		<br>
 		<h2>Current Version: <span class="value">{version}</span></h2>
-		<h2>&nbsp;&nbsp;Patch Version: <span class="value">{patchVersion}</span></h2>
+		<h2>&nbsp;&nbsp;Patch Version: <span class="value">{patchVersion}</span> [<a href='latest.html'>changes from last patch</a>]</h2>
 		<h2>&nbsp;&nbsp;&nbsp;Last Updated: <span class="value">{lastUpdated}</span><a href="#changeLog">(change log)</a></h2>
 		<br>
 		<br>
