@@ -1,5 +1,13 @@
 [
   {
+    "version": "2.7.11",
+    "when": "2016-04-19",
+    "patchVersion": "42273",
+    "changes": [
+      "http://us.battle.net/heroes/en/blog/20099322"
+    ]
+  },
+  {
     "version": "2.7.10",
     "when": "2016-04-12",
     "patchVersion": "42178",

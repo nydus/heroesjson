@@ -11,7 +11,8 @@ exports.EXTRA_HEROES_HEROMODS_NAMED =
 	"chogall" : "ChoGall",
 	"wizard"  : "Wizard",
 	"necromancer" : "Necromancer",
-	"dehaka"  : "Dehaka"
+	"dehaka"  : "Dehaka",
+	"tracer"  : "Tracer"
 };
 
 exports.SKIP_HERO_IDS = ["GreymaneWorgen"];
