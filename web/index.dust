@@ -1,435 +1,435 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <!--[if IE]><![endif]-->
 <html>
-	<head>
-		<title>Heroes of the Storm data in JSON format</title>
-		<script>
-			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    <head>
+        <title>Heroes of the Storm data in JSON format</title>
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-			ga('create', 'UA-2540999-10', 'auto');
-			ga('send', 'pageview');
-		</script>
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
-		<link type="text/css" rel="stylesheet" href="index.css">
-		<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-		<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-		<link type="text/css" rel="stylesheet" href="solarized-dark.css">
-	</head>
-	<body><a name="top"></a>
-		<script type="text/javascript" src="rainbow-custom.min.js"></script>
-		<center><h1 style="font-size: 240%;">Heroes of the Storm JSON</h1></center>
-		<p style="margin-top: 1.0em;">This project provides up to date <a href="http://heroesofthestorm.com">Heroes of the Storm</a> data in <a href="http://www.json.org/">JSON</a> format for developers to easily use in their projects.<br>
-		<br>
-		For more details see: <a href="#exampleHero">Example Hero</a> and <a href="#documentation">Documentation</a><br>
-		<br>
-		Any bugs or feedback, please address them on the <a href="https://www.github.com/nydus/heroesjson/issues">heroesjson issue tracker</a>.<br>
-		</p>
-		<br>
-		<br>
-		<h2>Current Version: <span class="value">{version}</span></h2>
-		<h2>&nbsp;&nbsp;Patch Version: <span class="value">{patchVersion}</span> [<a href='latest.html'>changes from last patch</a>]</h2>
-		<h2>&nbsp;&nbsp;&nbsp;Last Updated: <span class="value">{lastUpdated}</span><a href="#changeLog">(change log)</a></h2>
-		<br>
-		<br>
-		<table class="downloads downloadsAll">
-			<thead>
-				<tr>
-					<th colspan="2">Download JSON Data</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td class="sizeColLeft">
-						<a href="heroes.json">heroes.json</a>
-					</td>
-					<td class="sizeColRight">
-						<span class="size">{heroesSize}</span>
-					</td>
-				</tr>
-				<tr>
-					<td class="sizeColLeft">
-						<a href="mounts.json">mounts.json</a>
-					</td>
-					<td class="sizeColRight">
-						<span class="size">{mountsSize}</span>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-		<br>
-		<hr>
-		<a name="documentation"></a>
-		<h1>heroes.json Documentation<a href="#top">(back to top)</a></h1>
-		<p>All JSON files are UTF8 encoded and may contain UTF8 characters.<br>
-		<br>The 'heroes.json' file is an array where each entry is a hero object with key/value pairs.<br>
-		<br>Below you will find a table detailing each key.<br>
-		<br>
-		The heroes are sorted by 'name'.<br>
-		<br>
-		All data is extracted directly from the Heros of the Storm game files.<br>
-		<br>
-		</p>
-		<table>
-			<thead>
-				<tr>
-					<th>Key</th>
-					<th>Example</th>
-					<th>Description</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>id</td>
-					<td>"Nova"</td>
-					<td>The internal ID of this hero.</td>
-				</tr>
-				<tr>
-					<td>attributeid</td>
-					<td>"Nova"</td>
-					<td>The internal AttributeID of this hero.</td>
-				</tr>
-				<tr>
-					<td>name</td>
-					<td>"Nova"</td>
-					<td>The name of this hero.</td>
-				</tr>
-				<tr>
-					<td>title</td>
-					<td>"Dominion Ghost"</td>
-					<td>The title of this hero.</td>
-				</tr>
-				<tr>
-					<td>description</td>
-					<td>"Automatically cloaks while out of combat. Snipes enemies from afar, and creates Decoys of herself to fool enemies."</td>
-					<td>The description of this hero.</td>
-				</tr>
-				<tr>
-					<td>role</td>
-					<td>"Assassin"</td>
-					<td>The role of this hero.</td>
-				</tr>
-				<tr>
-					<td>type</td>
-					<td>"Ranged"</td>
-					<td>The type of this hero.</td>
-				</tr>
-				<tr>
-					<td>gender</td>
-					<td>"Female"</td>
-					<td>The gender of this hero.</td>
-				</tr>
-				<tr>
-					<td>franchise</td>
-					<td>"Starcraft"</td>
-					<td>Which universe/franchise this hero comes from.</td>
-				</tr>
-				<tr>
-					<td>difficulty</td>
-					<td>"Medium"</td>
-					<td>The level of difficulty to play this hero.</td>
-				</tr>
-				<tr>
-					<td>releaseDate</td>
-					<td>"2014-07-22"</td>
-					<td>The release date for this hero. Date format: YYYY-MM-DD</td>
-				</tr>
-				<tr>
-					<td>icon</td>
-					<td>"ui_targetportrait_hero_Nova.dds"</td>
-					<td>The internal filename for the icon used for this hero.</td>
-				</tr>
-				<tr>
-					<td>ratings</td>
-					<td colspan="2">
-						<table>
-							<thead>
-								<tr><th colspan="3">Type: object</th></tr>
-								<tr>
-									<th>Key</th>
-									<th>Example</th>
-									<th>Description</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>damage</td>
-									<td>10</td>
-									<td>A rating between 1 and 10 for this hero's damage.</td>
-								</tr>
-								<tr>
-									<td>utility</td>
-									<td>4</td>
-									<td>A rating between 1 and 10 for this hero's utility.</td>
-								</tr>
-								<tr>
-									<td>survivability</td>
-									<td>2</td>
-									<td>A rating between 1 and 10 for this hero's survivability.</td>
-								</tr>
-								<tr>
-									<td>complexity</td>
-									<td>5</td>
-									<td>A rating between 1 and 10 for this hero's complexity.</td>
-								</tr>
-							</tbody>
-						</table>
-					</td>
-				</tr>
-				<tr>
-					<td>stats</td>
-					<td colspan="2">
-						<table>
-							<thead>
-								<tr><th colspan="3">Type: object<br>Keys are hero/unit id's, values are objects:</th></tr>
-								<tr>
-									<th>Key</th>
-									<th>Example</th>
-									<th>Description</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>hp</td>
-									<td>700</td>
-									<td>The base HP for this hero.</td>
-								</tr>
-								<tr>
-									<td>hpPerLevel</td>
-									<td>4.5</td>
-									<td>How much additional 'hp' this hero gains per level. This is a PERCENTAGE.</td>
-								</tr>
-								<tr>
-									<td>hpRegen</td>
-									<td>1.457</td>
-									<td>How much 'hp' this hero regenerates per second in game.</td>
-								</tr>
-								<tr>
-									<td>hpRegenPerLevel</td>
-									<td>4.5</td>
-									<td>How much additional 'hpRegen' this hero gains per level. This is a PERCENTAGE.</td>
-								</tr>
-								<tr>
-									<td>mana</td>
-									<td>500</td>
-									<td>The base mana for this hero.</td>
-								</tr>
-								<tr>
-									<td>manaPerLevel</td>
-									<td>10</td>
-									<td>How much additional 'mana' this hero gains per level.</td>
-								</tr>
-								<tr>
-									<td>manaRegen</td>
-									<td>3</td>
-									<td>How much 'mana' this hero regenerates per second in game.</td>
-								</tr>
-								<tr>
-									<td>manaRegenPerLevel</td>
-									<td>0.0976</td>
-									<td>How much additional 'manaRegen' this hero gains per level.</td>
-								</tr>
-							</tbody>
-						</table>
-					</td>
-				</tr>
-				<tr>
-					<td>abilities</td>
-					<td colspan="2">
-						<table>
-							<thead>
-								<tr><th colspan="3">Type: object<br>Keys are hero/unit id's, values are arrays of ability objects:</th></tr>
-								<tr>
-									<th>Key</th>
-									<th>Example</th>
-									<th>Description</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>id</td>
-									<td>"NovaSnipeStorm"</td>
-									<td>The internal ID of this ability.</td>
-								</tr>
-								<tr>
-									<td>name</td>
-									<td>"Snipe"</td>
-									<td>The name of the ability.</td>
-								</tr>
-								<tr>
-									<td>description</td>
-									<td>"Deals 115 (+31 per level) damage to the first enemy hit."</td>
-									<td>The description of the ability.</td>
-								</tr>
-								<tr>
-									<td>shortcut</td>
-									<td>"Q"</td>
-									<td>The default in-game shortcut key for this ability.</td>
-								</tr>
-								<tr>
-									<td>cooldown</td>
-									<td>10</td>
-									<td>The cooldown, in seconds, of the ability.</td>
-								</tr>
-								<tr>
-									<td>manaCost</td>
-									<td>65</td>
-									<td>How much mana the ability costs to use.</td>
-								</tr>
-								<tr>
-									<td>manaCostPerSecond</td>
-									<td>15</td>
-									<td>How much mana the ability costs to maintain per second.</td>
-								</tr>
-								<tr>
-									<td>aimType</td>
-									<td>"Skillshot"</td>
-									<td>The type of aiming used for the ability.</td>
-								</tr>
-								<tr>
-									<td>heroic</td>
-									<td>true</td>
-									<td>Present and set to true if this ability is a heroic ability.</td>
-								</tr>
-								<tr>
-									<td>trait</td>
-									<td>true</td>
-									<td>Present and set to true if this ability is a trait.</td>
-								</tr>
-								<tr>
-									<td>mount</td>
-									<td>true</td>
-									<td>Present and set to true if this ability is a mount ability.</td>
-								</tr>
-								<tr>
-									<td>icon</td>
-									<td>"storm_ui_icon_nova_snipe.dds"</td>
-									<td>The internal filename for the icon used for this ability.</td>
-								</tr>
-							</tbody>
-						</table>
-					</td>
-				</tr>
-				<tr>
-					<td>talents</td>
-					<td colspan="2">
-						<table>
-							<thead>
-								<tr><th colspan="3">Type: object<br>Keys are the level of the talents.<br>Values are arrays of talent objects.<br>The talents are sorted in the order they appear in game.</th></tr>
-								<tr>
-									<th>Key</th>
-									<th>Example</th>
-									<th>Description</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>id</td>
-									<td>"NovaHeroicAbilityTripleTap"</td>
-									<td>The internal ID of this talent.</td>
-								</tr>
-								<tr>
-									<td>name</td>
-									<td>"Triple Tap"</td>
-									<td>The name of this talent.</td>
-								</tr>
-								<tr>
-									<td>description</td>
-									<td>"Locks in on the target Hero, then fires 3 shots that strike the first Hero or Structure they come in contact with for 80 (+33 per level) damage each."</td>
-									<td>The description of this talent.</td>
-								</tr>
-								<tr>
-									<td>cooldown</td>
-									<td>100</td>
-									<td>The cooldown of this talent.</td>
-								</tr>
-								<tr>
-									<td>prerequisite</td>
-									<td>"NovaHeroicAbilityTripleTap"</td>
-									<td>The prerequisite talent id needed in order to take this talent.</td>
-								</tr>
-								<tr>
-									<td>icon</td>
-									<td>"storm_ui_icon_nova_tripletap.dds"</td>
-									<td>The internal filename for the icon used for this talent.</td>
-								</tr>
-							</tbody>
-						</table>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-		<br>
-		<hr>
-		<h1>mounts.json Documentation<a href="#top">(back to top)</a></h1>
-		<p>All JSON files are UTF8 encoded and may contain UTF8 characters.<br>
-		<br>The 'mounts.json' file is an array where each entry is a mount object with key/value pairs.<br>
-		<br>Below you will find a table detailing each key.<br>
-		<br>
-		The mounts are sorted by 'name'.<br>
-		<br>
-		All data is extracted directly from the Heros of the Storm game files.<br>
-		<br>
-		</p>
-		<table>
-			<thead>
-				<tr>
-					<th>Key</th>
-					<th>Example</th>
-					<th>Description</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>id</td>
-					<td>"MoneyPig"</td>
-					<td>The internal ID of this mount.</td>
-				</tr>
-				<tr>
-					<td>attributeid</td>
-					<td>"Mpig"</td>
-					<td>The internal AttributeID of this mount.</td>
-				</tr>
-				<tr>
-					<td>name</td>
-					<td>"Piggy Bank"</td>
-					<td>The name of this mount.</td>
-				</tr>
-				<tr>
-					<td>description</td>
-					<td>"This little piggy went, "Whee whee whee!" all the way to the bank!"</td>
-					<td>The description of this mount.</td>
-				</tr>
-				<tr>
-					<td>franchise</td>
-					<td>"Heroes"</td>
-					<td>Which universe/franchise this mount comes from.</td>
-				</tr>
-				<tr>
-					<td>releaseDate</td>
-					<td>"2014-10-14"</td>
-					<td>The release date for this mount. Date format: YYYY-MM-DD</td>
-				</tr>
-				<tr>
-					<td>productid</td>
-					<td>10072</td>
-					<td>The internal product id for this mount. Not present for all mounts.</td>
-				</tr>
-				<tr>
-					<td>category</td>
-					<td>"Ride"</td>
-					<td>The category for this mount.</td>
-				</tr>
-			</tbody>
-		</table>
-		<br>
-		<hr>
-		<a name="exampleHero"></a>
-		<h1>Example Hero<a href="#top">(back to top)</a></h1>
-		<pre id="heroExampleCode"><code data-language="javascript">
+            ga('create', 'UA-2540999-10', 'auto');
+            ga('send', 'pageview');
+        </script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
+        <link type="text/css" rel="stylesheet" href="index.css">
+        <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+        <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+        <link type="text/css" rel="stylesheet" href="solarized-dark.css">
+    </head>
+    <body><a name="top"></a>
+        <script type="text/javascript" src="rainbow-custom.min.js"></script>
+        <center><h1 style="font-size: 240%;">Heroes of the Storm JSON</h1></center>
+        <p style="margin-top: 1.0em;">This project provides up to date <a href="http://heroesofthestorm.com">Heroes of the Storm</a> data in <a href="http://www.json.org/">JSON</a> format for developers to easily use in their projects.<br>
+        <br>
+        For more details see: <a href="#exampleHero">Example Hero</a> and <a href="#documentation">Documentation</a><br>
+        <br>
+        Any bugs or feedback, please address them on the <a href="https://www.github.com/nydus/heroesjson/issues">heroesjson issue tracker</a>.<br>
+        </p>
+        <br>
+        <br>
+        <h2>Current Version: <span class="value">{version}</span></h2>
+        <h2>&nbsp;&nbsp;Patch Version: <span class="value">{patchVersion}</span> [<a href='latest.html'>changes from last patch</a>]</h2>
+        <h2>&nbsp;&nbsp;&nbsp;Last Updated: <span class="value">{lastUpdated}</span><a href="#changeLog">(change log)</a></h2>
+        <br>
+        <br>
+        <table class="downloads downloadsAll">
+            <thead>
+                <tr>
+                    <th colspan="2">Download JSON Data</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="sizeColLeft">
+                        <a href="heroes.json">heroes.json</a>
+                    </td>
+                    <td class="sizeColRight">
+                        <span class="size">{heroesSize}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="sizeColLeft">
+                        <a href="mounts.json">mounts.json</a>
+                    </td>
+                    <td class="sizeColRight">
+                        <span class="size">{mountsSize}</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+        <hr>
+        <a name="documentation"></a>
+        <h1>heroes.json Documentation<a href="#top">(back to top)</a></h1>
+        <p>All JSON files are UTF8 encoded and may contain UTF8 characters.<br>
+        <br>The 'heroes.json' file is an array where each entry is a hero object with key/value pairs.<br>
+        <br>Below you will find a table detailing each key.<br>
+        <br>
+        The heroes are sorted by 'name'.<br>
+        <br>
+        All data is extracted directly from the Heros of the Storm game files.<br>
+        <br>
+        </p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Key</th>
+                    <th>Example</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>id</td>
+                    <td>"Nova"</td>
+                    <td>The internal ID of this hero.</td>
+                </tr>
+                <tr>
+                    <td>attributeid</td>
+                    <td>"Nova"</td>
+                    <td>The internal AttributeID of this hero.</td>
+                </tr>
+                <tr>
+                    <td>name</td>
+                    <td>"Nova"</td>
+                    <td>The name of this hero.</td>
+                </tr>
+                <tr>
+                    <td>title</td>
+                    <td>"Dominion Ghost"</td>
+                    <td>The title of this hero.</td>
+                </tr>
+                <tr>
+                    <td>description</td>
+                    <td>"Automatically cloaks while out of combat. Snipes enemies from afar, and creates Decoys of herself to fool enemies."</td>
+                    <td>The description of this hero.</td>
+                </tr>
+                <tr>
+                    <td>role</td>
+                    <td>"Assassin"</td>
+                    <td>The role of this hero.</td>
+                </tr>
+                <tr>
+                    <td>type</td>
+                    <td>"Ranged"</td>
+                    <td>The type of this hero.</td>
+                </tr>
+                <tr>
+                    <td>gender</td>
+                    <td>"Female"</td>
+                    <td>The gender of this hero.</td>
+                </tr>
+                <tr>
+                    <td>franchise</td>
+                    <td>"Starcraft"</td>
+                    <td>Which universe/franchise this hero comes from.</td>
+                </tr>
+                <tr>
+                    <td>difficulty</td>
+                    <td>"Medium"</td>
+                    <td>The level of difficulty to play this hero.</td>
+                </tr>
+                <tr>
+                    <td>releaseDate</td>
+                    <td>"2014-07-22"</td>
+                    <td>The release date for this hero. Date format: YYYY-MM-DD</td>
+                </tr>
+                <tr>
+                    <td>icon</td>
+                    <td>"ui_targetportrait_hero_Nova.dds"</td>
+                    <td>The internal filename for the icon used for this hero.</td>
+                </tr>
+                <tr>
+                    <td>ratings</td>
+                    <td colspan="2">
+                        <table>
+                            <thead>
+                                <tr><th colspan="3">Type: object</th></tr>
+                                <tr>
+                                    <th>Key</th>
+                                    <th>Example</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>damage</td>
+                                    <td>10</td>
+                                    <td>A rating between 1 and 10 for this hero's damage.</td>
+                                </tr>
+                                <tr>
+                                    <td>utility</td>
+                                    <td>4</td>
+                                    <td>A rating between 1 and 10 for this hero's utility.</td>
+                                </tr>
+                                <tr>
+                                    <td>survivability</td>
+                                    <td>2</td>
+                                    <td>A rating between 1 and 10 for this hero's survivability.</td>
+                                </tr>
+                                <tr>
+                                    <td>complexity</td>
+                                    <td>5</td>
+                                    <td>A rating between 1 and 10 for this hero's complexity.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>stats</td>
+                    <td colspan="2">
+                        <table>
+                            <thead>
+                                <tr><th colspan="3">Type: object<br>Keys are hero/unit id's, values are objects:</th></tr>
+                                <tr>
+                                    <th>Key</th>
+                                    <th>Example</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>hp</td>
+                                    <td>700</td>
+                                    <td>The base HP for this hero.</td>
+                                </tr>
+                                <tr>
+                                    <td>hpPerLevel</td>
+                                    <td>4.5</td>
+                                    <td>How much additional 'hp' this hero gains per level. This is a PERCENTAGE.</td>
+                                </tr>
+                                <tr>
+                                    <td>hpRegen</td>
+                                    <td>1.457</td>
+                                    <td>How much 'hp' this hero regenerates per second in game.</td>
+                                </tr>
+                                <tr>
+                                    <td>hpRegenPerLevel</td>
+                                    <td>4.5</td>
+                                    <td>How much additional 'hpRegen' this hero gains per level. This is a PERCENTAGE.</td>
+                                </tr>
+                                <tr>
+                                    <td>mana</td>
+                                    <td>500</td>
+                                    <td>The base mana for this hero.</td>
+                                </tr>
+                                <tr>
+                                    <td>manaPerLevel</td>
+                                    <td>10</td>
+                                    <td>How much additional 'mana' this hero gains per level.</td>
+                                </tr>
+                                <tr>
+                                    <td>manaRegen</td>
+                                    <td>3</td>
+                                    <td>How much 'mana' this hero regenerates per second in game.</td>
+                                </tr>
+                                <tr>
+                                    <td>manaRegenPerLevel</td>
+                                    <td>0.0976</td>
+                                    <td>How much additional 'manaRegen' this hero gains per level.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>abilities</td>
+                    <td colspan="2">
+                        <table>
+                            <thead>
+                                <tr><th colspan="3">Type: object<br>Keys are hero/unit id's, values are arrays of ability objects:</th></tr>
+                                <tr>
+                                    <th>Key</th>
+                                    <th>Example</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>id</td>
+                                    <td>"NovaSnipeStorm"</td>
+                                    <td>The internal ID of this ability.</td>
+                                </tr>
+                                <tr>
+                                    <td>name</td>
+                                    <td>"Snipe"</td>
+                                    <td>The name of the ability.</td>
+                                </tr>
+                                <tr>
+                                    <td>description</td>
+                                    <td>"Deals 115 (+31 per level) damage to the first enemy hit."</td>
+                                    <td>The description of the ability.</td>
+                                </tr>
+                                <tr>
+                                    <td>shortcut</td>
+                                    <td>"Q"</td>
+                                    <td>The default in-game shortcut key for this ability.</td>
+                                </tr>
+                                <tr>
+                                    <td>cooldown</td>
+                                    <td>10</td>
+                                    <td>The cooldown, in seconds, of the ability.</td>
+                                </tr>
+                                <tr>
+                                    <td>manaCost</td>
+                                    <td>65</td>
+                                    <td>How much mana the ability costs to use.</td>
+                                </tr>
+                                <tr>
+                                    <td>manaCostPerSecond</td>
+                                    <td>15</td>
+                                    <td>How much mana the ability costs to maintain per second.</td>
+                                </tr>
+                                <tr>
+                                    <td>aimType</td>
+                                    <td>"Skillshot"</td>
+                                    <td>The type of aiming used for the ability.</td>
+                                </tr>
+                                <tr>
+                                    <td>heroic</td>
+                                    <td>true</td>
+                                    <td>Present and set to true if this ability is a heroic ability.</td>
+                                </tr>
+                                <tr>
+                                    <td>trait</td>
+                                    <td>true</td>
+                                    <td>Present and set to true if this ability is a trait.</td>
+                                </tr>
+                                <tr>
+                                    <td>mount</td>
+                                    <td>true</td>
+                                    <td>Present and set to true if this ability is a mount ability.</td>
+                                </tr>
+                                <tr>
+                                    <td>icon</td>
+                                    <td>"storm_ui_icon_nova_snipe.dds"</td>
+                                    <td>The internal filename for the icon used for this ability.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>talents</td>
+                    <td colspan="2">
+                        <table>
+                            <thead>
+                                <tr><th colspan="3">Type: object<br>Keys are the level of the talents.<br>Values are arrays of talent objects.<br>The talents are sorted in the order they appear in game.</th></tr>
+                                <tr>
+                                    <th>Key</th>
+                                    <th>Example</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>id</td>
+                                    <td>"NovaHeroicAbilityTripleTap"</td>
+                                    <td>The internal ID of this talent.</td>
+                                </tr>
+                                <tr>
+                                    <td>name</td>
+                                    <td>"Triple Tap"</td>
+                                    <td>The name of this talent.</td>
+                                </tr>
+                                <tr>
+                                    <td>description</td>
+                                    <td>"Locks in on the target Hero, then fires 3 shots that strike the first Hero or Structure they come in contact with for 80 (+33 per level) damage each."</td>
+                                    <td>The description of this talent.</td>
+                                </tr>
+                                <tr>
+                                    <td>cooldown</td>
+                                    <td>100</td>
+                                    <td>The cooldown of this talent.</td>
+                                </tr>
+                                <tr>
+                                    <td>prerequisite</td>
+                                    <td>"NovaHeroicAbilityTripleTap"</td>
+                                    <td>The prerequisite talent id needed in order to take this talent.</td>
+                                </tr>
+                                <tr>
+                                    <td>icon</td>
+                                    <td>"storm_ui_icon_nova_tripletap.dds"</td>
+                                    <td>The internal filename for the icon used for this talent.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+        <hr>
+        <h1>mounts.json Documentation<a href="#top">(back to top)</a></h1>
+        <p>All JSON files are UTF8 encoded and may contain UTF8 characters.<br>
+        <br>The 'mounts.json' file is an array where each entry is a mount object with key/value pairs.<br>
+        <br>Below you will find a table detailing each key.<br>
+        <br>
+        The mounts are sorted by 'name'.<br>
+        <br>
+        All data is extracted directly from the Heros of the Storm game files.<br>
+        <br>
+        </p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Key</th>
+                    <th>Example</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>id</td>
+                    <td>"MoneyPig"</td>
+                    <td>The internal ID of this mount.</td>
+                </tr>
+                <tr>
+                    <td>attributeid</td>
+                    <td>"Mpig"</td>
+                    <td>The internal AttributeID of this mount.</td>
+                </tr>
+                <tr>
+                    <td>name</td>
+                    <td>"Piggy Bank"</td>
+                    <td>The name of this mount.</td>
+                </tr>
+                <tr>
+                    <td>description</td>
+                    <td>"This little piggy went, "Whee whee whee!" all the way to the bank!"</td>
+                    <td>The description of this mount.</td>
+                </tr>
+                <tr>
+                    <td>franchise</td>
+                    <td>"Heroes"</td>
+                    <td>Which universe/franchise this mount comes from.</td>
+                </tr>
+                <tr>
+                    <td>releaseDate</td>
+                    <td>"2014-10-14"</td>
+                    <td>The release date for this mount. Date format: YYYY-MM-DD</td>
+                </tr>
+                <tr>
+                    <td>productid</td>
+                    <td>10072</td>
+                    <td>The internal product id for this mount. Not present for all mounts.</td>
+                </tr>
+                <tr>
+                    <td>category</td>
+                    <td>"Ride"</td>
+                    <td>The category for this mount.</td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+        <hr>
+        <a name="exampleHero"></a>
+        <h1>Example Hero<a href="#top">(back to top)</a></h1>
+        <pre id="heroExampleCode"><code data-language="javascript">
 {
   "id": "Nova",
   "name": "Nova",
@@ -698,63 +698,63 @@
     ]
   }
 }
-		</code></pre>
-		<hr>
-		<a name="changeLog"></a>
-		<h1>Change Log<a href="#top">(back to top)</a></h1>
-		<table class="changeLog">
-			<thead>
-				<tr>
-					<th>Version</th>
-					<th>Date</th>
-					<th>Patch Version</th>
-					<th>Changes</th>
-				</tr>
-			</thead>
-			<tbody>
-				{#changeLog}<tr>
-					<td>{version}</td>
-					<td>{when}</td>
-					<td>{patchVersion}</td>
-					<td>
-						<ul>
-							{#changes}<li>{.|s}</li>
-						{/changes}</ul>
-					</td>
-				</tr>{/changeLog}
-			</tbody>
-		</table>
-		<hr>
-		<a name="license"></a>
-		<h1>License and Copyright<a href="#top">(back to top)</a></h1>
-		<p>The JSON files contain data that is Copyright (c) Blizzard Entertainment - All Rights Reserved<br>
-		<br>
-		This website is not affiliated with Blizzard Entertainment in any way.<br>
-		<br></p>
-		<hr>
-		<a name="thanks"></a>
-		<h1>Thanks<a href="#top">(back to top)</a></h1>
-		<ul>
-			<li>Thank you <strong>VERY MUCH</strong> to these folks who reported bugs and helped in other ways:
-				<ul>
-					<li>kenavr, ry__ry, Gnejs Development, Obiyer</li>
-				</ul>
-			</li>
-			<li><a href="http://ethanschoonover.com/solarized">Solarized</a> is a great color scheme, I used a bunch of those colors here on this page</li>
-			<li><a href="http://blizzard.com/">Blizzard Entertainment</a> for creating quality games that I have been playing since 1994!</li>
-		</ul>
-		<br>
-		<br>
-		<hr>
-		<a name="todo"></a>
-		<h1>To-Do List<a href="#top">(back to top)</a></h1>
-		<ul>
-			<li>Other Languages</li>
-			<li>Hero/Unit default attack damage/speed</li>
-		</ul>
-		<hr>
-		<h1>Source Code<a href="#top">(back to top)</a></h1>
-		<p>Source code used to generate the JSON is available here: <a href="https://github.com/nydus/heroesjson">https://github.com/nydus/heroesjson</a><br>
-		<br>
-	</body>
+        </code></pre>
+        <hr>
+        <a name="changeLog"></a>
+        <h1>Change Log<a href="#top">(back to top)</a></h1>
+        <table class="changeLog">
+            <thead>
+                <tr>
+                    <th>Version</th>
+                    <th>Date</th>
+                    <th>Patch Version</th>
+                    <th>Changes</th>
+                </tr>
+            </thead>
+            <tbody>
+                {#changeLog}<tr>
+                    <td>{version}</td>
+                    <td>{when}</td>
+                    <td>{patchVersion}</td>
+                    <td>
+                        <ul>
+                            {#changes}<li>{.|s}</li>
+                        {/changes}</ul>
+                    </td>
+                </tr>{/changeLog}
+            </tbody>
+        </table>
+        <hr>
+        <a name="license"></a>
+        <h1>License and Copyright<a href="#top">(back to top)</a></h1>
+        <p>The JSON files contain data that is Copyright (c) Blizzard Entertainment - All Rights Reserved<br>
+        <br>
+        This website is not affiliated with Blizzard Entertainment in any way.<br>
+        <br></p>
+        <hr>
+        <a name="thanks"></a>
+        <h1>Thanks<a href="#top">(back to top)</a></h1>
+        <ul>
+            <li>Thank you <strong>VERY MUCH</strong> to these folks who reported bugs and helped in other ways:
+                <ul>
+                    <li>kenavr, ry__ry, Gnejs Development, Obiyer</li>
+                </ul>
+            </li>
+            <li><a href="http://ethanschoonover.com/solarized">Solarized</a> is a great color scheme, I used a bunch of those colors here on this page</li>
+            <li><a href="http://blizzard.com/">Blizzard Entertainment</a> for creating quality games that I have been playing since 1994!</li>
+        </ul>
+        <br>
+        <br>
+        <hr>
+        <a name="todo"></a>
+        <h1>To-Do List<a href="#top">(back to top)</a></h1>
+        <ul>
+            <li>Other Languages</li>
+            <li>Hero/Unit default attack damage/speed</li>
+        </ul>
+        <hr>
+        <h1>Source Code<a href="#top">(back to top)</a></h1>
+        <p>Source code used to generate the JSON is available here: <a href="https://github.com/nydus/heroesjson">https://github.com/nydus/heroesjson</a><br>
+        <br>
+    </body>
 </html>
