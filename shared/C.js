@@ -109,6 +109,7 @@ exports.HERO_UNIT_ID_REPLACEMENTS =
 
 exports.ADDITIONAL_HERO_SUBUNIT_IDS =
 {
+  "Chen"    : ["ChenStormEarthFire"],
 	"Uther"   : ["UtherSpirit"],
 	"Rexxar"  : ["RexxarMisha"]
 };
@@ -119,15 +120,18 @@ exports.VALID_UNIT_ABILITY_IDS =
 	"HeroBaleog"      : ["LostVikingsPressA", "LostVikingsSpinToWin", "LostVikingsNorseForce", "LostVikingsNordicAttackSquad", "LostVikingsVikingBribery"],
 	"HeroErik"        : ["LostVikingsPressA", "LostVikingsSpinToWin", "LostVikingsNorseForce", "LostVikingsNordicAttackSquad", "LostVikingsVikingBribery"],
 	"HeroOlaf"        : ["LostVikingsPressA", "LostVikingsSpinToWin", "LostVikingsNorseForce", "LostVikingsNordicAttackSquad", "LostVikingsVikingBribery"],
+  "ChenStormEarthFire" : ["ChenStormEarthFireRetargetSpirits", "ChenStormEarthFireSpread", "ChenStormEarthFireTriAttack"],
 	"TychusOdin"      : ["TychusCommandeerOdinAnnihilate", "TychusCommandeerOdinRagnarokMissiles"],
 	"Tychus"          : ["TychusOdinThrusters"],
 	"Uther"           : ["UtherFlashofLight"],
 	"Rexxar"          : ["RexxarMishaFollow", "RexxarMishaFollowCancel"],
-	"Greymane"        : ["GreymaneDisengage", "GreymaneRazorSwipe"]
+	"Greymane"        : ["GreymaneDisengage", "GreymaneRazorSwipe"],
+  "Xul"             : ["NecromancerBoneArmor"]
 };
 
 exports.ACTIVATABLE_ABILITY_IDS =
 {
+  "Xul"    : ["NecromancerBoneArmor"],
 	"Rexxar" : ["RexxarMishaFollow", "RexxarMishaFollowCancel"]
 };
 
