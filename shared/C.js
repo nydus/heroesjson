@@ -12,7 +12,8 @@ exports.EXTRA_HEROES_HEROMODS_NAMED =
 	"wizard"  : "Wizard",
 	"necromancer" : "Necromancer",
 	"dehaka"  : "Dehaka",
-	"tracer"  : "Tracer"
+	"tracer"  : "Tracer",
+	"chromie" : "Chromie"
 };
 
 exports.SKIP_HERO_IDS = ["GreymaneWorgen"];
@@ -215,7 +216,16 @@ exports.FORMULA_PRE_REPLACEMENTS =
 	{
 		  match : "Upgrade,NovaSnipeMasterDamageUpgrade,MaxLevel",
 		replace : "5"
+	},
+	{   // 42742
+		  match : "Behavior,ArthasFrozenTempestFrigidWindsAttackSpeedDebuff,Modification.AdditiveAttackSpeedFactor*(1/Behavior,ArthasFrozenTempestCaster,Period)(-100)",
+		replace : "Behavior,ArthasFrozenTempestFrigidWindsAttackSpeedDebuff,Modification.AdditiveAttackSpeedFactor*(1/Behavior,ArthasFrozenTempestCaster,Period)*(-100)"
+	},
+	{   // 42742
+		  match : "Behavior,ChromieTimeTrapChronoSicknessSlow,MaxStackCount",
+		replace : "1"
 	}
+
 ];
 
 exports.XMLREF_REPLACEMENTS =
@@ -238,7 +248,7 @@ exports.XMLREF_REPLACEMENTS =
 	},
 	{
 		from : "Behavior,TalentBucketVigorousAssault,Modification.VitalDamageLeechArray[0].KindArray[2]",
-			to : "Behavior,TalentBucketVigorousAssault,Modification.VitalDamageLeechArray[0].KindArray[0]"
+		  to : "Behavior,TalentBucketVigorousAssault,Modification.VitalDamageLeechArray[0].KindArray[0]"
 	},
 	{
 		from : "Behavior,TalentBucketVampiricAssaultTychus,Modification.VitalDamageLeechArray[0].KindArray[2]",
@@ -254,7 +264,7 @@ exports.XMLREF_REPLACEMENTS =
 	},
 	{
 		from : "Behavior,TalentBucketVigorousStrike,Modification.VitalDamageLeechArray[0].KindArray[2]",
-			to : "Behavior,TalentBucketVigorousStrike,Modification.VitalDamageLeechArray[0].KindArray[0]"
+		  to : "Behavior,TalentBucketVigorousStrike,Modification.VitalDamageLeechArray[0].KindArray[0]"
 	},
 	{
 		from : "Effect,OdinRagnarokMissilesDamage,Amount",
@@ -267,6 +277,14 @@ exports.XMLREF_REPLACEMENTS =
 	{
 		from : "Effect,JainaArcaneIntellectAbilityDamageManaRestore,VitalArray[2].Change",
 		  to : "Effect,JainaArcaneIntellectAbilityDamageManaRestore,VitalArray[0].Change"
+	},
+	{	// 42742
+		from : 'Behavior,FalstadHammerGains,Modification.VitalDamageLeechArray[0].KindArray[2]',
+		  to : 'Behavior,FalstadHammerGains,Modification.VitalDamageLeechArray[0].KindArray[0]'
+	},
+	{	// 42742
+		from : 'Unit,HeroChromie,Sight',
+		  to : 'Behavior,ChromieDragonsBreathDeepBreathingMaxStack,Modification.SightBonus'
 	}
 ];
 
