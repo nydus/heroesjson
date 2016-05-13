@@ -173,14 +173,14 @@ exports.MOUNT_ABILITY_IDS =
 
 exports.FORMULA_PRE_REPLACEMENTS =
 [
-	{
-		  match : "$GalaxyVar:libGDHL_gv_bALHeroKerriganAssimilationRangedDamageModifier$",
-		replace : "0.1"
-	},
-	{
-		  match : "$GalaxyVar:libGDHL_gv_bALHeroKerriganAssimilationBaseModifier$",
-		replace : "0.1"
-	},
+	// { // deprecated 2016-05-12
+	// 	  match : "$GalaxyVar:libGDHL_gv_bALHeroKerriganAssimilationRangedDamageModifier$",
+	// 	replace : "0.1"
+	// },
+	// { // deprecated 2016-05-12
+	// 	  match : "$GalaxyVar:libGDHL_gv_bALHeroKerriganAssimilationBaseModifier$",
+	// 	replace : "0.1"
+	// },
 	{
 		  match : "Behavior,CrusaderPunishStackingSlow,Modification.UnifiedMoveSpeedFactor*(-100)6",
 		replace : "Behavior,CrusaderPunishStackingSlow,Modification.UnifiedMoveSpeedFactor*(-100)*6"
@@ -193,10 +193,10 @@ exports.FORMULA_PRE_REPLACEMENTS =
 		  match : "1-*Behavior,RexxarBarkskinBuff,DamageResponse.ModifyFraction*100",
 		replace : "1-Behavior,RexxarBarkskinBuff,DamageResponse.ModifyFraction*100"
 	},
-	{
-		  match : "Effect,ClairvoyanceRevealedPersistent,ExpireDelay",
-		replace : "4"
-	},
+	// { // deprecated 2016-05-12
+	// 	  match : "Effect,ClairvoyanceRevealedPersistent,ExpireDelay",
+	// 	replace : "4"
+	// },
 	{
 		  match : "Effect,ChoConsumingBlazeTalentBlazingBulwarkApplyBlockStack,Count",
 		replace : "1"
