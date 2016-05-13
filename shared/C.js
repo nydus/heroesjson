@@ -111,7 +111,7 @@ exports.HERO_UNIT_ID_REPLACEMENTS =
 
 exports.ADDITIONAL_HERO_SUBUNIT_IDS =
 {
-  "Chen"    : ["ChenStormEarthFire"],
+  // "Chen"    : ["ChenStormEarthFire"],
 	"Uther"   : ["UtherSpirit"],
 	"Rexxar"  : ["RexxarMisha"]
 };
