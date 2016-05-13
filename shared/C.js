@@ -230,38 +230,38 @@ exports.FORMULA_PRE_REPLACEMENTS =
 
 exports.XMLREF_REPLACEMENTS =
 [
-	{
-		from : "Effect,ArcaneIntellectBasicAttackManaRestore,VitalArray[2].Change",
-		  to : "Effect,ArcaneIntellectBasicAttackManaRestore,VitalArray[0].Change",
-	},
-	{
-		from : "Effect,ArcaneIntellectAbilityDamageManaRestore,VitalArray[2].Change",
-		  to : "Effect,ArcaneIntellectAbilityDamageManaRestore,VitalArray[0].Change"
-	},
-	{
-		from : "Effect,FrostmourneHungersManaRestoreModifyUnit,VitalArray[2].Change",
-		  to : "Effect,FrostmourneHungersManaRestoreModifyUnit,VitalArray[0].Change"
-	},
-	{
-		from : "Behavior,FeralHeartCarryBehavior,Modification.VitalRegenMultiplier[2]",
-		  to : "Behavior,FeralHeartCarryBehavior,Modification.VitalRegenMultiplier[1]"
-	},
+	// { // deprecated 2016-05-12
+	// 	from : "Effect,ArcaneIntellectBasicAttackManaRestore,VitalArray[2].Change",
+	// 	  to : "Effect,ArcaneIntellectBasicAttackManaRestore,VitalArray[0].Change",
+	// },
+	// { // deprecated 2016-05-12
+	// 	from : "Effect,ArcaneIntellectAbilityDamageManaRestore,VitalArray[2].Change",
+	// 	  to : "Effect,ArcaneIntellectAbilityDamageManaRestore,VitalArray[0].Change"
+	// },
+	// { // deprecated 2016-05-12
+	// 	from : "Effect,FrostmourneHungersManaRestoreModifyUnit,VitalArray[2].Change",
+	// 	  to : "Effect,FrostmourneHungersManaRestoreModifyUnit,VitalArray[0].Change"
+	// },
+	// { // deprecated 2016-05-12
+	// 	from : "Behavior,FeralHeartCarryBehavior,Modification.VitalRegenMultiplier[2]",
+	// 	  to : "Behavior,FeralHeartCarryBehavior,Modification.VitalRegenMultiplier[1]"
+	// },
 	{
 		from : "Behavior,TalentBucketVigorousAssault,Modification.VitalDamageLeechArray[0].KindArray[2]",
 		  to : "Behavior,TalentBucketVigorousAssault,Modification.VitalDamageLeechArray[0].KindArray[0]"
 	},
-	{
-		from : "Behavior,TalentBucketVampiricAssaultTychus,Modification.VitalDamageLeechArray[0].KindArray[2]",
-		  to : "Behavior,TalentBucketVampiricAssaultTychus,Modification.VitalDamageLeechArray[0].KindArray[0]"
-	},
-	{
-		from : "Effect,StormBoltRefundMasteryModifyUnit,Cost[0].Fraction.Vital[2]",
-		  to : "Effect,StormBoltRefundMasteryModifyUnit,Cost[0].Fraction.Vital[0]"
-	},
-	{
-		from : "Abil,MuradinStormBolt,Cost[0].Vital[2]",
-		  to : "Abil,MuradinStormBolt,Cost[0].Vital[0]"
-	},
+	// { // deprecated 2016-05-12
+	// 	from : "Behavior,TalentBucketVampiricAssaultTychus,Modification.VitalDamageLeechArray[0].KindArray[2]",
+	// 	  to : "Behavior,TalentBucketVampiricAssaultTychus,Modification.VitalDamageLeechArray[0].KindArray[0]"
+	// },
+	// { // deprecated 2016-05-12
+	// 	from : "Effect,StormBoltRefundMasteryModifyUnit,Cost[0].Fraction.Vital[2]",
+	// 	  to : "Effect,StormBoltRefundMasteryModifyUnit,Cost[0].Fraction.Vital[0]"
+	// },
+	// { // deprecated 2016-05-12
+	// 	from : "Abil,MuradinStormBolt,Cost[0].Vital[2]",
+	// 	  to : "Abil,MuradinStormBolt,Cost[0].Vital[0]"
+	// },
 	{
 		from : "Behavior,TalentBucketVigorousStrike,Modification.VitalDamageLeechArray[0].KindArray[2]",
 		  to : "Behavior,TalentBucketVigorousStrike,Modification.VitalDamageLeechArray[0].KindArray[0]"
