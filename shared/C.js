@@ -89,6 +89,7 @@ exports.HERO_MODIFICATIONS =
 
 exports.MOUNT_MODIFICATIONS =
 {
+	"Random" : [ { path : ":root", name : "description", value : "A random mount."} ],
 	"Mechanospider" : [ { path : ":root", name : "franchise", value : "Warcraft"} ],
 	"CountessKerriganBatForm" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
 	"ZagaraWings" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
