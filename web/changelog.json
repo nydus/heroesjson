@@ -1,5 +1,30 @@
 [
   {
+    "version": "2.7.17",
+    "when": "2016-06-14",
+    "patchVersion": "45371",
+    "changes": [
+      "http://us.battle.net/heroes/en/blog/20143449"
+    ]
+  },
+  {
+    "version": "2.7.16",
+    "when": "2016-05-25",
+    "patchVersion": "43170",
+    "changes": [
+      "http://us.battle.net/heroes/en/blog/20131411"
+    ]
+  },
+  {
+    "version": "2.7.15",
+    "when": "2016-05-19",
+    "patchVersion": "43051",
+    "changes": [
+      "http://us.battle.net/heroes/en/blog/20120032/",
+      "http://us.battle.net/heroes/en/blog/20118416/"
+    ]
+  },
+  {
     "version": "2.7.14",
     "when": "2016-05-07",
     "patchVersion": "42590",

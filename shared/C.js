@@ -13,7 +13,8 @@ exports.EXTRA_HEROES_HEROMODS_NAMED =
 	"necromancer" : "Necromancer",
 	"dehaka"  : "Dehaka",
 	"tracer"  : "Tracer",
-	"chromie" : "Chromie"
+	"chromie" : "Chromie",
+  "medivh"  : "Medivh"
 };
 
 exports.SKIP_HERO_IDS = ["GreymaneWorgen"];
@@ -122,7 +123,7 @@ exports.VALID_UNIT_ABILITY_IDS =
 	"HeroBaleog"      : ["LostVikingsPressA", "LostVikingsSpinToWin", "LostVikingsNorseForce", "LostVikingsNordicAttackSquad", "LostVikingsVikingBribery"],
 	"HeroErik"        : ["LostVikingsPressA", "LostVikingsSpinToWin", "LostVikingsNorseForce", "LostVikingsNordicAttackSquad", "LostVikingsVikingBribery"],
 	"HeroOlaf"        : ["LostVikingsPressA", "LostVikingsSpinToWin", "LostVikingsNorseForce", "LostVikingsNordicAttackSquad", "LostVikingsVikingBribery"],
-  "ChenStormEarthFire" : ["ChenStormEarthFireRetargetSpirits", "ChenStormEarthFireSpread", "ChenStormEarthFireTriAttack"],
+  // "Chen" : ["ChenStormEarthFireRetargetSpirits", "ChenStormEarthFireSpread", "ChenStormEarthFireTriAttack"],
 	"TychusOdin"      : ["TychusCommandeerOdinAnnihilate", "TychusCommandeerOdinRagnarokMissiles"],
 	"Tychus"          : ["TychusOdinThrusters"],
 	"Uther"           : ["UtherFlashofLight"],
