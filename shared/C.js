@@ -12,7 +12,9 @@ exports.EXTRA_HEROES_HEROMODS_NAMED =
 	"wizard"  : "Wizard",
 	"necromancer" : "Necromancer",
 	"dehaka"  : "Dehaka",
-	"tracer"  : "Tracer"
+	"tracer"  : "Tracer",
+	"chromie" : "Chromie",
+  "medivh"  : "Medivh"
 };
 
 exports.SKIP_HERO_IDS = ["GreymaneWorgen"];
@@ -88,6 +90,7 @@ exports.HERO_MODIFICATIONS =
 
 exports.MOUNT_MODIFICATIONS =
 {
+	"Random" : [ { path : ":root", name : "description", value : "A random mount."} ],
 	"Mechanospider" : [ { path : ":root", name : "franchise", value : "Warcraft"} ],
 	"CountessKerriganBatForm" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
 	"ZagaraWings" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
@@ -109,6 +112,7 @@ exports.HERO_UNIT_ID_REPLACEMENTS =
 
 exports.ADDITIONAL_HERO_SUBUNIT_IDS =
 {
+  // "Chen"    : ["ChenStormEarthFire"],
 	"Uther"   : ["UtherSpirit"],
 	"Rexxar"  : ["RexxarMisha"]
 };
@@ -119,15 +123,18 @@ exports.VALID_UNIT_ABILITY_IDS =
 	"HeroBaleog"      : ["LostVikingsPressA", "LostVikingsSpinToWin", "LostVikingsNorseForce", "LostVikingsNordicAttackSquad", "LostVikingsVikingBribery"],
 	"HeroErik"        : ["LostVikingsPressA", "LostVikingsSpinToWin", "LostVikingsNorseForce", "LostVikingsNordicAttackSquad", "LostVikingsVikingBribery"],
 	"HeroOlaf"        : ["LostVikingsPressA", "LostVikingsSpinToWin", "LostVikingsNorseForce", "LostVikingsNordicAttackSquad", "LostVikingsVikingBribery"],
+  // "Chen" : ["ChenStormEarthFireRetargetSpirits", "ChenStormEarthFireSpread", "ChenStormEarthFireTriAttack"],
 	"TychusOdin"      : ["TychusCommandeerOdinAnnihilate", "TychusCommandeerOdinRagnarokMissiles"],
 	"Tychus"          : ["TychusOdinThrusters"],
 	"Uther"           : ["UtherFlashofLight"],
 	"Rexxar"          : ["RexxarMishaFollow", "RexxarMishaFollowCancel"],
-	"Greymane"        : ["GreymaneDisengage", "GreymaneRazorSwipe"]
+	"Greymane"        : ["GreymaneDisengage", "GreymaneRazorSwipe"],
+  "Xul"             : ["NecromancerBoneArmor"]
 };
 
 exports.ACTIVATABLE_ABILITY_IDS =
 {
+  "Xul"    : ["NecromancerBoneArmor"],
 	"Rexxar" : ["RexxarMishaFollow", "RexxarMishaFollowCancel"]
 };
 
@@ -168,14 +175,14 @@ exports.MOUNT_ABILITY_IDS =
 
 exports.FORMULA_PRE_REPLACEMENTS =
 [
-	{
-		  match : "$GalaxyVar:libGDHL_gv_bALHeroKerriganAssimilationRangedDamageModifier$",
-		replace : "0.1"
-	},
-	{
-		  match : "$GalaxyVar:libGDHL_gv_bALHeroKerriganAssimilationBaseModifier$",
-		replace : "0.1"
-	},
+	// { // deprecated 2016-05-12
+	// 	  match : "$GalaxyVar:libGDHL_gv_bALHeroKerriganAssimilationRangedDamageModifier$",
+	// 	replace : "0.1"
+	// },
+	// { // deprecated 2016-05-12
+	// 	  match : "$GalaxyVar:libGDHL_gv_bALHeroKerriganAssimilationBaseModifier$",
+	// 	replace : "0.1"
+	// },
 	{
 		  match : "Behavior,CrusaderPunishStackingSlow,Modification.UnifiedMoveSpeedFactor*(-100)6",
 		replace : "Behavior,CrusaderPunishStackingSlow,Modification.UnifiedMoveSpeedFactor*(-100)*6"
@@ -188,10 +195,10 @@ exports.FORMULA_PRE_REPLACEMENTS =
 		  match : "1-*Behavior,RexxarBarkskinBuff,DamageResponse.ModifyFraction*100",
 		replace : "1-Behavior,RexxarBarkskinBuff,DamageResponse.ModifyFraction*100"
 	},
-	{
-		  match : "Effect,ClairvoyanceRevealedPersistent,ExpireDelay",
-		replace : "4"
-	},
+	// { // deprecated 2016-05-12
+	// 	  match : "Effect,ClairvoyanceRevealedPersistent,ExpireDelay",
+	// 	replace : "4"
+	// },
 	{
 		  match : "Effect,ChoConsumingBlazeTalentBlazingBulwarkApplyBlockStack,Count",
 		replace : "1"
@@ -211,46 +218,55 @@ exports.FORMULA_PRE_REPLACEMENTS =
 	{
 		  match : "Upgrade,NovaSnipeMasterDamageUpgrade,MaxLevel",
 		replace : "5"
+	},
+	{   // 42742
+		  match : "Behavior,ArthasFrozenTempestFrigidWindsAttackSpeedDebuff,Modification.AdditiveAttackSpeedFactor*(1/Behavior,ArthasFrozenTempestCaster,Period)(-100)",
+		replace : "Behavior,ArthasFrozenTempestFrigidWindsAttackSpeedDebuff,Modification.AdditiveAttackSpeedFactor*(1/Behavior,ArthasFrozenTempestCaster,Period)*(-100)"
+	},
+	{   // 42742
+		  match : "Behavior,ChromieTimeTrapChronoSicknessSlow,MaxStackCount",
+		replace : "1"
 	}
+
 ];
 
 exports.XMLREF_REPLACEMENTS =
 [
-	{
-		from : "Effect,ArcaneIntellectBasicAttackManaRestore,VitalArray[2].Change",
-		  to : "Effect,ArcaneIntellectBasicAttackManaRestore,VitalArray[0].Change",
-	},
-	{
-		from : "Effect,ArcaneIntellectAbilityDamageManaRestore,VitalArray[2].Change",
-		  to : "Effect,ArcaneIntellectAbilityDamageManaRestore,VitalArray[0].Change"
-	},
-	{
-		from : "Effect,FrostmourneHungersManaRestoreModifyUnit,VitalArray[2].Change",
-		  to : "Effect,FrostmourneHungersManaRestoreModifyUnit,VitalArray[0].Change"
-	},
-	{
-		from : "Behavior,FeralHeartCarryBehavior,Modification.VitalRegenMultiplier[2]",
-		  to : "Behavior,FeralHeartCarryBehavior,Modification.VitalRegenMultiplier[1]"
-	},
+	// { // deprecated 2016-05-12
+	// 	from : "Effect,ArcaneIntellectBasicAttackManaRestore,VitalArray[2].Change",
+	// 	  to : "Effect,ArcaneIntellectBasicAttackManaRestore,VitalArray[0].Change",
+	// },
+	// { // deprecated 2016-05-12
+	// 	from : "Effect,ArcaneIntellectAbilityDamageManaRestore,VitalArray[2].Change",
+	// 	  to : "Effect,ArcaneIntellectAbilityDamageManaRestore,VitalArray[0].Change"
+	// },
+	// { // deprecated 2016-05-12
+	// 	from : "Effect,FrostmourneHungersManaRestoreModifyUnit,VitalArray[2].Change",
+	// 	  to : "Effect,FrostmourneHungersManaRestoreModifyUnit,VitalArray[0].Change"
+	// },
+	// { // deprecated 2016-05-12
+	// 	from : "Behavior,FeralHeartCarryBehavior,Modification.VitalRegenMultiplier[2]",
+	// 	  to : "Behavior,FeralHeartCarryBehavior,Modification.VitalRegenMultiplier[1]"
+	// },
 	{
 		from : "Behavior,TalentBucketVigorousAssault,Modification.VitalDamageLeechArray[0].KindArray[2]",
-			to : "Behavior,TalentBucketVigorousAssault,Modification.VitalDamageLeechArray[0].KindArray[0]"
+		  to : "Behavior,TalentBucketVigorousAssault,Modification.VitalDamageLeechArray[0].KindArray[0]"
 	},
-	{
-		from : "Behavior,TalentBucketVampiricAssaultTychus,Modification.VitalDamageLeechArray[0].KindArray[2]",
-		  to : "Behavior,TalentBucketVampiricAssaultTychus,Modification.VitalDamageLeechArray[0].KindArray[0]"
-	},
-	{
-		from : "Effect,StormBoltRefundMasteryModifyUnit,Cost[0].Fraction.Vital[2]",
-		  to : "Effect,StormBoltRefundMasteryModifyUnit,Cost[0].Fraction.Vital[0]"
-	},
-	{
-		from : "Abil,MuradinStormBolt,Cost[0].Vital[2]",
-		  to : "Abil,MuradinStormBolt,Cost[0].Vital[0]"
-	},
+	// { // deprecated 2016-05-12
+	// 	from : "Behavior,TalentBucketVampiricAssaultTychus,Modification.VitalDamageLeechArray[0].KindArray[2]",
+	// 	  to : "Behavior,TalentBucketVampiricAssaultTychus,Modification.VitalDamageLeechArray[0].KindArray[0]"
+	// },
+	// { // deprecated 2016-05-12
+	// 	from : "Effect,StormBoltRefundMasteryModifyUnit,Cost[0].Fraction.Vital[2]",
+	// 	  to : "Effect,StormBoltRefundMasteryModifyUnit,Cost[0].Fraction.Vital[0]"
+	// },
+	// { // deprecated 2016-05-12
+	// 	from : "Abil,MuradinStormBolt,Cost[0].Vital[2]",
+	// 	  to : "Abil,MuradinStormBolt,Cost[0].Vital[0]"
+	// },
 	{
 		from : "Behavior,TalentBucketVigorousStrike,Modification.VitalDamageLeechArray[0].KindArray[2]",
-			to : "Behavior,TalentBucketVigorousStrike,Modification.VitalDamageLeechArray[0].KindArray[0]"
+		  to : "Behavior,TalentBucketVigorousStrike,Modification.VitalDamageLeechArray[0].KindArray[0]"
 	},
 	{
 		from : "Effect,OdinRagnarokMissilesDamage,Amount",
@@ -263,6 +279,14 @@ exports.XMLREF_REPLACEMENTS =
 	{
 		from : "Effect,JainaArcaneIntellectAbilityDamageManaRestore,VitalArray[2].Change",
 		  to : "Effect,JainaArcaneIntellectAbilityDamageManaRestore,VitalArray[0].Change"
+	},
+	{	// 42742
+		from : 'Behavior,FalstadHammerGains,Modification.VitalDamageLeechArray[0].KindArray[2]',
+		  to : 'Behavior,FalstadHammerGains,Modification.VitalDamageLeechArray[0].KindArray[0]'
+	},
+	{	// 42742
+		from : 'Unit,HeroChromie,Sight',
+		  to : 'Behavior,ChromieDragonsBreathDeepBreathingMaxStack,Modification.SightBonus'
 	}
 ];
 
