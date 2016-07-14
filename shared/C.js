@@ -69,8 +69,10 @@ exports.EXTRA_HEROES_GAMEDATA_FOLDERS = [
 	"Murky",
 	"Rexxar",
 	"SgtHammer",
+	"Stitches",
 	"Sylvanas",
-	"Thrall"
+	"Thrall",
+	"Uther"
 ];
 
 exports.HERO_MODIFICATIONS =
