@@ -102,6 +102,7 @@ exports.MOUNT_MODIFICATIONS =
 	"CyberWolf" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
 	"Felstalker" : [ { path : ":root", name : "franchise", value : "Warcraft"} ],
 	"CyberWolfGold" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
+	"CyberWolfBlack" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
 	"MarshallRaynorHorse" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
 	"MechaTassadarMorphForm" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
 	"VoidSpeeder" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
