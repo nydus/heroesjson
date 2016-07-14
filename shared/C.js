@@ -14,7 +14,8 @@ exports.EXTRA_HEROES_HEROMODS_NAMED =
 	"dehaka"  : "Dehaka",
 	"tracer"  : "Tracer",
 	"chromie" : "Chromie",
-  "medivh"  : "Medivh"
+  "medivh"  : "Medivh",
+  "guldan"	: "Guldan"
 };
 
 exports.SKIP_HERO_IDS = ["GreymaneWorgen"];
@@ -54,6 +55,7 @@ exports.EXTRA_HEROES_GAMEDATA_FILES = ["Chen", "Zagara"];
 exports.EXTRA_HEROES_GAMEDATA_FOLDERS = [
 	"Anubarak",
 	"Artanis",
+	"Azmodan",
 	"Butcher",
 	"Crusader",
 	"Jaina",
