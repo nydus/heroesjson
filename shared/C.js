@@ -89,7 +89,8 @@ exports.HERO_MODIFICATIONS =
 		{ path : ":root .abilities .Arthas *:nth-child(2)", name : "manaCostPerSecond", value : 15}		// Somehow 'ArthasDeathAndDecayTog' leads to CBehaviorBuff 'DeathAndDecay' which has a <VitalRegenArray index="Energy" value="-15"/>
 	],
 	"Medic" : [ { path : ":root .abilities .Medic *:nth-child(6)", remove : ["cooldown"]} ],
-	"Wizard" : [ { path : ":root", name : "releaseDate", value : "2016-02-02" } ]
+	"Wizard" : [ { path : ":root", name : "releaseDate", value : "2016-02-02" } ],
+	"Guldan" : [ { path : ":root", name : "ratings", value : { damage : 8, utility : 3, survivability : 5, complexity : 6 } } ],
 };
 
 exports.MOUNT_MODIFICATIONS =
@@ -298,7 +299,8 @@ exports.REMOVE_SUBUNITS =
 {
 	"LostVikings" : ["HeroBaleog", "HeroErik", "HeroOlaf"],
 	"Chen"        : ["HeroChenEarth", "HeroChenFire", "HeroChenStorm"],
-	"Medic"       : ["MedicMedivacDropship"]
+	"Medic"       : ["MedicMedivacDropship"],
+	"Medivh"			: ["HeroMedivhRaven"]
 };
 
 exports.IMPORT_ABILITIES_FROM_SUBUNIT =
