@@ -6,4 +6,5 @@ CascLib-build
 wip
 out
 images
+.DS_Store
 dist/

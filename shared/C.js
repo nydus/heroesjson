@@ -67,12 +67,14 @@ exports.EXTRA_HEROES_GAMEDATA_FOLDERS = [
 	"Medic",
 	"Monk",
 	"Murky",
+	"Necromancer",
 	"Rexxar",
 	"SgtHammer",
 	"Stitches",
 	"Sylvanas",
 	"Thrall",
-	"Uther"
+	"Uther",
+	"Wizard"
 ];
 
 exports.HERO_MODIFICATIONS =
@@ -95,7 +97,7 @@ exports.HERO_MODIFICATIONS =
 
 exports.MOUNT_MODIFICATIONS =
 {
-	"Random" : [ { path : ":root", name : "description", value : "A random mount."} ],
+	"Random" : [ { path : ":root", name : "description", value : "A random mount."}, { path : ":root", name : "franchise", value : "Legacy"} ],
 	"Mechanospider" : [ { path : ":root", name : "franchise", value : "Warcraft"} ],
 	"CountessKerriganBatForm" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
 	"ZagaraWings" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
