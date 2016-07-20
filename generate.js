@@ -38,7 +38,7 @@ var MOUNTS_OUT_PATH = path.join(OUT_PATH, "mounts.json");
 
 var DEFAULT_NODES = {};
 var NODE_MAPS = {};
-var NODE_MAP_TYPES = ["Hero", "Talent", "Behavior", "Effect", "Abil", "Unit", "Validator", "Weapon", "Button", "Mount", "Actor" ];
+var NODE_MAP_TYPES = ["Hero", "Talent", "Behavior", "Effect", "Abil", "Unit", "Validator", "Weapon", "Button", "Mount", "Actor", "Accumulator", "Undefined" ];
 var NODE_MAP_PREFIX_TYPES = ["Actor"];
 
 var NODE_MERGE_PARENT_TYPES = ["Mount"];
@@ -378,11 +378,12 @@ function processHeroNode(heroNode)
 
 function addHeroLevelScalingMods(heroid, heroNode)
 {
+//	console.log('==============',heroNode.toString());
 	heroNode.find("LevelScalingArray/Modifications").forEach(function(modNode)
 	{
-		var modType = getValue(modNode, "Catalog", attributeValue(modNode, "Catalog"));
-		if(!NODE_MAP_TYPES.contains(modType))
-			throw new Error("Unsupported LevelScalingArray Modification Catalog modType: " + modType);
+		var modType = getValue(modNode, "Catalog", attributeValue(modNode, "Catalog")) || 'Undefined';
+/*		if(!NODE_MAP_TYPES.contains(modType))
+			throw new Error("Unsupported LevelScalingArray Modification Catalog modType: " + modType);*/
 
 		var modKey = getValue(modNode, "Entry", attributeValue(modNode, "Entry"));
 		if(!modKey)

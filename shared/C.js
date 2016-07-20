@@ -14,7 +14,8 @@ exports.EXTRA_HEROES_HEROMODS_NAMED =
 	"dehaka"  : "Dehaka",
 	"tracer"  : "Tracer",
 	"chromie" : "Chromie",
-  "medivh"  : "Medivh"
+  "medivh"  : "Medivh",
+  "guldan"	: "Guldan"
 };
 
 exports.SKIP_HERO_IDS = ["GreymaneWorgen"];
@@ -54,6 +55,7 @@ exports.EXTRA_HEROES_GAMEDATA_FILES = ["Chen", "Zagara"];
 exports.EXTRA_HEROES_GAMEDATA_FOLDERS = [
 	"Anubarak",
 	"Artanis",
+	"Azmodan",
 	"Butcher",
 	"Crusader",
 	"Jaina",
@@ -65,10 +67,14 @@ exports.EXTRA_HEROES_GAMEDATA_FOLDERS = [
 	"Medic",
 	"Monk",
 	"Murky",
+	"Necromancer",
 	"Rexxar",
 	"SgtHammer",
+	"Stitches",
 	"Sylvanas",
-	"Thrall"
+	"Thrall",
+	"Uther",
+	"Wizard"
 ];
 
 exports.HERO_MODIFICATIONS =
@@ -85,18 +91,20 @@ exports.HERO_MODIFICATIONS =
 		{ path : ":root .abilities .Arthas *:nth-child(2)", name : "manaCostPerSecond", value : 15}		// Somehow 'ArthasDeathAndDecayTog' leads to CBehaviorBuff 'DeathAndDecay' which has a <VitalRegenArray index="Energy" value="-15"/>
 	],
 	"Medic" : [ { path : ":root .abilities .Medic *:nth-child(6)", remove : ["cooldown"]} ],
-	"Wizard" : [ { path : ":root", name : "releaseDate", value : "2016-02-02" } ]
+	"Wizard" : [ { path : ":root", name : "releaseDate", value : "2016-02-02" } ],
+	"Guldan" : [ { path : ":root", name : "ratings", value : { damage : 8, utility : 3, survivability : 5, complexity : 6 } } ],
 };
 
 exports.MOUNT_MODIFICATIONS =
 {
-	"Random" : [ { path : ":root", name : "description", value : "A random mount."} ],
+	"Random" : [ { path : ":root", name : "description", value : "A random mount."}, { path : ":root", name : "franchise", value : "Legacy"} ],
 	"Mechanospider" : [ { path : ":root", name : "franchise", value : "Warcraft"} ],
 	"CountessKerriganBatForm" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
 	"ZagaraWings" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
 	"CyberWolf" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
 	"Felstalker" : [ { path : ":root", name : "franchise", value : "Warcraft"} ],
 	"CyberWolfGold" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
+	"CyberWolfBlack" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
 	"MarshallRaynorHorse" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
 	"MechaTassadarMorphForm" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
 	"VoidSpeeder" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
@@ -294,7 +302,8 @@ exports.REMOVE_SUBUNITS =
 {
 	"LostVikings" : ["HeroBaleog", "HeroErik", "HeroOlaf"],
 	"Chen"        : ["HeroChenEarth", "HeroChenFire", "HeroChenStorm"],
-	"Medic"       : ["MedicMedivacDropship"]
+	"Medic"       : ["MedicMedivacDropship"],
+	"Medivh"			: ["HeroMedivhRaven"]
 };
 
 exports.IMPORT_ABILITIES_FROM_SUBUNIT =
