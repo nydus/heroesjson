@@ -13,13 +13,14 @@ var base = require("xbase"),
 	rimraf = require("rimraf"),
 	tiptoe = require("tiptoe");
 
-if(process.argv.length<3 || !fs.existsSync(process.argv[2]))
+var HOTS_PATH = process.argv[2] || "/Applications/Heroes\ of\ the\ Storm";
+
+if(!fs.existsSync(HOTS_PATH))
 {
 	base.error("Usage: node generate.js /path/to/hots");
 	process.exit(1);
 }
 
-var HOTS_PATH = process.argv[2];
 var HOTS_DATA_PATH = path.join(HOTS_PATH, "HeroesData");
 
 if(!fs.existsSync(HOTS_DATA_PATH))
@@ -37,7 +38,7 @@ var MOUNTS_OUT_PATH = path.join(OUT_PATH, "mounts.json");
 
 var DEFAULT_NODES = {};
 var NODE_MAPS = {};
-var NODE_MAP_TYPES = ["Hero", "Talent", "Behavior", "Effect", "Abil", "Unit", "Validator", "Weapon", "Button", "Mount", "Actor" ];
+var NODE_MAP_TYPES = ["Hero", "Talent", "Behavior", "Effect", "Abil", "Unit", "Validator", "Weapon", "Button", "Mount", "Actor", "Accumulator", "Undefined" ];
 var NODE_MAP_PREFIX_TYPES = ["Actor"];
 
 var NODE_MERGE_PARENT_TYPES = ["Mount"];
@@ -57,7 +58,9 @@ C.EXTRA_HEROES_HEROMODS.forEach(function(EXTRA_HERO)
 	NEEDED_PREFIXES.push("heromods\\" + EXTRA_HERO + ".stormmod");
 });
 
-var NEEDED_FILE_PATHS = [];
+var NEEDED_FILE_PATHS = [
+  "mods/core.stormmod/base.stormdata/DataBuildId.txt"
+];
 
 NEEDED_PREFIXES.forEach(function(NEEDED_PREFIX)
 {
@@ -88,6 +91,7 @@ Object.forEach(C.EXTRA_MOUNT_DATA_FILES, function(EXTRA_MOUNT_DIR, EXTRA_MOUNT_F
 Object.forEach(C.EXTRA_HEROES_HEROMODS_NAMED, function(heroName, gameDataName)
 {
 	NEEDED_FILE_PATHS.push("mods\\heromods\\" + heroName + ".stormmod\\base.stormdata\\GameData\\" + gameDataName + "Data.xml");
+	NEEDED_FILE_PATHS.push("mods\\heromods\\" + heroName + ".stormmod\\base.stormdata\\GameData\\HeroData.xml");
 	NEEDED_FILE_PATHS.push("mods\\heromods\\" + heroName + ".stormmod\\enus.stormdata\\LocalizedData\\GameStrings.txt");
 });
 
@@ -277,22 +281,20 @@ function processHeroNode(heroNode)
 
 	hero.releaseDate = processReleaseDate(heroNode.get("ReleaseDate"));
 
-	var heroUnitids = [];
+	var heroUnitids = [ hero.id ];
 	var alternateUnitArrayNodes = heroNode.find("AlternateUnitArray");
 	if(alternateUnitArrayNodes && alternateUnitArrayNodes.length>0)
 	{
 		alternateUnitArrayNodes.forEach(function(alternateUnitArrayNode)
 		{
 			var alternateHeroid = attributeValue(alternateUnitArrayNode, "value");
+      base.info("Alternate: ", alternateHeroid);
 			heroUnitids.push(alternateHeroid);
 		});
 	}
-	else
-	{
-		heroUnitids.push(hero.id);
-	}
 
 	heroUnitids = heroUnitids.concat(C.ADDITIONAL_HERO_SUBUNIT_IDS[hero.id] || []);
+  base.info("Sub-units:", hero.id, heroUnitids);
 
 	// Level Scaling Info
 	HERO_LEVEL_SCALING_MODS[hero.id] = [];
@@ -376,11 +378,12 @@ function processHeroNode(heroNode)
 
 function addHeroLevelScalingMods(heroid, heroNode)
 {
+//	console.log('==============',heroNode.toString());
 	heroNode.find("LevelScalingArray/Modifications").forEach(function(modNode)
 	{
-		var modType = getValue(modNode, "Catalog", attributeValue(modNode, "Catalog"));
-		if(!NODE_MAP_TYPES.contains(modType))
-			throw new Error("Unsupported LevelScalingArray Modification Catalog modType: " + modType);
+		var modType = getValue(modNode, "Catalog", attributeValue(modNode, "Catalog")) || 'Undefined';
+/*		if(!NODE_MAP_TYPES.contains(modType))
+			throw new Error("Unsupported LevelScalingArray Modification Catalog modType: " + modType);*/
 
 		var modKey = getValue(modNode, "Entry", attributeValue(modNode, "Entry"));
 		if(!modKey)
@@ -778,7 +781,7 @@ function getFullDescription(id, _fullDescription, heroid, heroLevel)
 			formula = formula.replace(/\$BehaviorStackCount:[^$]+\$/g, "0");
 			formula = formula.replace(/\[d ref='([^']+)'(?: player='[0-9]')?\/?]/g, "$1");
 
-			//if(heroid==="Tinker") { base.info("Before: %s", formula); }
+			//if(heroid==="Tracer") { base.info("Before: %s", formula); }
 			formula = formula.replace(/^([ (]*)-/, "$1-1*");
 
 			(formula.match(/((^\-)|(\(\-))?[A-Za-z][A-Za-z0-9,._\[\]]+/g) || []).map(function(match) { return match.indexOf("(")===0 ? match.substring(1) : match; }).forEach(function(match)
@@ -792,19 +795,21 @@ function getFullDescription(id, _fullDescription, heroid, heroLevel)
 				}
 				formula = formula.replace(match, lookupXMLRef(heroid, heroLevel, match, negative));
 			});
-			//if(heroid==="Tinker") { base.info("after: %s", formula); }
+			//if(heroid==="Tracer") { base.info("after: %s", formula); }
 
 			formula = formula.replace(/[+*/-]$/, "");
 			formula = "(".repeat((formula.match(/[)]/g) || []).length-(formula.match(/[(]/g) || []).length) + formula;
 
-			//if(heroid==="Tinker") { base.info("after prenthesiszed and regex: %s", parenthesize(formula)); base.info("after prenthesiszed x2: %s", parenthesize(parenthesize(formula))); }
+      formula = formula.replace(/--/, "+");
+
+			//if(heroid==="Tracer") { base.info("after prenthesiszed and regex: %s", parenthesize(formula)); base.info("after prenthesiszed x2: %s", parenthesize(parenthesize(formula))); }
 
 			//Talent,ArtanisBladeDashSolariteReaper,AbilityModificationArray[0].Modifications[0].Value)*(100)
 			
 			// Heroes formulas are evaluated Left to Right instead of normal math operation order, so we parenthesize everything. ugh.
 			var result = C.FULLY_PARENTHESIZE.contains(id) ? eval(fullyParenthesize(formula)) : eval(parenthesize(formula));	// jshint ignore:line
 			
-			//if(heroid==="Tinker") { base.info("Formula: %s\nResult: %d", formula, result); }
+			//if(heroid==="Tracer") { base.info("Formula: %s\nResult: %d", formula, result); }
 		
 			var MAX_PRECISION = 4;
 			if(result.toFixed(MAX_PRECISION).length<(""+result).length)
@@ -818,7 +823,7 @@ function getFullDescription(id, _fullDescription, heroid, heroLevel)
 		}
 		catch(err)
 		{
-			base.error("Failed to parse: %s (%s)", formula, _fullDescription);
+			base.error("Failed to parse: %s\n(%s)", formula, _fullDescription);
 			throw err;
 		}
 	});

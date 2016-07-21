@@ -9,14 +9,19 @@ exports.EXTRA_HEROES_HEROMODS = ["chogall"];
 exports.EXTRA_HEROES_HEROMODS_NAMED =
 {
 	"chogall" : "ChoGall",
-	"dryad"   : "Dryad",
-	"genn"    : "Genn",
-	"wizard"  : "Wizard"
+	"wizard"  : "Wizard",
+	"necromancer" : "Necromancer",
+	"dehaka"  : "Dehaka",
+	"tracer"  : "Tracer",
+	"chromie" : "Chromie",
+  "medivh"  : "Medivh",
+  "guldan"	: "Guldan"
 };
 
 exports.SKIP_HERO_IDS = ["GreymaneWorgen"];
 
-exports.HERO_ID_TEXTURE_RENAMES = {"Dryad" : "lunara", "Greymane" : "genngreymane"};
+exports.HERO_ID_TEXTURE_RENAMES = { };
+// { "Dryad" : "lunara"};
 
 exports.EXTRA_XML_FILE_PATHS = [];
 
@@ -28,7 +33,7 @@ exports.EXTRA_MOUNT_DATA_FILES = {
 				   			  "Horse_Common",
 				   			  "Horse_HeadlessHorseman",
 				   			  "Horse_IllidansNightmare",
-				   			  "Horse_JudgementCharger", 
+				   			  "Horse_JudgementCharger",
 				   			  "Horse_MalthaelsPhantom",
 				   			  "Horse_MarshalsOutrider",
 				   			  "Horse_Nazeebra",
@@ -46,7 +51,31 @@ exports.EXTRA_MOUNT_DATA_FILES = {
 exports.EXTRA_HEROES_GAMEDATA_FILES = ["Chen", "Zagara"];
 
 // Extra hero subfolder files GameData/Heroes/<hero>Data/<hero>Data.xml
-exports.EXTRA_HEROES_GAMEDATA_FOLDERS = ["Anubarak", "Artanis", "Butcher", "Crusader", "Jaina", "Kaelthas", "Leoric", "LostVikings", "Medic", "Monk", "Murky", "Rexxar", "SgtHammer", "Sylvanas", "Thrall"];
+// "Expansion" heroes that have moved into "main" modules.
+exports.EXTRA_HEROES_GAMEDATA_FOLDERS = [
+	"Anubarak",
+	"Artanis",
+	"Azmodan",
+	"Butcher",
+	"Crusader",
+	"Jaina",
+	"Dryad",
+	"Genn",
+	"Kaelthas",
+	"Leoric",
+	"LostVikings",
+	"Medic",
+	"Monk",
+	"Murky",
+	"Necromancer",
+	"Rexxar",
+	"SgtHammer",
+	"Stitches",
+	"Sylvanas",
+	"Thrall",
+	"Uther",
+	"Wizard"
+];
 
 exports.HERO_MODIFICATIONS =
 {
@@ -62,17 +91,20 @@ exports.HERO_MODIFICATIONS =
 		{ path : ":root .abilities .Arthas *:nth-child(2)", name : "manaCostPerSecond", value : 15}		// Somehow 'ArthasDeathAndDecayTog' leads to CBehaviorBuff 'DeathAndDecay' which has a <VitalRegenArray index="Energy" value="-15"/>
 	],
 	"Medic" : [ { path : ":root .abilities .Medic *:nth-child(6)", remove : ["cooldown"]} ],
-	"Wizard" : [ { path : ":root", name : "releaseDate", value : "2016-02-02" } ]
+	"Wizard" : [ { path : ":root", name : "releaseDate", value : "2016-02-02" } ],
+	"Guldan" : [ { path : ":root", name : "ratings", value : { damage : 8, utility : 3, survivability : 5, complexity : 6 } } ],
 };
 
 exports.MOUNT_MODIFICATIONS =
 {
+	"Random" : [ { path : ":root", name : "description", value : "A random mount."}, { path : ":root", name : "franchise", value : "Legacy"} ],
 	"Mechanospider" : [ { path : ":root", name : "franchise", value : "Warcraft"} ],
 	"CountessKerriganBatForm" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
 	"ZagaraWings" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
 	"CyberWolf" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
 	"Felstalker" : [ { path : ":root", name : "franchise", value : "Warcraft"} ],
 	"CyberWolfGold" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
+	"CyberWolfBlack" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
 	"MarshallRaynorHorse" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
 	"MechaTassadarMorphForm" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
 	"VoidSpeeder" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
@@ -88,8 +120,7 @@ exports.HERO_UNIT_ID_REPLACEMENTS =
 
 exports.ADDITIONAL_HERO_SUBUNIT_IDS =
 {
-	"Abathur" : ["AbathurSymbiote"],
-	"Tychus"  : ["TychusOdin"],
+  // "Chen"    : ["ChenStormEarthFire"],
 	"Uther"   : ["UtherSpirit"],
 	"Rexxar"  : ["RexxarMisha"]
 };
@@ -100,15 +131,18 @@ exports.VALID_UNIT_ABILITY_IDS =
 	"HeroBaleog"      : ["LostVikingsPressA", "LostVikingsSpinToWin", "LostVikingsNorseForce", "LostVikingsNordicAttackSquad", "LostVikingsVikingBribery"],
 	"HeroErik"        : ["LostVikingsPressA", "LostVikingsSpinToWin", "LostVikingsNorseForce", "LostVikingsNordicAttackSquad", "LostVikingsVikingBribery"],
 	"HeroOlaf"        : ["LostVikingsPressA", "LostVikingsSpinToWin", "LostVikingsNorseForce", "LostVikingsNordicAttackSquad", "LostVikingsVikingBribery"],
+  // "Chen" : ["ChenStormEarthFireRetargetSpirits", "ChenStormEarthFireSpread", "ChenStormEarthFireTriAttack"],
 	"TychusOdin"      : ["TychusCommandeerOdinAnnihilate", "TychusCommandeerOdinRagnarokMissiles"],
 	"Tychus"          : ["TychusOdinThrusters"],
 	"Uther"           : ["UtherFlashofLight"],
 	"Rexxar"          : ["RexxarMishaFollow", "RexxarMishaFollowCancel"],
-	"Greymane"        : ["GreymaneDisengage", "GreymaneRazorSwipe"]
+	"Greymane"        : ["GreymaneDisengage", "GreymaneRazorSwipe"],
+  "Xul"             : ["NecromancerBoneArmor"]
 };
 
 exports.ACTIVATABLE_ABILITY_IDS =
 {
+  "Xul"    : ["NecromancerBoneArmor"],
 	"Rexxar" : ["RexxarMishaFollow", "RexxarMishaFollowCancel"]
 };
 
@@ -133,7 +167,7 @@ exports.HERO_MOUNT_UNIT_ID_REPLACEMENTS =
 
 exports.HERO_SKIP_ABILITY_IDS =
 {
-	"Rehgar" : ["RehgarGhostWolfActivate"]	
+	"Rehgar" : ["RehgarGhostWolfActivate"]
 };
 
 exports.MOUNT_ABILITY_IDS =
@@ -147,27 +181,19 @@ exports.MOUNT_ABILITY_IDS =
 	"Gall"         : "GallHurryUpOaf"
 };
 
-exports.FORMULA_PRE_REPLACEMENTS = 
+exports.FORMULA_PRE_REPLACEMENTS =
 [
-	{
-		  match : "$GalaxyVar:libGDHL_gv_bALHeroKerriganAssimilationRangedDamageModifier$",
-		replace : "0.1"
-	},
-	{
-		  match : "$GalaxyVar:libGDHL_gv_bALHeroKerriganAssimilationBaseModifier$",
-		replace : "0.1"
-	},
+	// { // deprecated 2016-05-12
+	// 	  match : "$GalaxyVar:libGDHL_gv_bALHeroKerriganAssimilationRangedDamageModifier$",
+	// 	replace : "0.1"
+	// },
+	// { // deprecated 2016-05-12
+	// 	  match : "$GalaxyVar:libGDHL_gv_bALHeroKerriganAssimilationBaseModifier$",
+	// 	replace : "0.1"
+	// },
 	{
 		  match : "Behavior,CrusaderPunishStackingSlow,Modification.UnifiedMoveSpeedFactor*(-100)6",
 		replace : "Behavior,CrusaderPunishStackingSlow,Modification.UnifiedMoveSpeedFactor*(-100)*6"
-	},
-	{
-		  match : "Effect,PixieDustApplyBlockStacks,Count",
-		replace : "1"
-	},
-	{
-		  match : "Effect,PixieDustApplyBlockController,Count",
-		replace : "1"
 	},
 	{
 		  match : "Behavior,LostVikingVikingHoardCarryBehavior,Modification.VitalRegenArray[Life]",
@@ -177,10 +203,10 @@ exports.FORMULA_PRE_REPLACEMENTS =
 		  match : "1-*Behavior,RexxarBarkskinBuff,DamageResponse.ModifyFraction*100",
 		replace : "1-Behavior,RexxarBarkskinBuff,DamageResponse.ModifyFraction*100"
 	},
-	{
-		  match : "Effect,ClairvoyanceRevealedPersistent,ExpireDelay",
-		replace : "4"
-	},
+	// { // deprecated 2016-05-12
+	// 	  match : "Effect,ClairvoyanceRevealedPersistent,ExpireDelay",
+	// 	replace : "4"
+	// },
 	{
 		  match : "Effect,ChoConsumingBlazeTalentBlazingBulwarkApplyBlockStack,Count",
 		replace : "1"
@@ -200,46 +226,55 @@ exports.FORMULA_PRE_REPLACEMENTS =
 	{
 		  match : "Upgrade,NovaSnipeMasterDamageUpgrade,MaxLevel",
 		replace : "5"
+	},
+	{   // 42742
+		  match : "Behavior,ArthasFrozenTempestFrigidWindsAttackSpeedDebuff,Modification.AdditiveAttackSpeedFactor*(1/Behavior,ArthasFrozenTempestCaster,Period)(-100)",
+		replace : "Behavior,ArthasFrozenTempestFrigidWindsAttackSpeedDebuff,Modification.AdditiveAttackSpeedFactor*(1/Behavior,ArthasFrozenTempestCaster,Period)*(-100)"
+	},
+	{   // 42742
+		  match : "Behavior,ChromieTimeTrapChronoSicknessSlow,MaxStackCount",
+		replace : "1"
 	}
+
 ];
 
 exports.XMLREF_REPLACEMENTS =
 [
+	// { // deprecated 2016-05-12
+	// 	from : "Effect,ArcaneIntellectBasicAttackManaRestore,VitalArray[2].Change",
+	// 	  to : "Effect,ArcaneIntellectBasicAttackManaRestore,VitalArray[0].Change",
+	// },
+	// { // deprecated 2016-05-12
+	// 	from : "Effect,ArcaneIntellectAbilityDamageManaRestore,VitalArray[2].Change",
+	// 	  to : "Effect,ArcaneIntellectAbilityDamageManaRestore,VitalArray[0].Change"
+	// },
+	// { // deprecated 2016-05-12
+	// 	from : "Effect,FrostmourneHungersManaRestoreModifyUnit,VitalArray[2].Change",
+	// 	  to : "Effect,FrostmourneHungersManaRestoreModifyUnit,VitalArray[0].Change"
+	// },
+	// { // deprecated 2016-05-12
+	// 	from : "Behavior,FeralHeartCarryBehavior,Modification.VitalRegenMultiplier[2]",
+	// 	  to : "Behavior,FeralHeartCarryBehavior,Modification.VitalRegenMultiplier[1]"
+	// },
 	{
-		from : "Effect,ArcaneIntellectBasicAttackManaRestore,VitalArray[2].Change",
-		  to : "Effect,ArcaneIntellectBasicAttackManaRestore,VitalArray[0].Change",
+		from : "Behavior,TalentBucketVigorousAssault,Modification.VitalDamageLeechArray[0].KindArray[2]",
+		  to : "Behavior,TalentBucketVigorousAssault,Modification.VitalDamageLeechArray[0].KindArray[0]"
 	},
+	// { // deprecated 2016-05-12
+	// 	from : "Behavior,TalentBucketVampiricAssaultTychus,Modification.VitalDamageLeechArray[0].KindArray[2]",
+	// 	  to : "Behavior,TalentBucketVampiricAssaultTychus,Modification.VitalDamageLeechArray[0].KindArray[0]"
+	// },
+	// { // deprecated 2016-05-12
+	// 	from : "Effect,StormBoltRefundMasteryModifyUnit,Cost[0].Fraction.Vital[2]",
+	// 	  to : "Effect,StormBoltRefundMasteryModifyUnit,Cost[0].Fraction.Vital[0]"
+	// },
+	// { // deprecated 2016-05-12
+	// 	from : "Abil,MuradinStormBolt,Cost[0].Vital[2]",
+	// 	  to : "Abil,MuradinStormBolt,Cost[0].Vital[0]"
+	// },
 	{
-		from : "Effect,ArcaneIntellectAbilityDamageManaRestore,VitalArray[2].Change",
-		  to : "Effect,ArcaneIntellectAbilityDamageManaRestore,VitalArray[0].Change"
-	},
-	{
-		from : "Effect,FrostmourneHungersManaRestoreModifyUnit,VitalArray[2].Change",
-		  to : "Effect,FrostmourneHungersManaRestoreModifyUnit,VitalArray[0].Change"
-	},
-	{
-		from : "Behavior,FeralHeartCarryBehavior,Modification.VitalRegenMultiplier[2]",
-		  to : "Behavior,FeralHeartCarryBehavior,Modification.VitalRegenMultiplier[1]"
-	},
-	{
-		from : "Behavior,TalentBucketVampiricAssault,Modification.VitalDamageLeechArray[0].KindArray[2]",
-		  to : "Behavior,TalentBucketVampiricAssault,Modification.VitalDamageLeechArray[0].KindArray[0]"
-	},
-	{
-		from : "Behavior,TalentBucketVampiricAssaultTychus,Modification.VitalDamageLeechArray[0].KindArray[2]",
-		  to : "Behavior,TalentBucketVampiricAssaultTychus,Modification.VitalDamageLeechArray[0].KindArray[0]"
-	},
-	{
-		from : "Effect,StormBoltRefundMasteryModifyUnit,Cost[0].Fraction.Vital[2]",
-		  to : "Effect,StormBoltRefundMasteryModifyUnit,Cost[0].Fraction.Vital[0]"
-	},
-	{
-		from : "Abil,MuradinStormBolt,Cost[0].Vital[2]",
-		  to : "Abil,MuradinStormBolt,Cost[0].Vital[0]"
-	},
-	{
-		from : "Behavior,TalentBucketVampiricStrike,Modification.VitalDamageLeechArray[0].KindArray[2]",
-		  to : "Behavior,TalentBucketVampiricStrike,Modification.VitalDamageLeechArray[0].KindArray[0]"
+		from : "Behavior,TalentBucketVigorousStrike,Modification.VitalDamageLeechArray[0].KindArray[2]",
+		  to : "Behavior,TalentBucketVigorousStrike,Modification.VitalDamageLeechArray[0].KindArray[0]"
 	},
 	{
 		from : "Effect,OdinRagnarokMissilesDamage,Amount",
@@ -252,12 +287,23 @@ exports.XMLREF_REPLACEMENTS =
 	{
 		from : "Effect,JainaArcaneIntellectAbilityDamageManaRestore,VitalArray[2].Change",
 		  to : "Effect,JainaArcaneIntellectAbilityDamageManaRestore,VitalArray[0].Change"
+	},
+	{	// 42742
+		from : 'Behavior,FalstadHammerGains,Modification.VitalDamageLeechArray[0].KindArray[2]',
+		  to : 'Behavior,FalstadHammerGains,Modification.VitalDamageLeechArray[0].KindArray[0]'
+	},
+	{	// 42742
+		from : 'Unit,HeroChromie,Sight',
+		  to : 'Behavior,ChromieDragonsBreathDeepBreathingMaxStack,Modification.SightBonus'
 	}
 ];
 
 exports.REMOVE_SUBUNITS =
 {
-	"LostVikings" : ["HeroBaleog", "HeroErik", "HeroOlaf"]
+	"LostVikings" : ["HeroBaleog", "HeroErik", "HeroOlaf"],
+	"Chen"        : ["HeroChenEarth", "HeroChenFire", "HeroChenStorm"],
+	"Medic"       : ["MedicMedivacDropship"],
+	"Medivh"			: ["HeroMedivhRaven"]
 };
 
 exports.IMPORT_ABILITIES_FROM_SUBUNIT =
@@ -452,4 +498,4 @@ exports.HERO_JSON_SCHEMA.properties.talents.required = exports.HERO_TALENT_LEVEL
 exports.HERO_JSON_SCHEMA.required = Object.keys(exports.HERO_JSON_SCHEMA.properties);
 
 exports.HERO_JSON_SCHEMA.properties.talents.properties[10].minItems = 2;
-exports.HERO_JSON_SCHEMA.properties.talents.properties[10].maxItems = 2;
+exports.HERO_JSON_SCHEMA.properties.talents.properties[10].maxItems = 3;
