@@ -97,7 +97,10 @@ exports.HERO_MODIFICATIONS =
 
 exports.MOUNT_MODIFICATIONS =
 {
-	"Random" : [ { path : ":root", name : "description", value : "A random mount."}, { path : ":root", name : "franchise", value : "Legacy"} ],
+	"Random" : [ 
+		{ path : ":root", name : "description", value : "A random mount."}, 
+		{ path : ":root", name : "category", value : "Random"}
+	],
 	"Mechanospider" : [ { path : ":root", name : "franchise", value : "Warcraft"} ],
 	"CountessKerriganBatForm" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
 	"ZagaraWings" : [ { path : ":root", name : "franchise", value : "Starcraft"} ],
@@ -368,7 +371,6 @@ exports.MOUNT_JSON_SCHEMA =
 		attributeid : { type : "string", minLength : 1 },
 		name        : { type : "string", minLength : 1 },
 		description : { type : "string", minLength : 1 },
-		franchise   : { type : "string", minLength : 1 },
 		releaseDate : { type : "string", pattern : "2[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]" },
 		variation   : { type : "boolean" },
 		productid   : { type : "integer" },
