@@ -15,10 +15,11 @@ exports.EXTRA_HEROES_HEROMODS_NAMED =
 	"tracer"  : "Tracer",
 	"chromie" : "Chromie",
   "medivh"  : "Medivh",
-  "guldan"	: "Guldan"
+  "guldan"	: "Guldan",
+  "auriel"	: "Auriel"
 };
 
-exports.SKIP_HERO_IDS = ["GreymaneWorgen"];
+exports.SKIP_HERO_IDS = ["GreymaneWorgen", "ChoGallBundleProduct"];
 
 exports.HERO_ID_TEXTURE_RENAMES = { };
 // { "Dryad" : "lunara"};
