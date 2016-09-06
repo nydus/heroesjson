@@ -14,10 +14,11 @@ var base = require("xbase"),
 	tiptoe = require("tiptoe");
 
 var HOTS_PATH = process.argv[2] || "/Applications/Heroes\ of\ the\ Storm";
+var HOTS_LANG = process.argv[3] || "enus";
 
 if(!fs.existsSync(HOTS_PATH))
 {
-	base.error("Usage: node generate.js /path/to/hots");
+	base.error("Usage: node generate.js /path/to/hots language");
 	process.exit(1);
 }
 
@@ -45,7 +46,7 @@ var NODE_MERGE_PARENT_TYPES = ["Mount"];
 
 var HERO_LEVEL_SCALING_MODS = {};
 
-var NEEDED_SUBFIXES = [ "enus.stormdata\\LocalizedData\\GameStrings.txt" ];
+var NEEDED_SUBFIXES = [ HOTS_LANG + ".stormdata\\LocalizedData\\GameStrings.txt" ];
 NODE_MAP_TYPES.forEach(function(NODE_MAP_TYPE)
 {
 	NODE_MAPS[NODE_MAP_TYPE] = {};
@@ -92,7 +93,7 @@ Object.forEach(C.EXTRA_HEROES_HEROMODS_NAMED, function(heroName, gameDataName)
 {
 	NEEDED_FILE_PATHS.push("mods\\heromods\\" + heroName + ".stormmod\\base.stormdata\\GameData\\" + gameDataName + "Data.xml");
 	NEEDED_FILE_PATHS.push("mods\\heromods\\" + heroName + ".stormmod\\base.stormdata\\GameData\\HeroData.xml");
-	NEEDED_FILE_PATHS.push("mods\\heromods\\" + heroName + ".stormmod\\enus.stormdata\\LocalizedData\\GameStrings.txt");
+	NEEDED_FILE_PATHS.push("mods\\heromods\\" + heroName + ".stormmod\\"+HOTS_LANG+".stormdata\\LocalizedData\\GameStrings.txt");
 });
 
 NEEDED_FILE_PATHS = NEEDED_FILE_PATHS.concat(C.EXTRA_XML_FILE_PATHS);
