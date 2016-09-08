@@ -76,7 +76,8 @@ exports.EXTRA_HEROES_GAMEDATA_FOLDERS = [
 	"Sylvanas",
 	"Thrall",
 	"Uther",
-	"Wizard"
+	"Wizard",
+	"Tinker"
 ];
 
 exports.HERO_MODIFICATIONS =
