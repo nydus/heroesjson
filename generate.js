@@ -18,7 +18,7 @@ var HOTS_LANG = process.argv[3] || "enus";
 
 if(!fs.existsSync(HOTS_PATH))
 {
-	base.error("Usage: node generate.js /path/to/hots language");
+	base.error("Usage: node generate.js [/path/to/hots] [language]");
 	process.exit(1);
 }
 
