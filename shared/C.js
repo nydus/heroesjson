@@ -16,7 +16,8 @@ exports.EXTRA_HEROES_HEROMODS_NAMED =
 	"chromie" : "Chromie",
   "medivh"  : "Medivh",
   "guldan"	: "Guldan",
-  "auriel"	: "Auriel"
+  "auriel"	: "Auriel",
+  "alarak"	: "Alarak"
 };
 
 exports.SKIP_HERO_IDS = ["GreymaneWorgen", "ChoGallBundleProduct"];
@@ -60,9 +61,10 @@ exports.EXTRA_HEROES_GAMEDATA_FOLDERS = [
 	"Azmodan",
 	"Butcher",
 	"Crusader",
-	"Jaina",
+	"DemonHunter",
 	"Dryad",
 	"Genn",
+	"Jaina",
 	"Kaelthas",
 	"Leoric",
 	"LostVikings",
@@ -71,11 +73,11 @@ exports.EXTRA_HEROES_GAMEDATA_FOLDERS = [
 	"Murky",
 	"Necromancer",
 	"Rexxar",
-	"SgtHammer",
 	"Stitches",
 	"Sylvanas",
 	"Thrall",
 	"Uther",
+	"WitchDoctor",
 	"Wizard",
 	"Tinker"
 ];
