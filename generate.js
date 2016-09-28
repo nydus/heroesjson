@@ -39,7 +39,7 @@ var MOUNTS_OUT_PATH = path.join(OUT_PATH, "mounts.json");
 
 var DEFAULT_NODES = {};
 var NODE_MAPS = {};
-var NODE_MAP_TYPES = ["Hero", "Talent", "Behavior", "Effect", "Abil", "Unit", "Validator", "Weapon", "Button", "Mount", "Actor", "Accumulator", "Undefined" ];
+var NODE_MAP_TYPES = ["Hero", "Talent", "Behavior", "Effect", "Abil", "Unit", "Validator", "Weapon", "Button", "Mount", "Actor", "Accumulator", "Undefined", "BehaviorTokenCount" ];
 var NODE_MAP_PREFIX_TYPES = ["Actor"];
 
 var NODE_MERGE_PARENT_TYPES = ["Mount"];

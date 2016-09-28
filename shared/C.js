@@ -242,7 +242,12 @@ exports.FORMULA_PRE_REPLACEMENTS =
 	{   // 42742
 		  match : "Behavior,ChromieTimeTrapChronoSicknessSlow,MaxStackCount",
 		replace : "1"
+	},
+	{   // 42742
+		  match : "+($BehaviorTokenCount:AurielRayOfHeavenReservoirOfHopeQuestToken$*Behavior,AurielRayOfHeavenReservoirOfHopeBonusEnergy,Modification.VitalMaxArray[Energy])",
+		replace : ""
 	}
+
 
 ];
 
@@ -480,8 +485,8 @@ exports.HERO_JSON_SCHEMA =
 var HERO_TALENT_TIER_JSON_SCHEMA =
 {
 	type : "array",
-	minItems : 3,
-	maxItems : 5,
+	minItems : 1,
+	maxItems : 7,
 	items :
 		{
 			type : "object",
