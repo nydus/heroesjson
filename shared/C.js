@@ -17,7 +17,8 @@ exports.EXTRA_HEROES_HEROMODS_NAMED =
   "medivh"  : "Medivh",
   "guldan"	: "Guldan",
   "auriel"	: "Auriel",
-  "alarak"	: "Alarak"
+  "alarak"	: "Alarak",
+  "zarya"		: "Zarya"
 };
 
 exports.SKIP_HERO_IDS = ["GreymaneWorgen", "ChoGallBundleProduct"];
@@ -51,7 +52,7 @@ exports.EXTRA_MOUNT_DATA_FILES = {
 };
 
 // Extra hero data files GameData/Heroes/<hero>Data.xml
-exports.EXTRA_HEROES_GAMEDATA_FILES = ["Chen", "Zagara"];
+exports.EXTRA_HEROES_GAMEDATA_FILES = ["Zagara"];
 
 // Extra hero subfolder files GameData/Heroes/<hero>Data/<hero>Data.xml
 // "Expansion" heroes that have moved into "main" modules.
@@ -60,6 +61,7 @@ exports.EXTRA_HEROES_GAMEDATA_FOLDERS = [
 	"Artanis",
 	"Azmodan",
 	"Butcher",
+	"Chen",
 	"Crusader",
 	"DemonHunter",
 	"Dryad",
@@ -242,7 +244,17 @@ exports.FORMULA_PRE_REPLACEMENTS =
 	{   // 42742
 		  match : "Behavior,ChromieTimeTrapChronoSicknessSlow,MaxStackCount",
 		replace : "1"
+	},
+	{   // 42742
+		  match : "$BehaviorTokenCount:AurielRayOfHeavenReservoirOfHopeQuestToken$*Behavior,AurielRayOfHeavenReservoirOfHopeBonusEnergy,Modification.VitalMaxArray[Energy])",
+		replace : "Behavior,AurielRayOfHeavenReservoirOfHopeBonusEnergy,Modification.VitalMaxArray[Energy])"
+	},
+	{   // 42742
+		  match : "((Effect,ZaryaExpulsionZoneInitialSearchArea,AreaArray[0].Radius+.Value+Talent,ZaryaExpulsionZoneClearOut,AbilityModificationArray[0].Modifications[1].Value)/Effect,ZaryaExpulsionZoneInitialSearchArea,AreaArray[0].Radius)-1)*100",
+		replace : "((Effect,ZaryaExpulsionZoneInitialSearchArea,AreaArray[0].Radius+Talent,ZaryaExpulsionZoneClearOut,AbilityModificationArray[0].Modifications[1].Value)/Effect,ZaryaExpulsionZoneInitialSearchArea,AreaArray[0].Radius)-1)*100"
 	}
+	
+
 
 ];
 
@@ -480,8 +492,8 @@ exports.HERO_JSON_SCHEMA =
 var HERO_TALENT_TIER_JSON_SCHEMA =
 {
 	type : "array",
-	minItems : 3,
-	maxItems : 5,
+	minItems : 1,
+	maxItems : 7,
 	items :
 		{
 			type : "object",
