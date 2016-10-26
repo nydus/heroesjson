@@ -18,7 +18,8 @@ exports.EXTRA_HEROES_HEROMODS_NAMED =
   "guldan"	: "Guldan",
   "auriel"	: "Auriel",
   "alarak"	: "Alarak",
-  "zarya"		: "Zarya"
+  "zarya"		: "Zarya",
+  "samuro"		: "Samuro"
 };
 
 exports.SKIP_HERO_IDS = ["GreymaneWorgen", "ChoGallBundleProduct"];
