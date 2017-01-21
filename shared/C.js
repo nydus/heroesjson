@@ -1,6 +1,6 @@
 "use strict";
 
-var base = require("xbase"); // jshint ignore:line
+var base = require("@sembiance/xbase"); // jshint ignore:line
 
 // Extra heroes in the 'heromods' folder
 exports.EXTRA_HEROES_HEROMODS = ["chogall"];

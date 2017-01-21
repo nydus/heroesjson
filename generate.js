@@ -1,10 +1,10 @@
 "use strict";
 
-var base = require("xbase"),
+var base = require("@sembiance/xbase"),
 	fs = require("fs"),
 	path = require("path"),
-	runUtil = require("xutil").run,
-	fileUtil = require("xutil").file,
+	runUtil = require("@sembiance/xutil").run,
+	fileUtil = require("@sembiance/xutil").file,
 	moment = require("moment"),
 	jsen = require("jsen"),
 	jsonselect = require("JSONSelect"),
