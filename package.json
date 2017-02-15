@@ -13,8 +13,8 @@
     "libxmljs": "^0.14.3",
     "rimraf": "^2.4.5",
     "tiptoe": "^1.0.0",
-    "xutil": "git://github.com/Sembiance/xutil.git",
-    "xbase": "git://github.com/Sembiance/xbase.git"
+    "@sembiance/xutil": "git://github.com/Sembiance/xutil.git",
+    "@sembiance/xbase": "git://github.com/Sembiance/xbase.git"
   },
   "devDependencies": {},
   "scripts": {
